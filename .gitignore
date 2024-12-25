@@ -1,0 +1,11 @@
+mongo/
+postgres/
+node_modules/
+dist/
+build/
+coverage/
+
+.env
+package-lock.josn
+yarn.lock
+bun.lockb
