@@ -6,6 +6,6 @@ build/
 coverage/
 
 .env
-package-lock.josn
+package-lock.json
 yarn.lock
 bun.lockb
