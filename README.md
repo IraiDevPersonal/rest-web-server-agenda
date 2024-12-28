@@ -10,3 +10,4 @@
 - `prisma generate` para crear el cliente de prisma
 
 4. Ejecutar `npm run dev` o `bun dev` o `yarn dev` para levantar el proyecto en modo desarrollo
+   do=/
