@@ -11,3 +11,23 @@
 
 4. Ejecutar `npm run dev` o `bun dev` o `yarn dev` para levantar el proyecto en modo desarrollo
    do=/
+
+## cambios 29-12-2024 por Sebastian Acuña
+
+1. se agregan features de segun tablas en bd ( solo contienen el modelo)
+2. para aplicar los cambios se debe primero realizar lo siguiente:
+   - eliminar bd actual ( si es que se tiene creada )
+   - ejecutar `docker-compose up -d`,
+   - ejecutar `npx prisma db push`
+3. una vez creada la bd con las tablas:
+
+   - _appointment_
+   - _appointment_status_
+   - _patients_
+   - _roles_
+   - _schedules_
+   - _users_
+
+   levantar servicio con `npm run dev` o `bun dev` o `yarn dev`
+
+4. una vez levantado el servicio ejecutar enpoint ubicado en `/api/seed/seed` para que se poble la bd

@@ -10,7 +10,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("POSTGRES_URLx")
+  url      = env("POSTGRES_URL")
 }
 
 model roles {
@@ -27,8 +27,8 @@ model appointment_status {
 
 model users {
   id         BigInt      @id @default(autoincrement())
-  uid        String      @unique @default(uuid())
-  rut        String
+  uid        String      @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  rut        String      @unique
   names      String
   last_names String
   email      String      @unique
@@ -43,7 +43,7 @@ model users {
 model schedules {
   id              BigInt       @id @default(autoincrement())
   professional_id BigInt
-  week_day        Int
+  week_day        WeekDay
   time_from       String
   time_to         String
   is_enabled      Boolean      @default(true)
@@ -51,10 +51,20 @@ model schedules {
   appointments    appointment?
 }
 
+enum WeekDay {
+  LUNES
+  MARTES
+  MIERCOLES
+  JUEVES
+  VIERNES
+  SABADO
+  DOMINGO
+}
+
 model patients {
   id           BigInt        @id @default(autoincrement())
-  uid          String        @unique @default(uuid())
-  rut          String
+  uid          String        @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  rut          String        @unique
   names        String
   last_names   String
   email        String        @unique
