@@ -1,9 +1,9 @@
 import { AppointmentStatusModel } from "../../../appointment-status/domain/model/appointment-status_model";
 import { AppointmentModel } from "../../../appointment/domain/model/appointment_model";
-import { PatientModel } from "../../../patients/domain/models/patient_model";
+import { PatientEntity } from "../../../patients/domain/entities/patient_entity";
 import { RoleModel } from "../../../roles/domain/models/role_model";
 import { ScheduleModel } from "../../../schedule/domain/model/schedule_model";
-import { UserModel } from "../../../users/domain/model/user_model";
+import { UserEntity } from "../../../users/domain/entities/user_entity";
 
 export const roles: Pick<RoleModel, "name">[] = [
   { name: "admin" },
@@ -16,7 +16,7 @@ export const appointmentsStatus: Pick<AppointmentStatusModel, "name">[] = [
   { name: "cancelado" },
 ];
 
-export const patients: Omit<PatientModel, "id" | "uid">[] = [
+export const patients: Omit<PatientEntity, "id" | "uid">[] = [
   {
     email: "cosme_fulano_1@gmail.com",
     last_names: "fulano 1",
@@ -54,7 +54,7 @@ export const patients: Omit<PatientModel, "id" | "uid">[] = [
   },
 ];
 
-export const users: Omit<UserModel, "id" | "uid" | "role">[] = [
+export const users: Omit<UserEntity, "id" | "uid" | "role">[] = [
   {
     email: "pinilla.sebastianm@gmail.com",
     password: "123456",

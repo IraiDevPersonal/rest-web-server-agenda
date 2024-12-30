@@ -1,5 +1,5 @@
 import { AppointmentStatusModel } from "../../../appointment-status/domain/model/appointment-status_model";
-import { PatientModel } from "../../../patients/domain/models/patient_model";
+import { PatientEntity } from "../../../patients/domain/entities/patient_entity";
 import { ScheduleModel } from "../../../schedule/domain/model/schedule_model";
 
 export interface AppointmentModel {
@@ -7,7 +7,7 @@ export interface AppointmentModel {
   patient_id: number;
   schedule_id: number;
   appointment_status_id: number;
-  patient: PatientModel;
+  patient: PatientEntity;
   appointmentStatus: AppointmentStatusModel;
   schedule: ScheduleModel;
 }

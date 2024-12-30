@@ -1,4 +1,4 @@
-import { UserModel } from "../../../users/domain/model/user_model";
+import { UserModel } from "../../../users/domain/entities/user_entity";
 
 export type WeekDay =
   | "LUNES"
