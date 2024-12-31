@@ -1,4 +1,6 @@
+import { z } from "zod";
 import { CustomError } from "../../../core/domain/custom.error";
+import { ScheduleSchema } from "../../../schedule/presentation/schemas/schedule_schema";
 
 type Init = {
   id: number;
@@ -32,38 +34,20 @@ export class PatientEntity {
   static fromObject(object: Record<string, any>) {
     const { id, uid, rut, names, last_names, email, phone } = object;
 
-    if (!id) {
-      throw CustomError.badRequest("Missing id");
-    }
+    try {
+      const schema = ScheduleSchema.parse(object);
 
-    if (!uid) {
-      throw CustomError.badRequest("Missing uid");
+      return new PatientEntity({
+        last_names,
+        id,
+        email,
+        names,
+        phone,
+        rut,
+        uid,
+      });
+    } catch (error) {
+      throw CustomError.badRequest(`${error}`);
     }
-
-    if (!rut) {
-      throw CustomError.badRequest("Missing rut");
-    }
-
-    if (!names) {
-      throw CustomError.badRequest("Missing names");
-    }
-
-    if (!last_names) {
-      throw CustomError.badRequest("Missing lastnames");
-    }
-
-    if (!email) {
-      throw CustomError.badRequest("Missing email");
-    }
-
-    return new PatientEntity({
-      last_names,
-      id,
-      email,
-      names,
-      phone,
-      rut,
-      uid,
-    });
   }
 }

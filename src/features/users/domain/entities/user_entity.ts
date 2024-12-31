@@ -1,6 +1,7 @@
-import { RoleModel } from "../../../roles/domain/models/role_model";
-
+import { RoleModel } from "../../../roles/domain/entities/role_entity";
 import { CustomError } from "../../../core/domain/custom.error";
+import { userSchema } from "../../presentation/schemas/user_schema";
+import { z } from "zod";
 
 type Init = {
   id: number;
@@ -44,76 +45,13 @@ export class UserEntity {
   }
 
   static fromObject(object: Record<string, any>) {
-    const {
-      id,
-      uid,
-      rut,
-      names,
-      last_names,
-      email,
-      password,
-      is_admin,
-      phone,
-      role_id,
-      role,
-    } = object;
+    const { role } = object;
 
-    if (!id) {
-      throw CustomError.badRequest("Missing id");
+    try {
+      const scheme = userSchema.parse(object);
+      return new UserEntity({ ...scheme, role: role });
+    } catch (error) {
+      throw CustomError.badRequest(`${error}`);
     }
-
-    if (!uid) {
-      throw CustomError.badRequest("Missing uid");
-    }
-
-    if (!rut) {
-      throw CustomError.badRequest("Missing rut");
-    }
-
-    if (!names) {
-      throw CustomError.badRequest("Missing names");
-    }
-
-    if (!last_names) {
-      throw CustomError.badRequest("Missing lastnames");
-    }
-
-    if (!email) {
-      throw CustomError.badRequest("Missing email");
-    }
-
-    if (!password) {
-      throw CustomError.badRequest("Missing password");
-    }
-
-    if (!phone) {
-      throw CustomError.badRequest("Missing password");
-    }
-
-    if (is_admin === undefined) {
-      throw CustomError.badRequest("Missing password");
-    }
-
-    if (role_id === undefined) {
-      throw CustomError.badRequest("Missing password");
-    }
-
-    if (!role) {
-      throw CustomError.badRequest("Missing password");
-    }
-
-    return new UserEntity({
-      id,
-      uid,
-      rut,
-      names,
-      last_names,
-      email,
-      password,
-      is_admin,
-      phone,
-      role_id,
-      role,
-    });
   }
 }

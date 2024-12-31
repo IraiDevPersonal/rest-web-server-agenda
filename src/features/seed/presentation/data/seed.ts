@@ -1,8 +1,8 @@
 import { AppointmentStatusModel } from "../../../appointment-status/domain/model/appointment-status_model";
 import { AppointmentModel } from "../../../appointment/domain/model/appointment_model";
 import { PatientEntity } from "../../../patients/domain/entities/patient_entity";
-import { RoleModel } from "../../../roles/domain/models/role_model";
-import { ScheduleModel } from "../../../schedule/domain/model/schedule_model";
+import { RoleModel } from "../../../roles/domain/entities/role_entity";
+import { ScheduleModel } from "../../../schedule/domain/entities/schedule_entity";
 import { UserEntity } from "../../../users/domain/entities/user_entity";
 
 export const roles: Pick<RoleModel, "name">[] = [
