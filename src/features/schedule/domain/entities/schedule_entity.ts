@@ -12,23 +12,23 @@ export type WeekDay =
   | "DOMINGO";
 
 type Init = {
-  id: number;
+  id: number | undefined;
   professional_id: number;
   week_day: WeekDay;
   time_from: string;
   time_to: string;
   is_enabled: boolean;
-  professional: UserEntity;
+  professional: UserEntity | undefined;
 };
 
 export class ScheduleEntity {
-  private id: number;
+  public id: number | undefined;
   private professional_id: number;
   private week_day: WeekDay;
   private time_from: string;
   private time_to: string;
   private is_enabled: boolean;
-  private professional: UserEntity;
+  private professional: UserEntity | undefined;
 
   private constructor(init: Init) {
     this.id = init.id;
@@ -40,7 +40,7 @@ export class ScheduleEntity {
     this.professional = init.professional;
   }
 
-  static fromObject(object: Record<string, any>) {
+  static fromJson(object: Record<string, any>) {
     const { professional } = object;
 
     try {

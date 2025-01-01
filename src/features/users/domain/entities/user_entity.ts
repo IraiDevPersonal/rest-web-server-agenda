@@ -1,7 +1,6 @@
-import { RoleModel } from "../../../roles/domain/entities/role_entity";
 import { CustomError } from "../../../core/domain/custom.error";
+import { RoleEntity } from "../../../roles/domain/entities/role_entity";
 import { userSchema } from "../../presentation/schemas/user_schema";
-import { z } from "zod";
 
 type Init = {
   id: number;
@@ -14,7 +13,7 @@ type Init = {
   is_admin: boolean;
   phone: string;
   role_id: number;
-  role: RoleModel;
+  role: RoleEntity;
 };
 
 export class UserEntity {
@@ -28,7 +27,7 @@ export class UserEntity {
   public is_admin: boolean;
   public phone: string;
   public role_id: number;
-  public role: RoleModel;
+  public role: RoleEntity;
 
   private constructor(init: Init) {
     this.id = init.id;
