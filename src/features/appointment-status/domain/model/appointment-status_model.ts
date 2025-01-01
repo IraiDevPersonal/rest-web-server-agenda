@@ -8,7 +8,7 @@ type Init = {
 
 export class AppointmentStatusEntity {
   public id: number | undefined;
-  private name: string;
+  public name: string;
 
   private constructor(init: Init) {
     this.id = init.id;
