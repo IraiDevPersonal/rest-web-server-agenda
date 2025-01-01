@@ -1,9 +1,9 @@
-import { z } from "zod";
 import { CustomError } from "../../../core/domain/custom.error";
 import { ScheduleSchema } from "../../../schedule/presentation/schemas/schedule_schema";
+import { patientSchema } from "../../presentation/schemas/patient_schema";
 
 type Init = {
-  id: number;
+  id: number | undefined;
   uid: string;
   rut: string;
   names: string;
@@ -13,7 +13,7 @@ type Init = {
 };
 
 export class PatientEntity {
-  public id: number;
+  public id: number | undefined;
   public uid: string;
   public rut: string;
   public names: string;
@@ -31,21 +31,10 @@ export class PatientEntity {
     this.phone = init.phone;
   }
 
-  static fromObject(object: Record<string, any>) {
-    const { id, uid, rut, names, last_names, email, phone } = object;
-
+  static fromJson(object: Record<string, any>) {
     try {
-      const schema = ScheduleSchema.parse(object);
-
-      return new PatientEntity({
-        last_names,
-        id,
-        email,
-        names,
-        phone,
-        rut,
-        uid,
-      });
+      const schema = patientSchema.parse(object);
+      return new PatientEntity(schema);
     } catch (error) {
       throw CustomError.badRequest(`${error}`);
     }
