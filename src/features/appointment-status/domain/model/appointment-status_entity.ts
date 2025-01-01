@@ -2,12 +2,12 @@ import { CustomError } from "../../../core/domain/custom.error";
 import { appointmentStatusSchema } from "../../presentation/schema/appointment-status_schema";
 
 type Init = {
-  id: number | undefined;
+  id?: number | undefined;
   name: string;
 };
 
 export class AppointmentStatusEntity {
-  public id: number | undefined;
+  public id?: number | undefined;
   public name: string;
 
   private constructor(init: Init) {

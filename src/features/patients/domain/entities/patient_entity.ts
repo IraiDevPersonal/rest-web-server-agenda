@@ -3,8 +3,8 @@ import { ScheduleSchema } from "../../../schedule/presentation/schemas/schedule_
 import { patientSchema } from "../../presentation/schemas/patient_schema";
 
 type Init = {
-  id: number | undefined;
-  uid: string;
+  id?: number | undefined;
+  uid?: string | undefined;
   rut: string;
   names: string;
   last_names: string;
@@ -13,8 +13,8 @@ type Init = {
 };
 
 export class PatientEntity {
-  public id: number | undefined;
-  public uid: string;
+  public id?: number | undefined;
+  public uid?: string | undefined;
   public rut: string;
   public names: string;
   public last_names: string;

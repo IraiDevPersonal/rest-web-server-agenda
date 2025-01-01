@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { AgendaController } from "./controllers/ageda_controller";
 
 export class AgendaRoutes {
   static get routes(): Router {
@@ -11,7 +12,8 @@ export class AgendaRoutes {
      * hours-confirmed
      * hours-to-be-confirm
      */
-    router.get("/:professional-id/hours/:type" /*Controller*/);
+    const controller = new AgendaController();
+    router.get("/hours/:type", [], controller.getAgenda);
 
     return router;
   }

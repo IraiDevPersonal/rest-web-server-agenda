@@ -3,8 +3,8 @@ import { RoleEntity } from "../../../roles/domain/entities/role_entity";
 import { userSchema } from "../../presentation/schemas/user_schema";
 
 type Init = {
-  id: number;
-  uid: string;
+  id?: number | undefined;
+  uid?: string | undefined;
   rut: string;
   names: string;
   last_names: string;
@@ -17,8 +17,8 @@ type Init = {
 };
 
 export class UserEntity {
-  public id: number;
-  public uid: string;
+  public id?: number | undefined;
+  public uid?: string | undefined;
   public rut: string;
   public names: string;
   public last_names: string;
@@ -43,7 +43,7 @@ export class UserEntity {
     this.role = init.role;
   }
 
-  static fromObject(object: Record<string, any>) {
+  static fromJson(object: Record<string, any>) {
     const { role } = object;
 
     try {

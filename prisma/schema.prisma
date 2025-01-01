@@ -44,6 +44,7 @@ model schedules {
   id              BigInt       @id @default(autoincrement())
   professional_id BigInt
   week_day        WeekDay
+  date            DateTime     @db.Date
   time_from       String
   time_to         String
   is_enabled      Boolean      @default(true)

@@ -7,7 +7,7 @@ import {
   roles,
   schedules,
   users,
-} from "../data/seed";
+} from "../../../users/data/seed";
 
 export class SeedService implements SeedServiceModel {
   private readonly db: PrismaClient;

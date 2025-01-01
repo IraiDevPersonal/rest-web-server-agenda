@@ -1,10 +1,9 @@
 import { z } from "zod";
-import { ScheduleEntity } from "../../domain/entities/schedule_entity";
-import { WeekDay } from "@prisma/client";
 
 export const ScheduleSchema = z.object({
-  id: z.number(),
+  id: z.optional(z.number()),
   professional_id: z.number(),
+  date: z.date(),
   week_day: z.enum([
     "LUNES",
     "MARTES",
