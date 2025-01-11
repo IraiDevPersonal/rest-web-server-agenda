@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { AgendaFilter } from "../../../agenda/domain/entities/entities/agenda_filters";
 
 export class AppointmentService {
   private readonly db: PrismaClient;
@@ -7,12 +8,19 @@ export class AppointmentService {
     this.db = new PrismaClient();
   }
 
-  async getAppointments() {
+  async getAppointments({ type }: AgendaFilter) {
     return await this.db.appointment.findMany({
       include: {
-        appointment_status: true,
         patient: true,
-        schedule: true,
+        schedule: {
+          include: {
+            appointments: true,
+            professional: { include: { role: true } },
+          },
+        },
+      },
+      where: {
+        appointment_status: type,
       },
     });
   }

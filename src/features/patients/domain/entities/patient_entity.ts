@@ -31,6 +31,17 @@ export class PatientEntity {
     this.phone = init.phone;
   }
 
+  static toResponse(object: Record<string, any>): PatientEntity {
+    return {
+      uid: object["uid"],
+      rut: object["rut"],
+      names: object["names"],
+      last_names: object["last_names"],
+      email: object["email"],
+      phone: object["phone"],
+    };
+  }
+
   static fromJson(object: Record<string, any>) {
     try {
       const schema = patientSchema.parse(object);

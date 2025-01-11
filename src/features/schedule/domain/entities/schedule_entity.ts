@@ -43,6 +43,18 @@ export class ScheduleEntity {
     this.professional = init.professional;
   }
 
+  static toResponse(
+    object: Record<string, any>
+  ): Omit<ScheduleEntity, "professional_id"> {
+    return {
+      week_day: object["week_day"],
+      date: object["date"],
+      time_from: object["time_from"],
+      time_to: object["time_to"],
+      is_enabled: object["is_enabled"],
+      professional: UserEntity.toResponse(object["professional"]) as UserEntity,
+    };
+  }
   static fromJson(object: Record<string, any>) {
     const { professional } = object;
 

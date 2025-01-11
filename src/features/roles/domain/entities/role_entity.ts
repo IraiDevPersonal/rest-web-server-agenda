@@ -15,6 +15,13 @@ export class RoleEntity {
     this.name = init.name;
   }
 
+  static toResponse(object: Record<string, any>): RoleEntity {
+    return {
+      id: object?.["id"],
+      name: object["name"],
+    };
+  }
+
   static fromJson(object: Record<string, any>) {
     try {
       const schema = roleSchema.parse(object);

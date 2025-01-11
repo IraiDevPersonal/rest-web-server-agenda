@@ -43,6 +43,21 @@ export class UserEntity {
     this.role = init.role;
   }
 
+  static toResponse(
+    object: Record<string, any>
+  ): Omit<UserEntity, "password" | "role_id"> {
+    return {
+      email: object["email"],
+      uid: object["uid"],
+      rut: object["rut"],
+      names: object["names"],
+      last_names: object["last_names"],
+      is_admin: object["is_admin"],
+      phone: object["phone"],
+      role: RoleEntity.toResponse(object["role"]),
+    };
+  }
+
   static fromJson(object: Record<string, any>) {
     const { role } = object;
 

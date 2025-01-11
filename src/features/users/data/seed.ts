@@ -1,4 +1,3 @@
-import { AppointmentStatusEntity } from "../../appointment-status/domain/model/appointment-status_entity";
 import { AppointmentEntity } from "../../appointment/domain/model/appointment_entity";
 import { PatientEntity } from "../../patients/domain/entities/patient_entity";
 import { RoleEntity } from "../../roles/domain/entities/role_entity";
@@ -8,12 +7,6 @@ import { UserEntity } from "../domain/entities/user_entity";
 export const roles: RoleEntity[] = [
   RoleEntity.fromJson({ name: "admin" }),
   RoleEntity.fromJson({ name: "professional" }),
-];
-
-export const appointmentsStatus: AppointmentStatusEntity[] = [
-  AppointmentStatusEntity.fromJson({ name: "para confirmar" }),
-  AppointmentStatusEntity.fromJson({ name: "confirmado" }),
-  AppointmentStatusEntity.fromJson({ name: "cancelado" }),
 ];
 
 export const patients: PatientEntity[] = [
@@ -393,7 +386,7 @@ export const appointment: AppointmentEntity[] = [
     {
       patient_id: 1,
       schedule_id: 1,
-      appointment_status_id: 1,
+      appointment_status: "CANCELLED",
     },
     "insert"
   ),
@@ -401,7 +394,7 @@ export const appointment: AppointmentEntity[] = [
     {
       patient_id: 1,
       schedule_id: 5,
-      appointment_status_id: 2,
+      appointment_status: "CONFIRMED",
     },
     "insert"
   ),
@@ -409,7 +402,7 @@ export const appointment: AppointmentEntity[] = [
     {
       patient_id: 1,
       schedule_id: 6,
-      appointment_status_id: 3,
+      appointment_status: "TO_CONFIRM",
     },
     "insert"
   ),
@@ -417,7 +410,7 @@ export const appointment: AppointmentEntity[] = [
     {
       patient_id: 2,
       schedule_id: 8,
-      appointment_status_id: 1,
+      appointment_status: "TO_CONFIRM",
     },
     "insert"
   ),
@@ -425,7 +418,7 @@ export const appointment: AppointmentEntity[] = [
     {
       patient_id: 2,
       schedule_id: 2,
-      appointment_status_id: 2,
+      appointment_status: "CONFIRMED",
     },
     "insert"
   ),
@@ -433,7 +426,7 @@ export const appointment: AppointmentEntity[] = [
     {
       patient_id: 2,
       schedule_id: 14,
-      appointment_status_id: 3,
+      appointment_status: "TO_CONFIRM",
     },
     "insert"
   ),
@@ -441,7 +434,7 @@ export const appointment: AppointmentEntity[] = [
     {
       patient_id: 3,
       schedule_id: 9,
-      appointment_status_id: 1,
+      appointment_status: "CANCELLED",
     },
     "insert"
   ),
@@ -449,7 +442,7 @@ export const appointment: AppointmentEntity[] = [
     {
       patient_id: 3,
       schedule_id: 10,
-      appointment_status_id: 2,
+      appointment_status: "TO_CONFIRM",
     },
     "insert"
   ),
@@ -457,7 +450,7 @@ export const appointment: AppointmentEntity[] = [
     {
       patient_id: 3,
       schedule_id: 11,
-      appointment_status_id: 3,
+      appointment_status: "CONFIRMED",
     },
     "insert"
   ),
@@ -465,7 +458,7 @@ export const appointment: AppointmentEntity[] = [
     {
       patient_id: 4,
       schedule_id: 12,
-      appointment_status_id: 1,
+      appointment_status: "CONFIRMED",
     },
     "insert"
   ),
@@ -473,7 +466,7 @@ export const appointment: AppointmentEntity[] = [
     {
       patient_id: 4,
       schedule_id: 13,
-      appointment_status_id: 2,
+      appointment_status: "TO_CONFIRM",
     },
     "insert"
   ),
@@ -481,7 +474,7 @@ export const appointment: AppointmentEntity[] = [
     {
       patient_id: 4,
       schedule_id: 15,
-      appointment_status_id: 3,
+      appointment_status: "TO_CONFIRM",
     },
     "insert"
   ),
@@ -489,7 +482,7 @@ export const appointment: AppointmentEntity[] = [
     {
       patient_id: 5,
       schedule_id: 16,
-      appointment_status_id: 1,
+      appointment_status: "CANCELLED",
     },
     "insert"
   ),
@@ -497,7 +490,7 @@ export const appointment: AppointmentEntity[] = [
     {
       patient_id: 5,
       schedule_id: 17,
-      appointment_status_id: 2,
+      appointment_status: "TO_CONFIRM",
     },
     "insert"
   ),
@@ -505,7 +498,7 @@ export const appointment: AppointmentEntity[] = [
     {
       patient_id: 5,
       schedule_id: 18,
-      appointment_status_id: 3,
+      appointment_status: "CANCELLED",
     },
     "insert"
   ),

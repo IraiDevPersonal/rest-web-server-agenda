@@ -19,12 +19,6 @@ model roles {
   users users[]
 }
 
-model appointment_status {
-  id           Int           @id @default(autoincrement())
-  name         String
-  appointments appointment[]
-}
-
 model users {
   id         BigInt      @id @default(autoincrement())
   uid        String      @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
@@ -42,6 +36,7 @@ model users {
 
 model schedules {
   id              BigInt       @id @default(autoincrement())
+  uid             String       @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   professional_id BigInt
   week_day        WeekDay
   date            DateTime     @db.Date
@@ -74,11 +69,17 @@ model patients {
 }
 
 model appointment {
-  id                    BigInt             @id @default(autoincrement())
-  patient_id            BigInt
-  schedule_id           BigInt             @unique
-  appointment_status_id Int
-  appointment_status    appointment_status @relation(fields: [appointment_status_id], references: [id])
-  schedule              schedules          @relation(fields: [schedule_id], references: [id])
-  patient               patients           @relation(fields: [patient_id], references: [id])
+  id                 BigInt            @id @default(autoincrement())
+  uid                String            @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  patient_id         BigInt
+  schedule_id        BigInt            @unique
+  appointment_status AppointmentStatus
+  schedule           schedules         @relation(fields: [schedule_id], references: [id])
+  patient            patients          @relation(fields: [patient_id], references: [id])
+}
+
+enum AppointmentStatus {
+  TO_CONFIRM
+  CONFIRMED
+  CANCELLED
 }

@@ -2,7 +2,6 @@ import { PrismaClient } from "@prisma/client";
 import { SeedServiceModel } from "../../domain/model/seed_service_model";
 import {
   appointment,
-  appointmentsStatus,
   patients,
   roles,
   schedules,
@@ -30,9 +29,7 @@ export class SeedService implements SeedServiceModel {
       await this.db.$executeRawUnsafe(
         `TRUNCATE TABLE users RESTART IDENTITY CASCADE;`
       );
-      await this.db.$executeRawUnsafe(
-        `TRUNCATE TABLE appointment_status RESTART IDENTITY CASCADE;`
-      );
+
       await this.db.$executeRawUnsafe(
         `TRUNCATE TABLE roles RESTART IDENTITY CASCADE;`
       );
@@ -41,9 +38,6 @@ export class SeedService implements SeedServiceModel {
         data: roles,
       });
 
-      await this.db.appointment_status.createMany({
-        data: appointmentsStatus,
-      });
       await this.db.users.createMany({
         data: users,
       });
