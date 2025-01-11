@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { AgendaController } from "./controllers/ageda_controller";
+import { AppointmentService } from "../../appointment/presentation/services/appointment_service";
 
 export class AgendaRoutes {
   static get routes(): Router {
@@ -12,7 +13,9 @@ export class AgendaRoutes {
      * hours-confirmed
      * hours-to-be-confirm
      */
-    const controller = new AgendaController();
+
+    const appointmentService = new AppointmentService();
+    const controller = new AgendaController(appointmentService);
     router.get("/hours/:type", [], controller.getAgenda);
 
     return router;
