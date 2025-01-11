@@ -31,3 +31,56 @@
    levantar servicio con `npm run dev` o `bun dev` o `yarn dev`
 
 4. una vez levantado el servicio ejecutar enpoint ubicado en `/api/seed/seed` para que se poble la bd
+
+## cambios 10-01-2025 por Sebastian Acuña
+
+1. se cambiaron todos los modelos por entities agregando funciones estaticas de validacion en las clases
+2. se cambiaron tablas de la bd, por lo que se debe volver a ejecutar `npx prisma db push`
+3. se agrega EndPoint de agenda, para consumirlo se debe ejecutar
+
+   ```
+      METHOD: GET
+      URL:localhost:3000/api/agenda/hours/:type
+      type = TO_CONFIRM | CONFIRMED | CANCELLED
+      RESPONSE :
+
+         export interface Main {
+            data: Datum[];
+         }
+         export interface Datum {
+            uid: string;
+            patient: Patient;
+            appointment_status: string;
+            schedule: Schedule;
+         }
+
+         export interface Patient {
+            uid: string;
+            rut: string;
+            names: string;
+            last_names: string;
+            email: string;
+            phone: string;
+            is_admin?: boolean;
+            role?: Role;
+         }
+
+         export interface Role {
+            id: number;
+            name: string;
+         }
+
+         export interface Schedule {
+            uid: string;
+            week_day: string;
+            date: Date;
+            time_from: string;
+            time_to: string;
+            is_enabled: boolean;
+            professional: Patient;
+         }
+   ```
+
+### notas del parche
+
+falta el tipo AVAILABLES que ese debe mostrar los schedules ** no se si mantener separado schedule de appointment, me suenan a lo mismo **

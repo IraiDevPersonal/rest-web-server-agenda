@@ -1,4 +1,4 @@
-import { AppointmentEntity } from "../../appointment/domain/model/appointment_entity";
+import { AppointmentEntity } from "../../appointment/domain/entities/appointment_entity";
 import { PatientEntity } from "../../patients/domain/entities/patient_entity";
 import { RoleEntity } from "../../roles/domain/entities/role_entity";
 import { ScheduleEntity } from "../../schedule/domain/entities/schedule_entity";

@@ -7,6 +7,7 @@ export type AppointmentStatus = "TO_CONFIRM" | "CONFIRMED" | "CANCELLED";
 
 type Init = {
   id?: number | undefined;
+  uid?: string | undefined;
   patient_id: number;
   schedule_id: number;
   patient: PatientEntity | undefined;
@@ -15,6 +16,7 @@ type Init = {
 };
 export class AppointmentEntity {
   public id?: number | undefined;
+  public uid?: string | undefined;
   public patient_id: number;
   public schedule_id: number;
   public patient: PatientEntity | undefined;
@@ -23,30 +25,13 @@ export class AppointmentEntity {
 
   private constructor(init: Init) {
     this.id = init.id;
+    this.uid = init.uid;
     this.patient_id = init.patient_id;
     this.schedule_id = init.schedule_id;
     this.patient = init.patient;
     this.appointment_status = init.appointment_status;
     this.schedule = init.schedule;
   }
-
-  // {
-  //   id: 15n,
-  //   patient_id: 5n,
-  //   schedule_id: 18n,
-  //   appointment_status_id: 3,
-  //   appointment_status: { id: 3, name: 'cancelado' },
-  //   patient: {
-  //     id: 5n,
-  //     uid: '06ee8381-dab8-4d5c-ab2c-6b3481c41dff',
-  //     rut: '15.953.693-9',
-  //     names: 'cosme 5',
-  //     last_names: 'fulano 5',
-  //     email: 'cosme_fulano_5@gmail.com',
-  //     phone: '+569555555555'
-  //   }
-
-  // }
 
   static toResponse(
     object: Record<string, any>
@@ -56,6 +41,7 @@ export class AppointmentEntity {
   > {
     try {
       return {
+        uid: object["uid"],
         patient: PatientEntity.toResponse(object["patient"]),
         appointment_status: object["appointment_status"],
         schedule: ScheduleEntity.toResponse(

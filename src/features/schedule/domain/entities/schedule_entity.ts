@@ -13,6 +13,7 @@ export type WeekDay =
 
 type Init = {
   id?: number | undefined;
+  uid?: string | undefined;
   professional_id: number;
   week_day: WeekDay;
   date: Date;
@@ -24,6 +25,7 @@ type Init = {
 
 export class ScheduleEntity {
   public id?: number | undefined;
+  public uid?: string | undefined;
   public professional_id: number;
   public week_day: WeekDay;
   public date: Date;
@@ -47,6 +49,7 @@ export class ScheduleEntity {
     object: Record<string, any>
   ): Omit<ScheduleEntity, "professional_id"> {
     return {
+      uid: object["uid"],
       week_day: object["week_day"],
       date: object["date"],
       time_from: object["time_from"],
@@ -72,6 +75,7 @@ export class ScheduleEntity {
     delete schedule.professional;
     if (action === "insert") {
       delete schedule.id;
+      delete schedule.uid;
     }
 
     if (action === "update" && !schedule.id) {

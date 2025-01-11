@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { CustomError } from "../../../core/domain/custom.error";
 import { AppointmentService } from "../../../appointment/presentation/services/appointment_service";
-import { AppointmentEntity } from "../../../appointment/domain/model/appointment_entity";
+import { AppointmentEntity } from "../../../appointment/domain/entities/appointment_entity";
 import { AgendaFilter } from "../../domain/entities/entities/agenda_filters";
 import { AppointmentStatus } from "@prisma/client";
 
