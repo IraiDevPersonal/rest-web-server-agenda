@@ -19,32 +19,73 @@ model roles {
   users users[]
 }
 
+model professions {
+  id                      Int                       @id @default(autoincrement())
+  name                    String
+  professionalProfessions professionalProfessions[]
+}
+
+model professionals {
+  id                     BigInt                    @id @default(autoincrement())
+  user_id                BigInt
+  users                  users                     @relation(fields: [user_id], references: [id])
+  service_provider_id    Int
+  serviceProviders       serviceProviders          @relation(fields: [service_provider_id], references: [id])
+  professionalProfession professionalProfessions[]
+  schedules              schedules[]
+}
+
+model professionalProfessions {
+  professional_id BigInt
+  professionals   professionals @relation(fields: [professional_id], references: [id])
+  profession_id   Int
+  professions     professions   @relation(fields: [profession_id], references: [id])
+
+  @@id([profession_id, professional_id])
+}
+
+model serviceProviders {
+  id                   Int                    @id @default(autoincrement())
+  name                 String
+  rut                  String
+  serviceProviderCodes serviceProviderCodes[]
+  professionals        professionals[]
+}
+
+model serviceProviderCodes {
+  id                  Int              @id @default(autoincrement())
+  code                String
+  title               String
+  service_provider_id Int
+  serviceProviders    serviceProviders @relation(fields: [service_provider_id], references: [id])
+}
+
 model users {
-  id         BigInt      @id @default(autoincrement())
-  uid        String      @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  rut        String      @unique
-  names      String
-  last_names String
-  email      String      @unique
-  password   String
-  is_admin   Boolean     @default(false)
-  phone      String
-  role       roles       @relation(fields: [role_id], references: [id])
-  role_id    Int
-  schedules  schedules[]
+  id            BigInt          @id @default(autoincrement())
+  uid           String          @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  rut           String          @unique
+  names         String
+  last_names    String
+  email         String          @unique
+  password      String
+  is_admin      Boolean         @default(false)
+  phone         String
+  role          roles           @relation(fields: [role_id], references: [id])
+  role_id       Int
+  professionals professionals[]
 }
 
 model schedules {
-  id              BigInt       @id @default(autoincrement())
-  uid             String       @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id              BigInt        @id @default(autoincrement())
+  uid             String        @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   professional_id BigInt
   week_day        WeekDay
-  date            DateTime     @db.Date
+  date            DateTime      @db.Date
   time_from       String
   time_to         String
-  is_enabled      Boolean      @default(true)
-  professional    users        @relation(fields: [professional_id], references: [id])
-  appointments    appointment?
+  is_enabled      Boolean       @default(true)
+  professional    professionals @relation(fields: [professional_id], references: [id])
+  appointments    appointment[]
 }
 
 enum WeekDay {
@@ -82,4 +123,5 @@ enum AppointmentStatus {
   TO_CONFIRM
   CONFIRMED
   CANCELLED
+  AVAILABLE
 }

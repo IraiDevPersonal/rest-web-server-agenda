@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { AgendaFilter } from "../../../agenda/domain/entities/entities/agenda_filters";
+import { AgendaFilter } from "../../../agenda/domain/entities/agenda_filters";
 
 export class AppointmentService {
   private readonly db: PrismaClient;

@@ -1,6 +1,19 @@
+import { z } from "zod";
 import { CustomError } from "../../../core/domain/custom.error";
 import { RoleEntity } from "../../../roles/domain/entities/role_entity";
-import { userSchema } from "../../presentation/schemas/user_schema";
+
+const userSchema = z.object({
+  id: z.optional(z.number()),
+  email: z.string().email(),
+  is_admin: z.boolean(),
+  last_names: z.string(),
+  names: z.string(),
+  password: z.string(),
+  phone: z.string(),
+  role_id: z.number(),
+  rut: z.string().max(12),
+  uid: z.optional(z.string()),
+});
 
 type Init = {
   id?: number | undefined;
