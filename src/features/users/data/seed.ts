@@ -1,8 +1,44 @@
 import { AppointmentEntity } from "../../appointment/domain/entities/appointment_entity";
-import { PatientEntity } from "../../patients/domain/entities/patient_entity";
+import { PatientEntity } from "../../patient/domain/entities/patient_entity";
+import { ProfessionEntity } from "../../profession/domain/entities/profession_entity";
+import { ProfessionalEntity } from "../../professional/domain/entities/professional_entity";
+import { ProfessionalProfession } from "../../professional/domain/entities/professionalProfession_entity";
 import { RoleEntity } from "../../roles/domain/entities/role_entity";
 import { ScheduleEntity } from "../../schedule/domain/entities/schedule_entity";
+import { ServiceProviderEntity } from "../../serviceProvider/domain/entities/serviceProvider_entity";
+import { ServiceProviderCodesEntity } from "../../serviceProvider/domain/entities/serviceProviderCodes_entity";
 import { UserEntity } from "../domain/entities/user_entity";
+
+export const professions: ProfessionEntity[] = [
+  ProfessionEntity.fromJson({
+    name: "Psicologia",
+  }),
+  ProfessionEntity.fromJson({
+    name: "Dentista",
+  }),
+];
+
+export const serviceProvider: ServiceProviderEntity[] = [
+  ServiceProviderEntity.fromJson({
+    name: "Primero llamado",
+    rut: "12.109.544-0",
+    serviceProviderCode: [
+      {
+        title: "Codigo 1",
+        code: "1231241231",
+      },
+      {
+        title: "Codigo 2",
+        code: "123124123112312",
+      },
+    ] as ServiceProviderCodesEntity[],
+  }),
+];
+
+export const professionalProfession: ProfessionalProfession[] = [
+  { professionalId: 1, professionId: 1 },
+  { professionalId: 2, professionId: 2 },
+];
 
 export const roles: RoleEntity[] = [
   RoleEntity.fromJson({ name: "admin" }),
@@ -77,6 +113,16 @@ export const users: UserEntity[] = [
     names: "ignacio rodrigo",
     phone: "+56948426521",
     rut: "19.050.844-7",
+  }),
+];
+
+export const professionals: ProfessionalEntity[] = [
+  ProfessionalEntity.fromJson({
+    userId: 1,
+    serviceProviderId: 1,
+  }),
+  ProfessionalEntity.fromJson({
+    userId: 2,
   }),
 ];
 

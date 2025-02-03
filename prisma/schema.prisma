@@ -20,22 +20,22 @@ model roles {
 }
 
 model professions {
-  id                      Int                       @id @default(autoincrement())
-  name                    String
-  professionalProfessions professionalProfessions[]
+  id                       Int                        @id @default(autoincrement())
+  name                     String
+  professional_professions professional_professions[]
 }
 
 model professionals {
-  id                     BigInt                    @id @default(autoincrement())
-  user_id                BigInt
-  users                  users                     @relation(fields: [user_id], references: [id])
-  service_provider_id    Int
-  serviceProviders       serviceProviders          @relation(fields: [service_provider_id], references: [id])
-  professionalProfession professionalProfessions[]
-  schedules              schedules[]
+  id                      BigInt                     @id @default(autoincrement())
+  user_id                 BigInt
+  users                   users                      @relation(fields: [user_id], references: [id])
+  service_provider_id     Int?
+  serviceProviders        service_providers?         @relation(fields: [service_provider_id], references: [id])
+  professional_profession professional_professions[]
+  schedules               schedules[]
 }
 
-model professionalProfessions {
+model professional_professions {
   professional_id BigInt
   professionals   professionals @relation(fields: [professional_id], references: [id])
   profession_id   Int
@@ -44,20 +44,20 @@ model professionalProfessions {
   @@id([profession_id, professional_id])
 }
 
-model serviceProviders {
-  id                   Int                    @id @default(autoincrement())
-  name                 String
-  rut                  String
-  serviceProviderCodes serviceProviderCodes[]
-  professionals        professionals[]
+model service_providers {
+  id                     Int                      @id @default(autoincrement())
+  name                   String
+  rut                    String
+  service_provider_codes service_provider_codes[]
+  professionals          professionals[]
 }
 
-model serviceProviderCodes {
-  id                  Int              @id @default(autoincrement())
+model service_provider_codes {
+  id                  Int               @id @default(autoincrement())
   code                String
   title               String
   service_provider_id Int
-  serviceProviders    serviceProviders @relation(fields: [service_provider_id], references: [id])
+  service_providers   service_providers @relation(fields: [service_provider_id], references: [id])
 }
 
 model users {

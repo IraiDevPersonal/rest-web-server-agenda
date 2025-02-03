@@ -15,7 +15,7 @@ export class AppointmentService {
         schedule: {
           include: {
             appointments: true,
-            professional: { include: { role: true } },
+            professional: true,
           },
         },
       },

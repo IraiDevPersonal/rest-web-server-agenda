@@ -1,5 +1,5 @@
 import { CustomError } from "../../../core/domain/custom.error";
-import { PatientEntity } from "../../../patients/domain/entities/patient_entity";
+import { PatientEntity } from "../../../patient/domain/entities/patient_entity";
 import { ScheduleEntity } from "../../../schedule/domain/entities/schedule_entity";
 import { appointmentSchema } from "../../presentation/schemas/appointment_schemas";
 
