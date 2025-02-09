@@ -60,6 +60,10 @@ export class SeedService implements SeedServiceModel {
         data: professions,
       });
 
+      await this.db.users.createMany({
+        data: users,
+      });
+
       for (const sp of serviceProvider) {
         await this.db.service_providers.create({
           data: {
@@ -91,9 +95,6 @@ export class SeedService implements SeedServiceModel {
           })) ?? [],
       });
 
-      await this.db.users.createMany({
-        data: users,
-      });
       await this.db.patients.createMany({
         data: patients,
       });

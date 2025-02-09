@@ -28,7 +28,7 @@ model professions {
 model professionals {
   id                      BigInt                     @id @default(autoincrement())
   user_id                 BigInt
-  users                   users                      @relation(fields: [user_id], references: [id])
+  user                    users                      @relation(fields: [user_id], references: [id])
   service_provider_id     Int?
   serviceProviders        service_providers?         @relation(fields: [service_provider_id], references: [id])
   professional_profession professional_professions[]

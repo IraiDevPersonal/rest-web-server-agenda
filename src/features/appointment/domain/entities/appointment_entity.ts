@@ -3,7 +3,11 @@ import { PatientEntity } from "../../../patient/domain/entities/patient_entity";
 import { ScheduleEntity } from "../../../schedule/domain/entities/schedule_entity";
 import { appointmentSchema } from "../../presentation/schemas/appointment_schemas";
 
-export type AppointmentStatus = "TO_CONFIRM" | "CONFIRMED" | "CANCELLED";
+export type AppointmentStatus =
+  | "TO_CONFIRM"
+  | "CONFIRMED"
+  | "CANCELLED"
+  | "AVAILABLE";
 
 type Init = {
   id?: number | undefined;
@@ -42,13 +46,16 @@ export class AppointmentEntity {
     try {
       return {
         uid: object["uid"],
-        patient: PatientEntity.toResponse(object["patient"]),
+        patient: object["patient"]
+          ? PatientEntity.toResponse(object["patient"])
+          : undefined,
         appointment_status: object["appointment_status"],
         schedule: ScheduleEntity.toResponse(
           object["schedule"]
         ) as ScheduleEntity,
       };
     } catch (error) {
+      console.log(error);
       throw CustomError.badRequest(`parse error: ${error}`);
     }
   }

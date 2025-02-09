@@ -14,8 +14,20 @@ export class AppointmentService {
         patient: true,
         schedule: {
           include: {
-            appointments: true,
-            professional: true,
+            professional: {
+              include: {
+                user: {
+                  include: { role: true },
+                },
+                serviceProviders: true,
+                schedules: true,
+                // professional_profession: {
+                //   include: {
+                //     professions: true,
+                //   },
+                // },
+              },
+            },
           },
         },
       },

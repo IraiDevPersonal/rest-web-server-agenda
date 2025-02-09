@@ -3,6 +3,7 @@ import { ProfessionEntity } from "../../../profession/domain/entities/profession
 import { ServiceProviderEntity } from "../../../serviceProvider/domain/entities/serviceProvider_entity";
 import { UserEntity } from "../../../users/domain/entities/user_entity";
 import { CustomError } from "../../../core/domain/custom.error";
+import { ScheduleEntity } from "../../../schedule/domain/entities/schedule_entity";
 
 const scheme = z.object({
   id: z.number().optional(),
@@ -17,6 +18,7 @@ type Init = {
   user: UserEntity | undefined;
   serviceProvider: ServiceProviderEntity | undefined;
   professions: ProfessionEntity[] | undefined;
+  schedules: ScheduleEntity[] | undefined;
 };
 
 export class ProfessionalEntity {
@@ -26,6 +28,7 @@ export class ProfessionalEntity {
   public user: UserEntity | undefined;
   public serviceProvider: ServiceProviderEntity | undefined;
   public professions: ProfessionEntity[] | undefined;
+  public schedules: ScheduleEntity[] | undefined;
 
   public constructor(init: Init) {
     this.id = init.id;
@@ -34,20 +37,37 @@ export class ProfessionalEntity {
     this.user = init.user;
     this.serviceProvider = init.serviceProvider;
     this.professions = init.professions;
+    this.schedules = init.schedules;
   }
 
   static fromJson(object: Record<string, any>) {
     try {
-      const { professions, serviceProvider, user } = object;
+      const { professions, serviceProvider, schedules, user } = object;
       const schema = scheme.parse(object);
       return new ProfessionalEntity({
         ...schema,
         professions,
         serviceProvider,
+        schedules,
         user,
       });
     } catch (error) {
       throw CustomError.badRequest(`${error}`);
     }
+  }
+
+  static toResponse(object: Record<string, any>) {
+    return {
+      userId: object?.["userId"],
+      serviceProviderId: object?.["serviceProviderId"],
+      user: object?.["user"]
+        ? UserEntity.toResponse(object?.["user"])
+        : undefined,
+      schedules: object?.["schedules"]?.map(ScheduleEntity.toResponse) ?? [],
+      serviceProvider: object?.["serviceProvider"]
+        ? ServiceProviderEntity.toResponse(object?.["serviceProvider"])
+        : undefined,
+      professions: object?.["professions"],
+    };
   }
 }

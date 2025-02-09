@@ -329,7 +329,7 @@ export const schedules: ScheduleEntity[] = [
   ScheduleEntity.scheduleDTO(
     {
       date: new Date(),
-      professional_id: 3,
+      professional_id: 2,
       week_day: "LUNES",
       time_from: "10:00",
       time_to: "10:45",
@@ -340,7 +340,7 @@ export const schedules: ScheduleEntity[] = [
   ScheduleEntity.scheduleDTO(
     {
       date: new Date(),
-      professional_id: 3,
+      professional_id: 2,
       week_day: "LUNES",
       time_from: "12:00",
       time_to: "12:45",
@@ -351,7 +351,7 @@ export const schedules: ScheduleEntity[] = [
   ScheduleEntity.scheduleDTO(
     {
       date: new Date(),
-      professional_id: 3,
+      professional_id: 2,
       week_day: "LUNES",
       time_from: "14:00",
       time_to: "14:45",
@@ -362,7 +362,7 @@ export const schedules: ScheduleEntity[] = [
   ScheduleEntity.scheduleDTO(
     {
       date: new Date(),
-      professional_id: 3,
+      professional_id: 2,
       week_day: "MIERCOLES",
       time_from: "09:00",
       time_to: "09:15",
@@ -373,7 +373,7 @@ export const schedules: ScheduleEntity[] = [
   ScheduleEntity.scheduleDTO(
     {
       date: new Date(),
-      professional_id: 3,
+      professional_id: 2,
       week_day: "MIERCOLES",
       time_from: "09:30",
       time_to: "09:45",
@@ -384,7 +384,7 @@ export const schedules: ScheduleEntity[] = [
   ScheduleEntity.scheduleDTO(
     {
       date: new Date(),
-      professional_id: 3,
+      professional_id: 2,
       week_day: "MIERCOLES",
       time_from: "12:00",
       time_to: "12:15",
@@ -395,7 +395,7 @@ export const schedules: ScheduleEntity[] = [
   ScheduleEntity.scheduleDTO(
     {
       date: new Date(),
-      professional_id: 3,
+      professional_id: 2,
       week_day: "VIERNES",
       time_from: "08:00",
       time_to: "08:45",
@@ -406,7 +406,7 @@ export const schedules: ScheduleEntity[] = [
   ScheduleEntity.scheduleDTO(
     {
       date: new Date(),
-      professional_id: 3,
+      professional_id: 2,
       week_day: "VIERNES",
       time_from: "15:00",
       time_to: "15:45",
@@ -417,7 +417,7 @@ export const schedules: ScheduleEntity[] = [
   ScheduleEntity.scheduleDTO(
     {
       date: new Date(),
-      professional_id: 3,
+      professional_id: 2,
       week_day: "VIERNES",
       time_from: "16:00",
       time_to: "16:45",

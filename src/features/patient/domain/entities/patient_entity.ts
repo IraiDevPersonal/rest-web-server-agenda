@@ -33,12 +33,12 @@ export class PatientEntity {
 
   static toResponse(object: Record<string, any>): PatientEntity {
     return {
-      uid: object["uid"],
-      rut: object["rut"],
-      names: object["names"],
-      last_names: object["last_names"],
-      email: object["email"],
-      phone: object["phone"],
+      uid: object?.["uid"] ?? "",
+      rut: object?.["rut"] ?? "",
+      names: object?.["names"] ?? "",
+      last_names: object?.["last_names"] ?? "",
+      email: object?.["email"] ?? "",
+      phone: object?.["phone"] ?? "",
     };
   }
 

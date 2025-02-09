@@ -1,4 +1,5 @@
 import { CustomError } from "../../../core/domain/custom.error";
+import { ProfessionalEntity } from "../../../professional/domain/entities/professional_entity";
 import { UserEntity } from "../../../users/domain/entities/user_entity";
 import { ScheduleSchema } from "../../presentation/schemas/schedule_schema";
 
@@ -20,7 +21,7 @@ type Init = {
   time_from: string;
   time_to: string;
   is_enabled: boolean;
-  professional: UserEntity | undefined;
+  professional: ProfessionalEntity | undefined;
 };
 
 export class ScheduleEntity {
@@ -32,7 +33,7 @@ export class ScheduleEntity {
   public time_from: string;
   public time_to: string;
   public is_enabled: boolean;
-  public professional: UserEntity | undefined;
+  public professional: ProfessionalEntity | undefined;
 
   private constructor(init: Init) {
     this.id = init.id;
@@ -55,7 +56,9 @@ export class ScheduleEntity {
       time_from: object["time_from"],
       time_to: object["time_to"],
       is_enabled: object["is_enabled"],
-      professional: UserEntity.toResponse(object["professional"]) as UserEntity,
+      professional: ProfessionalEntity.toResponse(
+        object["professional"]
+      ) as ProfessionalEntity,
     };
   }
   static fromJson(object: Record<string, any>) {

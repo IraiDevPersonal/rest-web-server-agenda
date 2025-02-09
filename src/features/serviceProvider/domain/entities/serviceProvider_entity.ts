@@ -37,4 +37,16 @@ export class ServiceProviderEntity {
       throw CustomError.badRequest(`${error}`);
     }
   }
+
+  static toResponse(object: Record<string, any>) {
+    return {
+      id: object?.["id"],
+      name: object?.["name"] ?? "",
+      rut: object?.["rut"] ?? "",
+      serviceProviderCode:
+        object?.["serviceProviderCode"]?.map(
+          ServiceProviderCodesEntity.toResponse
+        ) ?? [],
+    };
+  }
 }

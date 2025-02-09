@@ -36,4 +36,13 @@ export class ServiceProviderCodesEntity {
       throw CustomError.badRequest(`${error}`);
     }
   }
+
+  static toResponse(object: Record<string, any>) {
+    return {
+      id: object?.["id"],
+      code: object["code"],
+      title: object["title"],
+      serviceProviderId: object["serviceProviderId"],
+    };
+  }
 }
