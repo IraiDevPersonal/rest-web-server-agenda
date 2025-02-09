@@ -88,3 +88,8 @@ falta el tipo AVAILABLES que ese debe mostrar los schedules ** no se si mantener
 ## cambios 25-01-2025 V1.0.1 por Sebastian Acuña
 
 - se cambio estructura de bd, se agregan tablas como professional, profession, y se ajustan las demas tablas para congeniar con las creadas
+
+## cambios 09-02-2025 V1.1.1 por SMAP
+
+- se modifica seed para llenar tablas nuevas
+- se modifica EP de agenda para listar separadas por estado.
