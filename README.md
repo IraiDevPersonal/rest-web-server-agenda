@@ -93,3 +93,30 @@ falta el tipo AVAILABLES que ese debe mostrar los schedules ** no se si mantener
 
 - se modifica seed para llenar tablas nuevas
 - se modifica EP de agenda para listar separadas por estado.
+
+## cambios 10-02-2025 V1.2.1 por SMAP
+
+- se modifica respuesta de agenda segun conversado
+- correcciones menores
+- ep agenda GET `http://localhost:3000/api/agenda/hours`
+
+```
+export interface Data {
+    availables: Appointments[];
+    cancelled:  Appointments[];
+    confirmed:  Appointments[];
+    toConfirm:  Appointments[];
+}
+
+export interface Appointments {
+    uid:               string;
+    date:              string;
+    time_from:         string;
+    time_to:           string;
+    patient_name:      string;
+    patient_rut:       string;
+    patient_phone:     string;
+    professional_name: string;
+    professions:       string[];
+}
+```
