@@ -5,6 +5,7 @@ import {
 } from "../../../appointment/domain/entities/appointment_entity";
 import { AppointmentService } from "../../../appointment/presentation/services/appointment_service";
 import { CustomError } from "../../../core/domain/custom.error";
+import { getAgendaAdapter } from "../adapters/agenda_adapter";
 
 export class AgendaController {
   public constructor(private readonly appointmentService: AppointmentService) {}
@@ -21,18 +22,18 @@ export class AgendaController {
 
       const aps = appointments.map(AppointmentEntity.toResponse);
       // console.log(appointments);
-      const availables = aps.filter(
-        (el) => el.appointment_status === "AVAILABLE"
-      );
-      const cancelled = aps.filter(
-        (el) => el.appointment_status === "CANCELLED"
-      );
-      const confirmed = aps.filter(
-        (el) => el.appointment_status === "CONFIRMED"
-      );
-      const toConfirm = aps.filter(
-        (el) => el.appointment_status === "TO_CONFIRM"
-      );
+      const availables = aps
+        .filter((el) => el.appointment_status === "AVAILABLE")
+        .map(getAgendaAdapter);
+      const cancelled = aps
+        .filter((el) => el.appointment_status === "CANCELLED")
+        .map(getAgendaAdapter);
+      const confirmed = aps
+        .filter((el) => el.appointment_status === "CONFIRMED")
+        .map(getAgendaAdapter);
+      const toConfirm = aps
+        .filter((el) => el.appointment_status === "TO_CONFIRM")
+        .map(getAgendaAdapter);
 
       return res
         .status(200)

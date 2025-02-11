@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { AgendaController } from "./controllers/ageda_controller";
+import { AgendaController } from "./controllers/agenda_controller";
 import { AppointmentService } from "../../appointment/presentation/services/appointment_service";
 
 export class AgendaRoutes {
