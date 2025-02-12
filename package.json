@@ -21,6 +21,8 @@
   },
   "dependencies": {
     "@prisma/client": "^6.1.0",
+    "@types/cors": "^2.8.17",
+    "cors": "^2.8.5",
     "dayjs": "^1.11.13",
     "dotenv": "^16.3.1",
     "env-var": "^7.4.1",

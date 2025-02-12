@@ -37,7 +37,7 @@ export class AgendaController {
 
       return res
         .status(200)
-        .json({ data: { availables, cancelled, confirmed, toConfirm } });
+        .json({ availables, cancelled, confirmed, toConfirm });
     } catch (error) {
       console.log("catch ", error);
       const e = CustomError.internalServer(`${error}`);
