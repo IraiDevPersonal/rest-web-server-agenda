@@ -120,3 +120,10 @@ export interface Appointments {
     professions:       string[];
 }
 ```
+
+## cambios 13-02-2025 V1.3.1 por SMAP
+
+cambios en estructura, se separo el backoffice (mantenedores) de los casos de uso ya que estaba muy desordenado y las clases estaban corruptas con muchos datos condicionales.
+
+se creará una entidad por caso de uso para la agenda, getMyDay es para pantalla mi dia, y asi.
+en bd solo deje pacienteId como posible nulo en los appointments ya que al estar disponible no tendra pacientes.

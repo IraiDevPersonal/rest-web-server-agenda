@@ -7,19 +7,14 @@ import { GetMyDay } from "../../domain/entities/get_my_day";
 export class AgendaController {
   public constructor(private readonly agendaService: AgendaService) {}
 
-  public getAgenda = async (req: Request, res: Response) => {
+  public getMyDay = async (req: Request, res: Response) => {
     try {
       const { type } = req.query;
-
-      console.log(type);
-
       const appointments = await this.agendaService.getMyDay({
         type: type as AppointmentStatus,
       });
 
       const aps = appointments.map(GetMyDay.fromJson);
-      console.log({ aps });
-
       const availables = aps.filter(
         (el) => el.appointment_status === "AVAILABLE"
       );

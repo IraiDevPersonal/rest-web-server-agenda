@@ -8,7 +8,7 @@ export class AgendaRoutes {
 
     const agendaService = new AgendaService();
     const controller = new AgendaController(agendaService);
-    router.get("/", [], controller.getAgenda);
+    router.get("/", [], controller.getMyDay);
 
     return router;
   }
