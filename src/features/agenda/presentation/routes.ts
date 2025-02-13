@@ -1,13 +1,13 @@
 import { Router } from "express";
 import { AgendaController } from "./controllers/agenda_controller";
-import { AppointmentService } from "../../appointment/presentation/services/appointment_service";
+import { AgendaService } from "./service/agenda_service";
 
 export class AgendaRoutes {
   static get routes(): Router {
     const router = Router();
 
-    const appointmentService = new AppointmentService();
-    const controller = new AgendaController(appointmentService);
+    const agendaService = new AgendaService();
+    const controller = new AgendaController(agendaService);
     router.get("/", [], controller.getAgenda);
 
     return router;

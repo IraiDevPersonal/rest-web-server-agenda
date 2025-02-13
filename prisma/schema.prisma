@@ -112,11 +112,11 @@ model patients {
 model appointment {
   id                 BigInt            @id @default(autoincrement())
   uid                String            @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  patient_id         BigInt
+  patient_id         BigInt?
   schedule_id        BigInt            @unique
   appointment_status AppointmentStatus
   schedule           schedules         @relation(fields: [schedule_id], references: [id])
-  patient            patients          @relation(fields: [patient_id], references: [id])
+  patient            patients?         @relation(fields: [patient_id], references: [id])
 }
 
 enum AppointmentStatus {

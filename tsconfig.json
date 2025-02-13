@@ -28,8 +28,18 @@
     "module": "commonjs",                                /* Specify what module code is generated. */
     "rootDir": "src",                                    /* Specify the root folder within your source files. */
     // "moduleResolution": "node10",                     /* Specify how TypeScript looks up a file from a given module specifier. */
-    // "baseUrl": "./",                                  /* Specify the base directory to resolve non-relative module names. */
-    // "paths": {},                                      /* Specify a set of entries that re-map imports to additional lookup locations. */
+    "baseUrl": ".",                                  /* Specify the base directory to resolve non-relative module names. */
+    "paths": {
+      "@appointments/*": ["src/features/backoffice/appointment/*"],
+      "@patients/*": ["src/features/backoffice/patient/*"],
+      "@professions/*": ["src/features/backoffice/profession/*"],
+      "@professionals/*": ["src/features/backoffice/professional/*"],
+      "@roles/*": ["src/features/backoffice/roles/*"],
+      "@schedules/*": ["src/features/backoffice/schedule/*"],
+      "@serviceProviders/*": ["src/features/backoffice/serviceProvider/*"],
+      "@users/*": ["src/features/backoffice/users/*"],
+      "@core/*": ["src/features/core/*"],
+    },                                      /* Specify a set of entries that re-map imports to additional lookup locations. */
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
     // "typeRoots": [],                                  /* Specify multiple folders that act like './node_modules/@types'. */
     // "types": [],                                      /* Specify type package names to be included without being referenced in a source file. */

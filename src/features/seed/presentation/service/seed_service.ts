@@ -9,7 +9,7 @@ import {
   schedules,
   serviceProvider,
   users,
-} from "../../../users/data/seed";
+} from "@users/data/seed";
 import { SeedServiceModel } from "../../domain/model/seed_service_model";
 
 export class SeedService implements SeedServiceModel {
