@@ -6,26 +6,26 @@ type Init = {
   date: string;
   time_from: string;
   time_to: string;
-  patient_name: string | undefined;
-  patient_rut: string | undefined;
-  patient_phone: string | undefined;
+  patient_name: string | null;
+  patient_rut: string | null;
+  patient_phone: string | null;
   professional_name: string;
   appointment_status: AppointmentStatus;
   professions: string[];
 };
 export class GetMyDay {
-  public uid: string;
-  public date: string;
-  public time_from: string;
-  public time_to: string;
-  public patient_name: string | undefined;
-  public patient_rut: string | undefined;
-  public patient_phone: string | undefined;
-  public professional_name: string;
-  public appointment_status: AppointmentStatus;
-  public professions: string[];
+  public uid: Init["uid"];
+  public date: Init["date"];
+  public time_from: Init["time_from"];
+  public time_to: Init["time_to"];
+  public patient_name: Init["patient_name"];
+  public patient_rut: Init["patient_rut"];
+  public patient_phone: Init["patient_phone"];
+  public professional_name: Init["professional_name"];
+  public appointment_status: Init["appointment_status"];
+  public professions: Init["professions"];
 
-  public constructor(init: Init) {
+  private constructor(init: Init) {
     this.uid = init.uid;
     this.date = init.date;
     this.time_from = init.time_from;
@@ -38,29 +38,29 @@ export class GetMyDay {
     this.appointment_status = init.appointment_status;
   }
 
-  static fromJson(object: Record<string, any>): GetMyDay {
-    return new GetMyDay(GetMyDay.adapter(object) as Init);
+  static fromObject(object: Record<string, any>) {
+    const appointment = GetMyDay.adapter(object);
+    return new GetMyDay(appointment);
   }
 
-  static adapter(object: Record<string, any>): Record<string, any> {
-    // console.log(object);
+  static adapter(appointment: Record<string, any>): Init {
+    const schedule = appointment["schedule"];
+    const patient = appointment?.["patient"] ?? null;
+    const professional = appointment["schedule"]["professional"];
+
     return {
-      uid: object["uid"],
-      appointment_status: object["appointment_status"],
-      date: DateFormatter.formatDate(object["schedule"]["date"], "ymd"),
-      time_from: object["schedule"]["time_from"],
-      time_to: object["schedule"]["time_to"],
-      patient_name: object?.["patient"]
-        ? `${object["patient"]["names"]} ${object["patient"]["last_names"]} `
+      uid: appointment["uid"],
+      appointment_status: appointment["appointment_status"],
+      date: DateFormatter.formatDate(schedule["date"], "ymd"),
+      time_from: schedule["time_from"],
+      time_to: schedule["time_to"],
+      patient_name: patient
+        ? `${patient["names"]} ${patient["last_names"]}`
         : null,
-      patient_rut: object?.["patient"]?.["rut"] ?? null,
-      patient_phone: object?.["patient"]?.["phone"] ?? null,
-      professional_name:
-        object["schedule"]["professional"]["user"]["professional_name"],
-      professions:
-        object?.["schedule"]?.["professional"]["professions"]?.map(
-          (p: any) => p.name
-        ) ?? [],
+      patient_rut: patient?.["rut"] ?? null,
+      patient_phone: patient?.["phone"] ?? null,
+      professional_name: `${professional["user"]["names"]} ${professional["user"]["last_names"]}`,
+      professions: professional["professions"]?.map((p: any) => p.name) ?? [],
     };
   }
 }

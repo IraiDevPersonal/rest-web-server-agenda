@@ -17,7 +17,7 @@ export class AgendaController {
         patient_rut: patient_rut as string,
       });
 
-      const aps = appointments.map(GetMyDay.fromJson);
+      const aps = appointments.map(GetMyDay.fromObject);
       const availables = aps.filter(
         (el) => el.appointment_status === "AVAILABLE"
       );
