@@ -127,3 +127,5 @@ cambios en estructura, se separo el backoffice (mantenedores) de los casos de us
 
 se creará una entidad por caso de uso para la agenda, getMyDay es para pantalla mi dia, y asi.
 en bd solo deje pacienteId como posible nulo en los appointments ya que al estar disponible no tendra pacientes.
+
+extra: se agrega filtro por fecha y por rut de paciente (por aproximacion no exacto)
