@@ -23,6 +23,7 @@ export class AgendaService {
                 user: {
                   select: {
                     names: true,
+                    last_names: true,
                   },
                 },
                 professional_profession: {

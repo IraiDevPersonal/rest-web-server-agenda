@@ -20,6 +20,13 @@ export class ProfessionEntity {
     this.name = init.name;
   }
 
+  static adapter(object: Record<string, any>) {
+    return {
+      id: object["id"],
+      name: object["name"],
+    };
+  }
+
   static fromJson(object: Record<string, any>) {
     try {
       const schema = scheme.parse(object);
@@ -27,5 +34,20 @@ export class ProfessionEntity {
     } catch (error) {
       throw CustomError.badRequest(`${error}`);
     }
+  }
+
+  static insertDTO(object: Record<string, any>) {
+    const model = ProfessionEntity.fromJson(object);
+    delete model.id;
+    return model;
+  }
+
+  static updateDTO(object: Record<string, any>) {
+    const model = ProfessionEntity.fromJson(object);
+
+    if (!model.id) {
+      throw CustomError.badRequest("Id es requerida para actualizar");
+    }
+    return { data: model, id: model.id };
   }
 }

@@ -46,7 +46,7 @@ export class GetMyDay {
   static adapter(appointment: Record<string, any>): Init {
     const schedule = appointment["schedule"];
     const patient = appointment?.["patient"] ?? null;
-    const professional = appointment["schedule"]["professional"];
+    const professional = schedule["professional"];
 
     return {
       uid: appointment["uid"],

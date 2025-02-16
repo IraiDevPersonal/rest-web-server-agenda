@@ -4,6 +4,7 @@ node_modules/
 dist/
 build/
 coverage/
+agenda/
 
 .env
 package-lock.json

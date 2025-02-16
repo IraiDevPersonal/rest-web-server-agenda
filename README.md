@@ -129,3 +129,11 @@ se creará una entidad por caso de uso para la agenda, getMyDay es para pantalla
 en bd solo deje pacienteId como posible nulo en los appointments ya que al estar disponible no tendra pacientes.
 
 extra: se agrega filtro por fecha y por rut de paciente (por aproximacion no exacto)
+
+## cambios 16-02-2025 v1.4.1 por SMAP
+
+- se corrige nombre de profesional en GetMyDay
+- se agrega EP para profesiones
+  GET http://localhost:3000/api/profession/
+
+respuesta es {id:number, name:string} no se si adaptarlo a label, value ya que eso es para el FE solamente.
