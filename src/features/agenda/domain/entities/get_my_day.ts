@@ -60,7 +60,10 @@ export class GetMyDay {
       patient_rut: patient?.["rut"] ?? null,
       patient_phone: patient?.["phone"] ?? null,
       professional_name: `${professional["user"]["names"]} ${professional["user"]["last_names"]}`,
-      professions: professional["professions"]?.map((p: any) => p.name) ?? [],
+      professions:
+        professional?.["professional_profession"]?.map(
+          (p: any) => p.professions.name
+        ) ?? [],
     };
   }
 }

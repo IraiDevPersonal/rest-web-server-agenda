@@ -4,4 +4,6 @@ export interface GetMyDayFilter {
   type?: AppointmentStatus;
   date?: Date;
   patient_rut?: string;
+  professional_id?: number;
+  profession_id?: number;
 }

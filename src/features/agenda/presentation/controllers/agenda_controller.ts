@@ -4,8 +4,9 @@ import { CustomError } from "@core/domain/custom.error";
 import { AgendaService } from "../service/agenda_service";
 import { GetMyDay } from "../../domain/entities/get_my_day";
 import { DateFormatter } from "@core/domain/date_formatter";
+import { Controllers } from "@core/domain/controllers";
 
-export class AgendaController {
+export class AgendaController implements Controllers {
   public constructor(private readonly agendaService: AgendaService) {}
 
   public getMyDay = async (req: Request, res: Response) => {
@@ -55,14 +56,16 @@ export class AgendaController {
     }
   };
 
-  private getFilters(req: Request) {
-    const { date, patient_rut } = req.query;
+  public getFilters(req: Request) {
+    const { date, patient_rut, professional_id, profession_id } = req.query;
     const type = req.params.type ?? req.query.type;
 
     return {
       date: date ? DateFormatter.stringToDate(date as string) : undefined,
       patient_rut: patient_rut as string,
       type: type as AppointmentStatus,
+      profession_id: profession_id ? Number(profession_id) : undefined,
+      professional_id: professional_id ? Number(professional_id) : undefined,
     };
   }
 }

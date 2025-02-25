@@ -8,7 +8,13 @@ export class AgendaService {
     this.db = new PrismaClient();
   }
 
-  async getMyDay({ type, date, patient_rut }: GetMyDayFilter) {
+  async getMyDay({
+    type,
+    date,
+    patient_rut,
+    professional_id,
+    profession_id,
+  }: GetMyDayFilter) {
     return await this.db.appointment.findMany({
       select: {
         uid: true,
@@ -48,7 +54,16 @@ export class AgendaService {
         appointment_status: type,
         schedule: {
           date: date,
+          professional_id: professional_id,
+          professional: {
+            professional_profession: {
+              some: {
+                profession_id: profession_id,
+              },
+            },
+          },
         },
+
         patient: {
           rut: { contains: patient_rut },
         },
