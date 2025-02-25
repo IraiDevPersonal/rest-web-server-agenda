@@ -137,3 +137,14 @@ extra: se agrega filtro por fecha y por rut de paciente (por aproximacion no exa
   GET http://localhost:3000/api/profession/
 
 respuesta es {id:number, name:string} no se si adaptarlo a label, value ya que eso es para el FE solamente.
+
+## cambios 24-02-2025 v1.5.1 por SMAP
+
+- se modifica filtros de agenda, se agrega `profession_id` y `professional_id`
+- se agrega ep de professionales
+
+```
+http:localhost:3000/api/professional/to-filter
+```
+
+metodo: GET, filtro opcional : profession_id
