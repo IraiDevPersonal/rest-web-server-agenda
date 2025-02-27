@@ -12,7 +12,10 @@ export class ProfessionService {
     return await this.db.professions.findMany({
       where: {
         id: filters?.id,
-        name: filters?.name,
+        name: {
+          contains: filters?.name,
+          mode: "insensitive",
+        },
       },
     });
   }

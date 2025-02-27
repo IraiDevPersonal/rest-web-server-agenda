@@ -1,6 +1,6 @@
 import { FilterInit } from "@core/domain/filters";
 
-export class GetProfessionalFilter {
+export class GetProfessionFilter {
   public value: string;
   public label: string;
 
@@ -10,15 +10,15 @@ export class GetProfessionalFilter {
   }
 
   static fromObject(object: Record<string, any>) {
-    const professional = GetProfessionalFilter.adapter(object);
+    const entity = GetProfessionFilter.adapter(object);
 
-    return new GetProfessionalFilter(professional);
+    return new GetProfessionFilter(entity);
   }
 
   static adapter(object: Record<string, any>) {
     return {
       value: object["id"],
-      label: `${object["user"]["names"]} ${object["user"]["last_names"]}`,
+      label: object["name"],
     };
   }
 }
