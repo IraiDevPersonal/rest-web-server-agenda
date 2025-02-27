@@ -148,3 +148,8 @@ http:localhost:3000/api/professional/to-filter
 ```
 
 metodo: GET, filtro opcional : profession_id
+
+## cambios 26-02-2025 v1.6.2 por SMAP
+
+- se corrige error en apellido de profesional en to-filter
+- se agrega ep to-filter para profession, aceptando filtro por id y name
