@@ -1,0 +1,38 @@
+import { Controllers } from "@core/domain/controllers";
+import { Request, Response } from "express";
+import { CalendarService } from "../service/calendar_service";
+import { CustomError } from "@core/domain/custom.error";
+import { GetCalendar } from "../../domain/entities/get_calendar";
+import { DateFormatter } from "@core/domain/date_formatter";
+import { AppointmentStatus } from "@prisma/client";
+
+export class CalendarController implements Controllers {
+  public constructor(private readonly service: CalendarService) {}
+
+  public getCalendar = async (req: Request, res: Response) => {
+    try {
+      const filters = this.getFilters(req);
+
+      const rawCalendars = await this.service.getCalendar(filters);
+      const calendars = rawCalendars.map(GetCalendar.fromObject);
+      return res.status(200).json(calendars);
+    } catch (error) {
+      console.log("catch ", error);
+      const e = CustomError.internalServer(`${error}`);
+      return CustomError.handleError(e, res);
+    }
+  };
+
+  getFilters(req: Request): Record<string, any> {
+    const { date, patient_rut, professional_id, profession_id } = req.query;
+    const type = req.params.type ?? req.query.type;
+
+    return {
+      date: date ? DateFormatter.stringToDate(date as string) : undefined,
+      patient_rut: patient_rut as string,
+      type: type as AppointmentStatus,
+      profession_id: profession_id ? Number(profession_id) : undefined,
+      professional_id: professional_id ? Number(professional_id) : undefined,
+    };
+  }
+}
