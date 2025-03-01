@@ -153,3 +153,11 @@ metodo: GET, filtro opcional : profession_id
 
 - se corrige error en apellido de profesional en to-filter
 - se agrega ep to-filter para profession, aceptando filtro por id y name
+
+## cambios 01-03-2025 v1.7.2 por SMAP
+
+- se agrega EP calendar/ , mismos filtros que get-my-day
+
+```
+GET http:localhost:3000/api/calendar/
+```
