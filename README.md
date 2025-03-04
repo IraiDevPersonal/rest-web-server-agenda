@@ -161,3 +161,8 @@ metodo: GET, filtro opcional : profession_id
 ```
 GET http:localhost:3000/api/calendar/
 ```
+
+## cambios 03-03-2025 v1.8.2 por SMAP
+
+- se agrega propiedad year_month a filtros de / de calendar.
+  valor esperado es formato YYYY-MM, ej: 2025-03
