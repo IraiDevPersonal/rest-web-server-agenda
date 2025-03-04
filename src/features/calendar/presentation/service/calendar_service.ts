@@ -9,7 +9,8 @@ export class CalendarService {
   }
 
   async getCalendar({
-    date,
+    date_from,
+    date_to,
     patient_rut,
     profession_id,
     professional_id,
@@ -19,6 +20,7 @@ export class CalendarService {
       select: {
         time_from: true,
         time_to: true,
+        date: true,
         professional: {
           select: {
             user: {
@@ -42,9 +44,11 @@ export class CalendarService {
           },
         },
       },
-
       where: {
-        date: date,
+        date: {
+          gte: date_from,
+          lte: date_to,
+        },
         professional_id: professional_id,
         professional: {
           professional_profession: {

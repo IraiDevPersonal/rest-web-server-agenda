@@ -12,7 +12,6 @@ export class CalendarController implements Controllers {
   public getCalendar = async (req: Request, res: Response) => {
     try {
       const filters = this.getFilters(req);
-
       const rawCalendars = await this.service.getCalendar(filters);
       const calendars = rawCalendars.map(GetCalendar.fromObject);
       return res.status(200).json(calendars);
@@ -24,15 +23,25 @@ export class CalendarController implements Controllers {
   };
 
   getFilters(req: Request): Record<string, any> {
-    const { date, patient_rut, professional_id, profession_id } = req.query;
+    const { patient_rut, professional_id, profession_id, year_month } =
+      req.query;
     const type = req.params.type ?? req.query.type;
 
+    const date_from = year_month
+      ? DateFormatter.stringToDate(`${year_month}-01`)
+      : undefined;
+
+    const date_to = year_month
+      ? DateFormatter.getLastDayOfMonth(date_from)
+      : undefined;
+
     return {
-      date: date ? DateFormatter.stringToDate(date as string) : undefined,
       patient_rut: patient_rut as string,
       type: type as AppointmentStatus,
       profession_id: profession_id ? Number(profession_id) : undefined,
       professional_id: professional_id ? Number(professional_id) : undefined,
+      date_from: date_from,
+      date_to: date_to,
     };
   }
 }
