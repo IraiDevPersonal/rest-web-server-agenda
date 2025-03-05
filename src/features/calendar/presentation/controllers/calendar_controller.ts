@@ -14,7 +14,26 @@ export class CalendarController implements Controllers {
       const filters = this.getFilters(req);
       const rawCalendars = await this.service.getCalendar(filters);
       const calendars = rawCalendars.map(GetCalendar.fromObject);
-      return res.status(200).json(calendars);
+
+      const calendarResponse: Record<string, any>[] = [];
+
+      //agrupa calendars por fecha
+      for (const calendar of calendars) {
+        const index = calendarResponse.findIndex(
+          (c) => c.date === calendar.date
+        );
+        if (index === -1) {
+          calendarResponse.push({
+            date: calendar.date,
+            schedules: [...calendar.appointments],
+          });
+        }
+        if (index !== -1) {
+          calendarResponse[index].schedules.push(...calendar.appointments);
+        }
+      }
+
+      return res.status(200).json(calendarResponse);
     } catch (error) {
       console.log("catch ", error);
       const e = CustomError.internalServer(`${error}`);

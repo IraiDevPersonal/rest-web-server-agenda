@@ -18,6 +18,7 @@ export class CalendarService {
   }: GetCalendarFilter) {
     return await this.db.schedules.findMany({
       select: {
+        uid: true,
         time_from: true,
         time_to: true,
         date: true,

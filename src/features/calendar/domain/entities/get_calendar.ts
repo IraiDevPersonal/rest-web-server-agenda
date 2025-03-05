@@ -1,12 +1,13 @@
 import { DateFormatter } from "@core/domain/date_formatter";
 
 type Init = {
-  professional_name: string;
+  schedule_uid: string;
   date: string;
   appointments: AppointmentCalendar[];
 };
 
 type AppointmentCalendar = {
+  professional_name: string;
   uid: string;
   pattient_name: string;
   patient_rut: string;
@@ -16,18 +17,19 @@ type AppointmentCalendar = {
 };
 
 export class GetCalendar {
-  public professional_name: string;
+  public schedule_uid: string;
   public date: string;
   public appointments: AppointmentCalendar[];
 
   private constructor(init: Init) {
-    this.professional_name = init.professional_name;
     this.date = init.date;
     this.appointments = init.appointments;
+    this.schedule_uid = init.schedule_uid;
   }
 
   static fromObject(object: Record<string, any>) {
     const calendar = GetCalendar.adapter(object);
+
     return new GetCalendar(calendar);
   }
 
@@ -35,12 +37,14 @@ export class GetCalendar {
     const appointments = object?.["appointments"] ?? [];
     const professional = object?.["professional"];
 
+    // console.log(object);
     return {
-      professional_name: professional
-        ? `${professional["user"]["names"]} ${professional["user"]["last_names"]}`
-        : "",
+      schedule_uid: object["uid"],
       date: DateFormatter.formatDate(object["date"], "ymd"),
       appointments: appointments.map((appointment: any) => ({
+        professional_name: professional
+          ? `${professional["user"]["names"]} ${professional["user"]["last_names"]}`
+          : "",
         uid: appointment["uid"],
         pattient_name: appointment["patient"]
           ? `${appointment["patient"]["names"]} ${appointment["patient"]["last_names"]}`

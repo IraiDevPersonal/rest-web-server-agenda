@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 import { ProfessionalFilters } from "@professionals/domain/entities/professional_filters";
-import { ProfessionFilters } from "@professions/domain/entities/profession_filters";
 
 export class ProfessionalService {
   private readonly db: PrismaClient;
@@ -36,6 +35,11 @@ export class ProfessionalService {
           select: {
             names: true,
             last_names: true,
+          },
+        },
+        professional_profession: {
+          select: {
+            profession_id: true,
           },
         },
       },
