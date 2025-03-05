@@ -28,7 +28,7 @@ export class GetProfessionalFilter {
       label: `${object["user"]["names"]} ${object["user"]["last_names"]}`,
       professions:
         object["professional_profession"]?.map(
-          (profession: any) => `${profession["profession_id"]}`
+          (profession: any) => profession["profession_id"]
         ) ?? [],
     };
   }
