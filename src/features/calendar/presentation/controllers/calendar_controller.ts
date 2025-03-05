@@ -25,11 +25,11 @@ export class CalendarController implements Controllers {
         if (index === -1) {
           calendarResponse.push({
             date: calendar.date,
-            schedules: [...calendar.appointments],
+            appointments: [...calendar.appointments],
           });
         }
         if (index !== -1) {
-          calendarResponse[index].schedules.push(...calendar.appointments);
+          calendarResponse[index].appointments.push(...calendar.appointments);
         }
       }
 
