@@ -12,7 +12,10 @@ export class CalendarController implements Controllers {
   public getCalendar = async (req: Request, res: Response) => {
     try {
       const filters = this.getFilters(req);
-      const rawCalendars = await this.service.getCalendar(filters);
+      const rawCalendars = await this.service.getCalendar({
+        ...filters,
+        type: "CONFIRMED",
+      });
       const calendars = rawCalendars.map(GetCalendar.fromObject);
 
       const calendarResponse: Record<string, any>[] = [];
@@ -22,9 +25,17 @@ export class CalendarController implements Controllers {
         const index = calendarResponse.findIndex(
           (c) => c.date === calendar.date
         );
+
+        const availableAppointmetns =
+          await this.service.getCountAppointmentsByDateAndStatus({
+            type: "AVAILABLE",
+            date_from: DateFormatter.stringToDate(calendar.date),
+          });
+
         if (index === -1) {
           calendarResponse.push({
             date: calendar.date,
+            available_appointments_count: availableAppointmetns,
             schedules: [...calendar.appointments],
           });
         }

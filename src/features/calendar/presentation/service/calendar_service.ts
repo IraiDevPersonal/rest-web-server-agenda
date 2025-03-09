@@ -8,6 +8,20 @@ export class CalendarService {
     this.db = new PrismaClient();
   }
 
+  async getCountAppointmentsByDateAndStatus({
+    date_from,
+    type,
+  }: Pick<GetCalendarFilter, "date_from" | "type">) {
+    return await this.db.appointment.count({
+      where: {
+        appointment_status: type,
+        schedule: {
+          date: date_from,
+        },
+      },
+    });
+  }
+
   async getCalendar({
     date_from,
     date_to,
