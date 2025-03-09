@@ -36,11 +36,11 @@ export class CalendarController implements Controllers {
           calendarResponse.push({
             date: calendar.date,
             available_appointments_count: availableAppointmetns,
-            schedules: [...calendar.appointments],
+            appointments: [...calendar.appointments],
           });
         }
         if (index !== -1) {
-          calendarResponse[index].schedules.push(...calendar.appointments);
+          calendarResponse[index].appointments.push(...calendar.appointments);
         }
       }
 
