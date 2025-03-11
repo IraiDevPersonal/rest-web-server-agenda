@@ -1,6 +1,6 @@
 {
-  "name": "08-user-store",
-  "version": "1.8.2",
+  "name": "agenda-backend",
+  "version": "1.9.2",
   "description": "",
   "main": "index.js",
   "scripts": {

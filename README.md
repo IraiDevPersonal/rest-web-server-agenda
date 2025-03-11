@@ -166,3 +166,13 @@ GET http:localhost:3000/api/calendar/
 
 - se agrega propiedad year_month a filtros de / de calendar.
   valor esperado es formato YYYY-MM, ej: 2025-03
+
+## cambios 10-03-2025 v1.9.2 por SMAP
+
+- se agrega EP para obtener detalle de un appointment en agenda
+
+method: GET,
+url: http:localhost:3000/api/agenda/detail/:uid
+respuesta segun hablado
+
+OJO: no se valida el uid, por ende si no envias uno en un formato valido manda error, dejo pendiente esa validacion para pararlo antes de llegar a la bd.

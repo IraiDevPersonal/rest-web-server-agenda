@@ -5,6 +5,7 @@ import { AgendaService } from "../service/agenda_service";
 import { GetMyDay } from "../../domain/entities/get_my_day";
 import { DateFormatter } from "@core/domain/date_formatter";
 import { Controllers } from "@core/domain/controllers";
+import { GetAgendaDetail } from "../../domain/entities/get_agenda_detail";
 
 export class AgendaController implements Controllers {
   public constructor(private readonly agendaService: AgendaService) {}
@@ -49,6 +50,26 @@ export class AgendaController implements Controllers {
         return res.status(200).json(adaptedAppointments);
       }
       throw CustomError.badRequest(`El tipo: ${filters.type} no es permitido`);
+    } catch (error) {
+      console.log("catch ", error);
+      const e = CustomError.internalServer(`${error}`);
+      return CustomError.handleError(e, res);
+    }
+  };
+
+  public getAppointmentDetail = async (req: Request, res: Response) => {
+    try {
+      // const filters = this.getFilters(req);
+      const uid = req.params.uid;
+      console.log(req.params.uid);
+      const appoitnment = await this.agendaService.getAppointmentDetail(uid);
+
+      if (!appoitnment) {
+        throw CustomError.badRequest(`No se encontró hora medica indicada`);
+      }
+
+      const adaptedAppointments = GetAgendaDetail.fromObject(appoitnment);
+      return res.status(200).json(adaptedAppointments);
     } catch (error) {
       console.log("catch ", error);
       const e = CustomError.internalServer(`${error}`);

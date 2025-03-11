@@ -8,6 +8,50 @@ export class AgendaService {
     this.db = new PrismaClient();
   }
 
+  async getAppointmentDetail(appointment_uid: string) {
+    console.log(appointment_uid);
+    return await this.db.appointment.findFirst({
+      select: {
+        uid: true,
+        schedule: {
+          select: {
+            professional: {
+              select: {
+                professional_profession: {
+                  select: {
+                    professions: {
+                      select: {
+                        name: true,
+                      },
+                    },
+                  },
+                },
+                user: {
+                  select: {
+                    names: true,
+                    last_names: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        patient: {
+          select: {
+            names: true,
+            last_names: true,
+            rut: true,
+            phone: true,
+            email: true,
+          },
+        },
+      },
+      where: {
+        uid: appointment_uid,
+      },
+    });
+  }
+
   async getMyDay({
     type,
     date,
