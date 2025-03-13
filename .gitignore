@@ -4,7 +4,8 @@ node_modules/
 dist/
 build/
 coverage/
-agenda/
+
+*.bru
 
 .env
 package-lock.json
