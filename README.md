@@ -176,3 +176,28 @@ url: http:localhost:3000/api/agenda/detail/:uid
 respuesta segun hablado
 
 OJO: no se valida el uid, por ende si no envias uno en un formato valido manda error, dejo pendiente esa validacion para pararlo antes de llegar a la bd.
+
+## cambios 18-03-2025 v1.10.2 por SMAP
+
+- se agrega middlweare en EP para obtener el detalle del appointment, para que devuelva error al enviar un uid invalido
+
+##cambios 18-03-2025 v1.11.2 por SMAP
+
+- se habilita ep para crear paciente
+  POST http:localhost:3000/api/patient/
+  BODY:
+
+```
+{
+  "rut":"188040667",
+  "names":"sin nombre",
+  "last_names":"sin apellidos",
+  "email":"email_valido",
+  "phone":"phone valido",
+  "address":"calle falsa 123"
+}
+```
+
+- falta validar campos de mejor manera,
+- zod devuelve mensaje en ingles
+- devolver algo al crear usuario

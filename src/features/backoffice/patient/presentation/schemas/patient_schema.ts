@@ -8,4 +8,5 @@ export const patientSchema = z.object({
   last_names: z.string(),
   email: z.string(),
   phone: z.string(),
+  address: z.string().min(10, { message: "Minimo 10 caracteres" }),
 });

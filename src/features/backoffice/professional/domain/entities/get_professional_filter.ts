@@ -22,7 +22,6 @@ export class GetProfessionalFilter {
   }
 
   static adapter(object: Record<string, any>) {
-    console.log(object);
     return {
       value: object["id"],
       label: `${object["user"]["names"]} ${object["user"]["last_names"]}`,

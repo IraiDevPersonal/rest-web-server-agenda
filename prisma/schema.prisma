@@ -106,6 +106,7 @@ model patients {
   last_names   String
   email        String        @unique
   phone        String
+  address      String        @default("")
   appointments appointment[]
 }
 

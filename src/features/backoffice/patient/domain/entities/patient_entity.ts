@@ -9,6 +9,7 @@ type Init = {
   last_names: string;
   email: string;
   phone: string;
+  address: string;
 };
 
 export class PatientEntity {
@@ -19,6 +20,7 @@ export class PatientEntity {
   public last_names: string;
   public email: string;
   public phone: string;
+  public address: string;
 
   private constructor(init: Init) {
     this.id = init.id;
@@ -28,22 +30,24 @@ export class PatientEntity {
     this.last_names = init.last_names;
     this.email = init.email;
     this.phone = init.phone;
+    this.address = init.address;
   }
 
-  static toResponse(object: Record<string, any>): PatientEntity {
+  static adapter(object: Record<string, any>): PatientEntity {
     return {
+      id: object?.["id"],
       uid: object?.["uid"] ?? "",
       rut: object?.["rut"] ?? "",
       names: object?.["names"] ?? "",
       last_names: object?.["last_names"] ?? "",
       email: object?.["email"] ?? "",
       phone: object?.["phone"] ?? "",
+      address: object?.["address"] ?? "",
     };
   }
-
   static fromJson(object: Record<string, any>) {
     try {
-      const schema = patientSchema.parse(object);
+      const schema = patientSchema.parse(PatientEntity.adapter(object));
       return new PatientEntity(schema);
     } catch (error) {
       throw CustomError.badRequest(`${error}`);
