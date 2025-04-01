@@ -2,6 +2,16 @@ import { envs } from "./config/envs";
 import { AppRoutes } from "./features/core/presentation/routes";
 import { Server } from "./features/core/presentation/server";
 
+declare global {
+  interface BigInt {
+    toJSON(): string;
+  }
+}
+
+BigInt.prototype.toJSON = function () {
+  return this.toString();
+};
+
 (async () => {
   main();
 })();

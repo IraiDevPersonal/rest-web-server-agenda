@@ -10,6 +10,7 @@ type Init = {
   email: string;
   phone: string;
   address: string;
+  is_deleted: boolean;
 };
 
 export class PatientEntity {
@@ -21,6 +22,7 @@ export class PatientEntity {
   public email: string;
   public phone: string;
   public address: string;
+  public is_deleted: boolean;
 
   private constructor(init: Init) {
     this.id = init.id;
@@ -31,6 +33,7 @@ export class PatientEntity {
     this.email = init.email;
     this.phone = init.phone;
     this.address = init.address;
+    this.is_deleted = init.is_deleted;
   }
 
   static adapter(object: Record<string, any>): PatientEntity {
@@ -43,6 +46,7 @@ export class PatientEntity {
       email: object?.["email"] ?? "",
       phone: object?.["phone"] ?? "",
       address: object?.["address"] ?? "",
+      is_deleted: object?.["is_deleted"] ?? false,
     };
   }
   static fromJson(object: Record<string, any>) {

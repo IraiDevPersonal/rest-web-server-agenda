@@ -28,9 +28,30 @@ export class PatientController implements Controllers {
         email: patient.email,
         phone: patient.phone,
         address: patient.address,
+        is_deleted: false,
       });
 
       return res.status(201).json(PatientEntity.fromJson(createdPatient));
+    } catch (error) {
+      console.log("catch ", error);
+      const e = CustomError.internalServer(`${error}`);
+      return CustomError.handleError(e, res);
+    }
+  };
+  public delete = async (req: Request, res: Response) => {
+    const uid = req.params.uid!;
+
+    try {
+      const findedPatient = await this.service.findByUid(uid);
+      if (!findedPatient) {
+        throw CustomError.badRequest(
+          `Paciente con identificacion (${uid}) no encontrado`
+        );
+      }
+
+      await this.service.update({ is_deleted: true }, findedPatient.id);
+
+      return res.status(204).json();
     } catch (error) {
       console.log("catch ", error);
       const e = CustomError.internalServer(`${error}`);
@@ -50,6 +71,18 @@ export class PatientController implements Controllers {
         );
       }
 
+      const rutAndEmail = await this.service.findByRutOrEmail(
+        rut,
+        email,
+        findedPatient.id
+      );
+
+      if (rutAndEmail) {
+        throw CustomError.badRequest(
+          `Paciente con rut (${rut ?? ""}) o email (${email ?? ""}) ya existe`
+        );
+      }
+
       const payload = {
         rut,
         names,
@@ -60,6 +93,8 @@ export class PatientController implements Controllers {
       };
 
       await this.service.update(payload, findedPatient.id);
+
+      return res.status(200).json();
     } catch (error) {
       console.log("catch ", error);
       const e = CustomError.internalServer(`${error}`);

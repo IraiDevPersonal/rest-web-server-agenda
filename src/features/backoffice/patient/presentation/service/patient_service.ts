@@ -8,9 +8,9 @@ export class PatientService {
     this.db = new PrismaClient();
   }
 
-  async findByRutOrEmail(rut: string, email: string) {
+  async findByRutOrEmail(rut: string, email: string, notId?: bigint) {
     return await this.db.patients.findFirst({
-      where: { OR: [{ email, rut }] },
+      where: { OR: [{ email, rut }], NOT: { id: notId } },
     });
   }
 

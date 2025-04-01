@@ -107,6 +107,7 @@ model patients {
   email        String        @unique
   phone        String
   address      String        @default("")
+  is_deleted   Boolean       @default(false)
   appointments appointment[]
 }
 
