@@ -16,40 +16,8 @@ export class AgendaController implements Controllers {
       const appointments = await this.agendaService.getMyDay(filters);
 
       const aps = appointments.map(GetMyDay.fromObject);
-      const availables = aps.filter(
-        (el) => el.appointment_status === "AVAILABLE"
-      );
-      const cancelled = aps.filter(
-        (el) => el.appointment_status === "CANCELLED"
-      );
-      const confirmed = aps.filter(
-        (el) => el.appointment_status === "CONFIRMED"
-      );
-      const toConfirm = aps.filter(
-        (el) => el.appointment_status === "TO_CONFIRM"
-      );
 
-      return res
-        .status(200)
-        .json({ availables, cancelled, confirmed, toConfirm });
-    } catch (error) {
-      console.log("catch ", error);
-      const e = CustomError.internalServer(`${error}`);
-      return CustomError.handleError(e, res);
-    }
-  };
-
-  public getAppointmentsByType = async (req: Request, res: Response) => {
-    try {
-      const filters = this.getFilters(req);
-
-      if (filters.type in AppointmentStatus) {
-        const appointments = await this.agendaService.getMyDay(filters);
-
-        const adaptedAppointments = appointments.map(GetMyDay.fromObject);
-        return res.status(200).json(adaptedAppointments);
-      }
-      throw CustomError.badRequest(`El tipo: ${filters.type} no es permitido`);
+      return res.status(200).json(aps);
     } catch (error) {
       console.log("catch ", error);
       const e = CustomError.internalServer(`${error}`);
@@ -61,7 +29,6 @@ export class AgendaController implements Controllers {
     try {
       // const filters = this.getFilters(req);
       const uid = req.params.uid;
-      console.log(req.params.uid);
       const appoitnment = await this.agendaService.getAppointmentDetail(uid);
 
       if (!appoitnment) {
@@ -78,13 +45,23 @@ export class AgendaController implements Controllers {
   };
 
   public getFilters(req: Request) {
-    const { date, patient_rut, professional_id, profession_id } = req.query;
+    const { date, patient_rut, professional_id, profession_id, month, year } =
+      req.query;
     const type = req.params.type ?? req.query.type;
+
+    let dateFrom: Date | undefined;
+    let dateTo: Date | undefined;
+    if (month && year) {
+      dateFrom = DateFormatter.stringToDate(`${year}-${month}-01`);
+      dateTo = DateFormatter.getLastDayOfMonth(dateFrom) as Date;
+    }
 
     return {
       date: date ? DateFormatter.stringToDate(date as string) : undefined,
       patient_rut: patient_rut as string,
       type: type as AppointmentStatus,
+      date_from: dateFrom,
+      date_to: dateTo,
       profession_id: profession_id ? Number(profession_id) : undefined,
       professional_id: professional_id ? Number(professional_id) : undefined,
     };

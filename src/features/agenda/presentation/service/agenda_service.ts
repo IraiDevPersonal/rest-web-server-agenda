@@ -9,7 +9,6 @@ export class AgendaService {
   }
 
   async getAppointmentDetail(appointment_uid: string) {
-    console.log(appointment_uid);
     return await this.db.appointment.findFirst({
       select: {
         uid: true,
@@ -54,7 +53,8 @@ export class AgendaService {
 
   async getMyDay({
     type,
-    date,
+    date_from,
+    date_to,
     patient_rut,
     professional_id,
     profession_id,
@@ -97,7 +97,12 @@ export class AgendaService {
       where: {
         appointment_status: type,
         schedule: {
-          date: date,
+          // date: date,
+          date: {
+            gte: date_from,
+            lte: date_to,
+          },
+
           professional_id: professional_id,
           professional: {
             professional_profession: {
