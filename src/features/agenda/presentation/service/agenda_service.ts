@@ -53,6 +53,7 @@ export class AgendaService {
 
   async getMyDay({
     type,
+    date,
     date_from,
     date_to,
     patient_rut,
@@ -98,7 +99,7 @@ export class AgendaService {
         appointment_status: type,
         schedule: {
           // date: date,
-          date: {
+          date: date ?? {
             gte: date_from,
             lte: date_to,
           },
