@@ -118,6 +118,18 @@ export class AgendaService {
           rut: { contains: patient_rut },
         },
       },
+      orderBy: [
+        {
+          schedule: {
+            date: 'asc',
+          },
+        },
+        {
+          schedule: {
+            time_from: 'asc',
+          },
+        },
+      ],
     });
   }
 }
