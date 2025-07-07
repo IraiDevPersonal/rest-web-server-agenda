@@ -8,12 +8,18 @@ export class AgendaService {
     this.db = new PrismaClient();
   }
 
-  async getAppointmentDetail(appointment_uid: string) {
+  async getOneAppointment(appointment_uid: string) {
     return await this.db.appointment.findFirst({
       select: {
         uid: true,
+        appointment_status: true,
         schedule: {
           select: {
+            date: true,
+            time_from: true,
+            time_to: true,
+            is_enabled: true,
+            week_day: true,
             professional: {
               select: {
                 professional_profession: {
@@ -29,6 +35,7 @@ export class AgendaService {
                   select: {
                     names: true,
                     last_names: true,
+                    rut: true
                   },
                 },
               },
@@ -42,6 +49,26 @@ export class AgendaService {
             rut: true,
             phone: true,
             email: true,
+            address: true,
+            appointments: {
+              orderBy: {
+                schedule: {
+                  date: "desc"
+                }
+              },
+              take: 4,
+              select: {
+                uid: true,
+                appointment_status: true,
+                schedule: {
+                  select: {
+                    date: true,
+                    time_from: true,
+                    time_to: true,
+                  }
+                }
+              }
+            }
           },
         },
       },

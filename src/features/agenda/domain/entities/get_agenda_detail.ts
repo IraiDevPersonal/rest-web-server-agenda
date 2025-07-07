@@ -2,25 +2,32 @@ import { DateFormatter } from "@core/domain/date_formatter";
 import { AppointmentStatus } from "@prisma/client";
 
 type PatientHistory = {
-  date_time: Date;
+  date_time: string;
   status: AppointmentStatus;
 };
 type Init = {
+  date: string;
+  time_from: string;
+  time_to: string;
+  status: AppointmentStatus;
+  is_enabled: boolean;
   professional: {
-    full_name: string;
-    profession: string;
-    pay_method: string[];
-    confirm_method: string[];
+    fullname: string;
+    professions: string[];
+    pay_methods: string[];
+    confirm_methods: string[];
   };
   patient: {
-    full_name: string;
+    names: string;
+    lastnames: string;
     rut: string;
     phone: string;
     email: string;
+    address: string;
   };
   alert: {
     message: string;
-    type: string;
+    is_required: boolean
   };
   patient_history: PatientHistory[];
 };
@@ -30,12 +37,22 @@ export class GetAgendaDetail {
   public patient;
   public alert;
   public patient_history;
+  public date;
+  public time_from;
+  public time_to;
+  public status;
+  public is_enabled;
 
   private constructor(init: Init) {
     this.professional = init.professional;
     this.patient = init.patient;
     this.alert = init.alert;
     this.patient_history = init.patient_history;
+    this.date = init.date;
+    this.time_from = init.time_from;
+    this.time_to = init.time_to;
+    this.status = init.status;
+    this.is_enabled = init.is_enabled;
   }
 
   static fromObject(object: Record<string, any>) {
@@ -44,40 +61,46 @@ export class GetAgendaDetail {
   }
 
   static adapter(object: Record<string, any>) {
-    const professional = object["schedule"]["professional"];
+    const schedule = object["schedule"];
+    const professional = schedule?.["professional"];
     const patient = object["patient"];
+    const patienHistory: any[] = patient?.appointments ?? [];
+    const professions: any[] = professional?.["professional_profession"] ?? [];
 
-    const story: PatientHistory[] = [
-      {
-        date_time: DateFormatter.stringToDate("2025-01-01 15:30:20"),
-        status: AppointmentStatus.CONFIRMED,
-      },
-      {
-        date_time: DateFormatter.stringToDate("2024-12-31 23:30:20"),
-        status: AppointmentStatus.CANCELLED,
-      },
-    ];
+    const history: PatientHistory[] = patienHistory.map((appointment: any) => {
+      const schedule = appointment["schedule"]
+
+      return {
+        date_time: `${DateFormatter.formatDate(schedule["date"], "dmy")} ${schedule["time_from"]}-${schedule["time_to"]}`,
+        status: appointment.appointment_status ?? "INDETERMINATE"
+      } satisfies PatientHistory
+    })
 
     return {
+      date: DateFormatter.formatDate(schedule["date"], "ymd"),
+      time_from: schedule["time_from"],
+      time_to: schedule["time_to"],
+      status: object["appointment_status"] ?? "INDETERMINATE",
+      is_enabled: schedule["is_enabled"],
       professional: {
-        full_name: `${professional?.["user"]["names"]} ${professional?.["user"]["last_names"]}`,
-        profession: professional?.["professional_profession"]["professions"],
-        pay_method: ["efectivo", "transbank"],
-        confirm_method: ["whatsapp", "telefono", "correo"],
+        fullname: `${professional?.["user"]["names"] ?? "Profesional sin nombres"} ${professional?.["user"]["last_names"] ?? "Profesional sin apellidos"}`,
+        professions: professions.map((p) => p.professions.name),
+        pay_methods: ["fonasa", "particular (Efectivo, Transferencia)"],
+        confirm_methods: ["whatsapp", "teléfono", "correo", "presencial"],
       },
       patient: {
-        full_name: `${patient?.["names"] ?? ""} ${
-          patient?.["last_names"] ?? ""
-        }`,
-        rut: patient?.["rut"] ?? "--",
-        phone: patient?.["phone"] ?? "--",
-        email: patient?.["email"] ?? "--",
+        names: professional?.["user"]["names"] ?? "Paciente sin nombres",
+        lastnames: professional?.["user"]["last_names"] ?? "Paciente sin apellidos",
+        rut: patient?.["rut"] ?? "Paciente sin rut",
+        phone: patient?.["phone"] ?? "Paciente sin teléfono",
+        email: patient?.["email"] ?? "Paciente sin correo",
+        address: patient?.["address"] ?? "Paciente sin dirección",
       },
+      patient_history: history,
       alert: {
         message: "Profesional exige bono para confirmar paciente",
-        type: "require",
+        is_required: true
       },
-      patient_history: story,
-    };
+    } satisfies GetAgendaDetail;
   }
 }

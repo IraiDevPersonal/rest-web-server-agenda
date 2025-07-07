@@ -11,9 +11,9 @@ export class AgendaRoutes {
     const controller = new AgendaController(agendaService);
     router.get("/", [], controller.getMyDay);
     router.get(
-      "/detail/:uid",
+      "/:uid",
       [Middlewares.uidValidator],
-      controller.getAppointmentDetail
+      controller.getOneAppointment
     );
 
     return router;

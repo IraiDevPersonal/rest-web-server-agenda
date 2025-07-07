@@ -26,14 +26,13 @@ export class AgendaController implements Controllers {
     }
   };
 
-  public getAppointmentDetail = async (req: Request, res: Response) => {
+  public getOneAppointment = async (req: Request, res: Response) => {
     try {
-      // const filters = this.getFilters(req);
       const uid = req.params.uid;
-      const appoitnment = await this.agendaService.getAppointmentDetail(uid);
+      const appoitnment = await this.agendaService.getOneAppointment(uid);
 
       if (!appoitnment) {
-        throw CustomError.badRequest(`No se encontró hora medica indicada`);
+        throw CustomError.badRequest(`No se encontró cita para el UID: ${uid}`);
       }
 
       const adaptedAppointments = GetAgendaDetail.fromObject(appoitnment);
