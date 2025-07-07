@@ -5,7 +5,20 @@ import { CustomError } from "@core/domain/custom.error";
 import { PatientEntity } from "@patients/domain/entities/patient_entity";
 
 export class PatientController implements Controllers {
-  public constructor(private readonly service: PatientService) {}
+  public constructor(private readonly service: PatientService) { }
+
+  public getAll = async (req: Request, res: Response) => {
+    try {
+      const filters = this.getFilters(req);
+      const patients = await this.service.getAllPatients(filters);
+
+      return res.status(200).json(patients);
+    } catch (error) {
+      console.log("catch ", error);
+      const e = CustomError.internalServer(`${error}`);
+      return CustomError.handleError(e, res);
+    }
+  }
 
   public create = async (req: Request, res: Response) => {
     try {
@@ -102,7 +115,14 @@ export class PatientController implements Controllers {
     }
   };
 
-  getFilters(request: Request): Record<string, any> {
-    throw new Error("Method not implemented.");
+  getFilters(req: Request): Record<string, any> {
+    const { rut, names, last_names, email } = req.query;
+
+    return {
+      rut,
+      names,
+      last_names,
+      email,
+    }
   }
 }

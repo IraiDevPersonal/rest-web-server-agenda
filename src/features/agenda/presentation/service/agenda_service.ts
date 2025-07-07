@@ -78,7 +78,7 @@ export class AgendaService {
     });
   }
 
-  async getMyDay({
+  async getAppointments({
     type,
     date,
     date_from,

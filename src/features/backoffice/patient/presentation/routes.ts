@@ -11,6 +11,7 @@ export class PatientRoutes {
     const service = new PatientService();
     const controller = new PatientController(service);
 
+    router.get("/", [], controller.getAll);
     router.post("/", [PatientMiddleware.insertValidation], controller.create);
     router.put(
       "/:uid",

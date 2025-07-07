@@ -8,6 +8,41 @@ export class PatientService {
     this.db = new PrismaClient();
   }
 
+  async getAllPatients(filters: Record<string, any>) {
+    return await this.db.patients.findMany({
+      select: {
+        uid: true,
+        email: true,
+        rut: true,
+        names: true,
+        last_names: true,
+        phone: true,
+        address: true,
+      },
+      where: {
+        rut: {
+          equals: filters.rut,
+          mode: "insensitive"
+        },
+        names: {
+          contains: filters.names,
+          mode: "insensitive"
+        },
+        last_names: {
+          contains: filters.last_names,
+          mode: "insensitive"
+        },
+        email: {
+          contains: filters.email,
+          mode: "insensitive"
+        },
+      },
+      orderBy: {
+        last_names: "asc"
+      }
+    });
+  }
+
   async findByRutOrEmail(rut: string, email: string, notId?: bigint) {
     return await this.db.patients.findFirst({
       where: { OR: [{ email, rut }], NOT: { id: notId } },

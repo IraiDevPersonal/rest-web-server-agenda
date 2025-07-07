@@ -14,7 +14,7 @@ export class AgendaController implements Controllers {
   public getMyDay = async (req: Request, res: Response) => {
     try {
       const filters = this.getFilters(req);
-      const appointments = await this.agendaService.getMyDay(filters);
+      const appointments = await this.agendaService.getAppointments(filters);
 
       const aps = appointments.map(GetMyDay.fromObject);
 
