@@ -1,7 +1,7 @@
 import { Response, Request, NextFunction } from "express";
-import { validate } from "uuid";
 
 import { CustomError } from "../custom-error";
+import { Uid } from "../uid";
 
 export class UidValidator {
   static validate(req: Request, res: Response, next: NextFunction) {
@@ -12,7 +12,7 @@ export class UidValidator {
         throw CustomError.badRequest("Necesitas enviar el identificador");
       }
 
-      if (!validate(uid)) {
+      if (!Uid.isValid(uid)) {
         throw CustomError.badRequest(
           "Necesitas enviar un identificador valido"
         );

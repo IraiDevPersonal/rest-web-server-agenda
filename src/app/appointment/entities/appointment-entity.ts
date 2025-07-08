@@ -1,7 +1,7 @@
+import { Uid } from "@/lib/uid";
 import { isValidObject, safeArray } from "@/lib/utils";
 import { DateFormatter } from "@core/domain/date_formatter";
 import { AppointmentStatus } from "@prisma/client";
-import { v4 } from "uuid";
 
 type Init = {
   uid: string;
@@ -60,7 +60,7 @@ export class AppointmentEntity {
     const professions = professional?.["professional_profession"];
 
     const defaultAppointment: Init = {
-      uid: v4(),
+      uid: Uid.createV4(),
       date: "aaaa-mm-dd",
       time_from: "hh:mm",
       time_to: "hh:mm",
