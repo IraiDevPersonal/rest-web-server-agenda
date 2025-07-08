@@ -8,6 +8,7 @@ import { ServiceProviderEntity } from "@serviceProviders/domain/entities/service
 import { ServiceProviderCodesEntity } from "@serviceProviders/domain/entities/serviceProviderCodes_entity";
 import { UserEntity } from "@users/domain/entities/user_entity";
 import { ProfessionalProfession } from "@professionals/domain/entities/professionalProfession_entity";
+import { v4 } from "uuid";
 
 export const professions: ProfessionEntity[] = [
   ProfessionEntity.fromJson({
@@ -53,6 +54,8 @@ export const patients: PatientEntity[] = [
     phone: "+56911111111",
     rut: "18.805.186-3",
     address: "calle falsa 123",
+    is_deleted: false,
+    uid: v4()
   }),
   PatientEntity.fromJson({
     email: "cosme_fulano_2@gmail.com",
@@ -61,6 +64,8 @@ export const patients: PatientEntity[] = [
     phone: "+56922222222",
     rut: "3.560.077-9",
     address: "calle falsa 123",
+    is_deleted: false,
+    uid: v4()
   }),
   PatientEntity.fromJson({
     email: "cosme_fulano_3@gmail.com",
@@ -69,6 +74,8 @@ export const patients: PatientEntity[] = [
     phone: "+56933333333",
     rut: "12.109.544-0",
     address: "calle falsa 123",
+    is_deleted: false,
+    uid: v4()
   }),
   PatientEntity.fromJson({
     email: "cosme_fulano_4@gmail.com",
@@ -77,6 +84,8 @@ export const patients: PatientEntity[] = [
     phone: "+569444444444",
     rut: "11.111.111-1",
     address: "calle falsa 123",
+    is_deleted: false,
+    uid: v4()
   }),
   PatientEntity.fromJson({
     email: "cosme_fulano_5@gmail.com",
@@ -85,6 +94,8 @@ export const patients: PatientEntity[] = [
     phone: "+569555555555",
     rut: "15.953.693-9",
     address: "calle falsa 123",
+    is_deleted: false,
+    uid: v4()
   }),
 ];
 

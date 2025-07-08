@@ -51,6 +51,7 @@ export class PatientController implements Controllers {
       return CustomError.handleError(e, res);
     }
   };
+
   public delete = async (req: Request, res: Response) => {
     const uid = req.params.uid!;
 
@@ -115,7 +116,7 @@ export class PatientController implements Controllers {
     }
   };
 
-  getFilters(req: Request): Record<string, any> {
+  public getFilters(req: Request): Record<string, any> {
     const { rut, names, last_names, email } = req.query;
 
     return {
