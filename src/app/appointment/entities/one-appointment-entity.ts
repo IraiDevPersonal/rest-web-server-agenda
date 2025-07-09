@@ -1,3 +1,5 @@
+import { CustomError } from "@/lib/custom-error";
+import { isValidObject } from "@/lib/utils";
 import { DateFormatter } from "@core/domain/date_formatter";
 import { AppointmentStatus } from "@prisma/client";
 
@@ -55,15 +57,21 @@ export class OneAppointmentEntity {
     this.is_enabled = init.is_enabled;
   }
 
-  static responseAdapter(object: Record<string, any>): OneAppointmentEntity {
+  static responseAdapter(object: any): OneAppointmentEntity {
+    const message = "one-appointment-entity.ts: (itemAdapter) entreada no esperada, se esperaba un objeto"
+
+    if (!isValidObject(object, message)) {
+      throw new Error(message);
+    }
+
     const appointment = OneAppointmentEntity.itemAdapter(object);
     return new OneAppointmentEntity(appointment);
   }
 
-  private static itemAdapter(object: Record<string, any>): Init {
-    const schedule = object["schedule"];
+  private static itemAdapter(item: Record<string, any>): Init {
+    const schedule = item["schedule"];
     const professional = schedule?.["professional"];
-    const patient = object["patient"];
+    const patient = item["patient"];
     const patienHistory: any[] = patient?.appointments ?? [];
     const professions: any[] = professional?.["professional_profession"] ?? [];
 
@@ -80,7 +88,7 @@ export class OneAppointmentEntity {
       date: schedule?.["date"] ? DateFormatter.formatDate(schedule["date"], "ymd") : "aaaa-mm-dd",
       time_from: schedule?.["time_from"] ?? "hh:mm",
       time_to: schedule?.["time_to"] ?? "hh:mm",
-      status: object["appointment_status"] ?? "INDETERMINATE",
+      status: item["appointment_status"] ?? "INDETERMINATE",
       is_enabled: schedule?.["is_enabled"] ?? false,
       professional: {
         fullname: `${professional?.["user"]["names"] ?? "sin nombres"} ${professional?.["user"]["last_names"] ?? "sin apellidos"}`,

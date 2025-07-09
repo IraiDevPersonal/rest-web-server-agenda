@@ -1,7 +1,8 @@
-import { Uid } from "@/lib/uid";
-import { isValidObject, safeArray } from "@/lib/utils";
-import { DateFormatter } from "@core/domain/date_formatter";
 import { AppointmentStatus } from "@prisma/client";
+
+import { isValidObject, safeArray } from "@/lib/utils";
+import { DateFormatter } from "@/lib/date-formatter";
+import { Uid } from "@/lib/uid";
 
 type Init = {
   uid: string;
@@ -45,13 +46,18 @@ export class AppointmentEntity {
     try {
       return safeArray<AppointmentEntity>(data).map(AppointmentEntity.itemAdapter);
     } catch (error) {
-      return []
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      throw new Error("appointment-entity.ts: (responseAdapter) error inesperado");
     }
   }
 
-  private static itemAdapter(item: Record<string, any>): AppointmentEntity {
-    if (!isValidObject(item, "appointment-entity.ts: entreada no esperada, se esperaba un objeto")) {
-      throw new Error("Invalid object");
+  private static itemAdapter(item: any): AppointmentEntity {
+    const message = "appointment-entity.ts: (itemAdapter) entreada no esperada, se esperaba un objeto"
+
+    if (!isValidObject(item, message)) {
+      throw new Error(message);
     }
 
     const schedule = item["schedule"];
