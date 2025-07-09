@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { ProfessionFilters } from "./types/professions";
+import { ProfessionFilters } from "./models/profession";
 
 export class ProfessionService {
   private readonly db: PrismaClient;
@@ -17,3 +17,4 @@ export class ProfessionService {
     );
   }
 }
+

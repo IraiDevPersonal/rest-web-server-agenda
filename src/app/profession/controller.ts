@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 
 import { Controllers } from "@/lib/controllers";
-import { ProfessionService } from "./service";
 import { CustomError } from "@/lib/custom-error";
-import { ProfessionFilters } from "./types/professions";
+import { ProfessionFilters } from "./models/profession";
 import { ProfessionToFilterEntity } from "./entities/profession-to-filter-entity";
 import { ProfessionEntity } from "./entities/profession-entity";
+import { ProfessionService } from "./service";
 
 export class ProfessionController implements Controllers<ProfessionFilters> {
   public constructor(private readonly service: ProfessionService) { }

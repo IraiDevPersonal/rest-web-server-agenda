@@ -2,7 +2,7 @@ import { Router } from "express";
 import { ProfessionService } from "./service";
 import { ProfessionController } from "./controller";
 
-export class ProfessionRoute {
+export class ProfessionRoutes {
   static get routes(): Router {
     const router = Router();
     const service = new ProfessionService();
