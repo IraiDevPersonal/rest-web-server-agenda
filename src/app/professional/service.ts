@@ -10,13 +10,39 @@ export class ProfessionalService {
 
   async getProfessionals(filters: ProfessionalFilters) {
     return await this.db.professionals.findMany({
+      select: {
+        id: false,
+        user: {
+          omit: {
+            password: true,
+            role_id: true,
+          },
+          include: {
+            role: {
+              select: {
+                name: true,
+                id: true,
+              },
+            },
+          }
+        },
+        professional_profession: {
+          select: {
+            professions: {
+              select: {
+                id: true,
+                name: true,
+              }
+            }
+          }
+        },
+      },
       where: {
         id: filters?.id,
         user: {
-          OR: [
-            { names: { contains: filters?.names, mode: "insensitive" } },
-            { last_names: { contains: filters?.last_names, mode: "insensitive" } },
-          ],
+          names: { contains: filters?.names, mode: "insensitive" },
+          last_names: { contains: filters?.last_names, mode: "insensitive" },
+          rut: { equals: filters?.rut, mode: "insensitive" },
         },
         professional_profession: {
           some: {

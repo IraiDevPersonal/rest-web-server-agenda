@@ -1,18 +1,41 @@
 import { CustomError } from "@/lib/custom-error";
+import { Uid } from "@/lib/uid";
 import { isValidObject, safeArray } from "@/lib/utils";
 
 type Init = {
   id: number;
-  name: string;
+  names: string;
+  uid: string
+  rut: string;
+  lastnames: string;
+  phone: string
+  email: string
+  professions: { id: number, name: string }[]
+  role: { id: number, name: string }
 }
 
 export class ProfessionalEntity {
-  public id: Init["id"];
-  public name: Init["name"];
+  public id: Init["id"]
+  public names: Init["names"]
+  public uid: Init["uid"]
+  public rut: Init["rut"]
+  public lastnames: Init["lastnames"]
+  public phone: Init["phone"]
+  public email: Init["email"]
+  public professions: Init["professions"]
+  public role: Init["role"]
+
 
   private constructor(init: Init) {
     this.id = init.id;
-    this.name = init.name;
+    this.names = init.names;
+    this.uid = init.uid;
+    this.rut = init.rut;
+    this.lastnames = init.lastnames;
+    this.phone = init.phone;
+    this.email = init.email;
+    this.professions = init.professions;
+    this.role = init.role;
   }
 
   static responseAdapter(data: any): ProfessionalEntity[] {
@@ -35,9 +58,26 @@ export class ProfessionalEntity {
       throw new Error(message);
     }
 
+    const user = item["user"]
+    const role = user?.["role"]
+    const professions = item["professional_profession"] ?? []
+
     return {
-      id: item["id"],
-      name: item["name"],
+      id: Number(user?.["id"]),
+      names: user?.["names"] ?? "Sin nombres",
+      uid: user?.["uid"] ?? Uid.createV4(),
+      rut: user?.["rut"] ?? "Sin rut",
+      lastnames: user?.["last_names"] ?? "Sin apellidos",
+      phone: user?.["phone"] ?? "Sin telefono",
+      email: user?.["email"] ?? "Sin correo",
+      role: {
+        id: role?.["id"],
+        name: role?.["name"] ?? "indeterminado"
+      },
+      professions: professions.map((p: any) => ({
+        id: p?.["professions"]?.["id"],
+        name: p?.["professions"]?.["name"] ?? "Sin nombre"
+      }))
     };
   }
 }

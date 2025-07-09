@@ -37,12 +37,13 @@ export class ProfessionalController implements Controllers<ProfessionalFilters> 
   };
 
   getFilters(request: Request) {
-    const { id, names, last_names, profession_id } = request.query;
+    const { id, names, last_names, profession_id, rut } = request.query;
 
     return {
       profession_id: profession_id ? Number(profession_id) : undefined,
       last_names: last_names as string | undefined,
       names: names as string | undefined,
+      rut: rut as string | undefined,
       id: id ? Number(id) : undefined,
     };
   }
