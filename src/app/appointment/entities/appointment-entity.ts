@@ -3,6 +3,7 @@ import { AppointmentStatus } from "@prisma/client";
 import { isValidObject, safeArray } from "@/lib/utils";
 import { DateFormatter } from "@/lib/date-formatter";
 import { Uid } from "@/lib/uid";
+import { CustomError } from "@/lib/custom-error";
 
 type Init = {
   uid: string;
@@ -46,10 +47,12 @@ export class AppointmentEntity {
     try {
       return safeArray<AppointmentEntity>(data).map(AppointmentEntity.itemAdapter);
     } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(error.message);
-      }
-      throw new Error("appointment-entity.ts: (responseAdapter) error inesperado");
+      const errorMessage = CustomError.getErrorMessage(
+        error,
+        "appointment-entity.ts: (responseAdapter) error inesperado"
+      );
+
+      throw new Error(errorMessage);
     }
   }
 
