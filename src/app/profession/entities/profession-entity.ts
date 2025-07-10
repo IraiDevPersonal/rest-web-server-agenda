@@ -1,10 +1,14 @@
-import { CustomError } from "@/lib/custom-error";
-import { isValidObject, safeArray } from "@/lib/utils";
+import { z } from "zod";
 
-type Init = {
-  id: number;
-  name: string;
-}
+import { CustomError } from "@/lib/custom-error";
+import { safeArray } from "@/lib/utils";
+
+const ProfessionSchema = z.object({
+  id: z.number().positive(),
+  name: z.string(),
+})
+
+type Init = z.infer<typeof ProfessionSchema>
 
 export class ProfessionEntity {
   public id: Init["id"];
@@ -15,6 +19,25 @@ export class ProfessionEntity {
     this.name = init.name;
   }
 
+  static getSchema() {
+    return ProfessionSchema
+  }
+
+  static validate(item: any): ProfessionEntity {
+    try {
+      const data = ProfessionEntity.itemAdapter(item)
+      const profession = ProfessionEntity.getSchema().parse(data)
+      return new ProfessionEntity(profession)
+    } catch (error) {
+      throw new Error(
+        CustomError.getErrorMessage(
+          error,
+          "profession-entity.ts: (validate) error inesperado"
+        )
+      )
+    }
+  }
+
   static responseAdapter(data: any): ProfessionEntity[] {
     try {
       return safeArray<ProfessionEntity>(data).map(ProfessionEntity.itemAdapter);
@@ -23,18 +46,11 @@ export class ProfessionEntity {
         error,
         "profession-entity.ts: (responseAdapter) error inesperado"
       );
-
       throw new Error(errorMessage);
     }
   }
 
-  private static itemAdapter(item: any): ProfessionEntity {
-    const message = "profession-entity.ts: (itemAdapter) entreada no esperada, se esperaba un objeto"
-
-    if (!isValidObject(item, message)) {
-      throw new Error(message);
-    }
-
+  private static itemAdapter(item: any): Init {
     return {
       id: item["id"],
       name: item["name"],

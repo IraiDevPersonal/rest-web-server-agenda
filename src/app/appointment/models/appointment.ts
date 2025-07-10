@@ -1,4 +1,4 @@
-import { UndefinedObject } from "@/types/global-types";
+import { UndefinedObject } from "@/types/global";
 import { AppointmentStatus } from "@prisma/client";
 
 export type AppointmentFilters = UndefinedObject<{

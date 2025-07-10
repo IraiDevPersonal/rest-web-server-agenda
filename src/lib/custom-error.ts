@@ -37,10 +37,14 @@ export class CustomError extends Error {
     return res.status(500).json({ error: "Internal server error" });
   };
 
-  static getErrorMessage(error: unknown, message?: string) {
+  static getErrorMessage(error: unknown, defaultErrorMessage?: string) {
     if (error instanceof Error) {
       return error.message;
     }
-    return message ?? "Error inesperado...";
+    if (error instanceof CustomError) {
+      return error.message;
+    }
+    console.log(error)
+    return defaultErrorMessage ?? "Error inesperado...";
   }
 }

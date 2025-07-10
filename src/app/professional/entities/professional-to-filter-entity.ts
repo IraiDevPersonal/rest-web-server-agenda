@@ -1,8 +1,14 @@
-import { CustomError } from "@/lib/custom-error";
-import { isValidObject, safeArray } from "@/lib/utils";
-import { Option } from "@/types/global-types";
+import { z } from "zod";
 
-type ProfessionalOption = Option<{ professions: number[] }>
+import { CustomError } from "@/lib/custom-error";
+import { safeArray } from "@/lib/utils";
+import { OptionSchema } from "@/schemas/global";
+
+const ProfessionalOptionSchema = OptionSchema.extend({
+  professions: z.array(z.number()),
+})
+
+type ProfessionalOption = z.infer<typeof ProfessionalOptionSchema>
 
 export class ProfessionalToFilterEntity {
   public value: ProfessionalOption["value"];
@@ -15,33 +21,43 @@ export class ProfessionalToFilterEntity {
     this.professions = init.professions
   }
 
+  static getSchema() {
+    return ProfessionalOptionSchema
+  }
+
+  static validate(item: any): ProfessionalToFilterEntity {
+    try {
+      const data = ProfessionalToFilterEntity.itemAdapter(item)
+      const professional = ProfessionalOptionSchema.parse(data)
+      return new ProfessionalToFilterEntity(professional)
+    } catch (error) {
+      throw new Error(CustomError.getErrorMessage(
+        error,
+        "profession-to-filter-entity.ts: (validate) error inesperado"
+      ))
+    }
+  }
+
   static responseAdapter(data: any): ProfessionalToFilterEntity[] {
     try {
-      return safeArray<ProfessionalToFilterEntity>(data).map(ProfessionalToFilterEntity.itemAdapter);
+      return safeArray<ProfessionalToFilterEntity>(data).map(ProfessionalToFilterEntity.validate);
     } catch (error) {
       const errorMessage = CustomError.getErrorMessage(
         error,
         "profession-to-filter-entity.ts: (responseAdapter) error inesperado"
       );
-
       throw new Error(errorMessage);
     }
   }
 
   private static itemAdapter(item: any): ProfessionalOption {
-    const message = "profession-to-filter-entity.ts: (itemAdapter) entreada no esperada, se esperaba un objeto"
-
-    if (!isValidObject(item, message)) {
-      throw new Error(message);
-    }
-
-    const user = item["user"]
-    const professions = item["professional_profession"] ?? []
+    const user = item["user"];
+    const professions = safeArray<any>(item["professional_profession"])
 
     return {
       value: Number(item["id"]),
-      label: `${user?.["names"] ?? "Sin nombres"} ${user?.["last_names"] ?? "Sin apellidos"}`,
-      professions: professions.map((i: any) => Number(i?.profession_id ?? 0))
-    };
+      label: `${user?.["names"]} ${user?.["last_names"]}`,
+      professions: professions.map((i: any) => Number(i?.profession_id))
+    }
   }
 }
