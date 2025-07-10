@@ -7,7 +7,7 @@ type Init = {
   names: string;
   uid: string
   rut: string;
-  lastnames: string;
+  last_names: string;
   phone: string
   email: string
   professions: { id: number, name: string }[]
@@ -19,7 +19,7 @@ export class ProfessionalEntity {
   public names: Init["names"]
   public uid: Init["uid"]
   public rut: Init["rut"]
-  public lastnames: Init["lastnames"]
+  public last_names: Init["last_names"]
   public phone: Init["phone"]
   public email: Init["email"]
   public professions: Init["professions"]
@@ -31,7 +31,7 @@ export class ProfessionalEntity {
     this.names = init.names;
     this.uid = init.uid;
     this.rut = init.rut;
-    this.lastnames = init.lastnames;
+    this.last_names = init.last_names;
     this.phone = init.phone;
     this.email = init.email;
     this.professions = init.professions;
@@ -67,7 +67,7 @@ export class ProfessionalEntity {
       names: user?.["names"] ?? "Sin nombres",
       uid: user?.["uid"] ?? Uid.createV4(),
       rut: user?.["rut"] ?? "Sin rut",
-      lastnames: user?.["last_names"] ?? "Sin apellidos",
+      last_names: user?.["last_names"] ?? "Sin apellidos",
       phone: user?.["phone"] ?? "Sin telefono",
       email: user?.["email"] ?? "Sin correo",
       role: {

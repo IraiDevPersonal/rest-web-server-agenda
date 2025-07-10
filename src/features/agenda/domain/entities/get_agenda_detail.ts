@@ -12,14 +12,14 @@ type Init = {
   status: AppointmentStatus;
   is_enabled: boolean;
   professional: {
-    fullname: string;
+    full_name: string;
     professions: string[];
     pay_methods: string[];
     confirm_methods: string[];
   };
   patient: {
     names: string;
-    lastnames: string;
+    last_names: string;
     rut: string;
     phone: string;
     email: string;
@@ -83,14 +83,14 @@ export class GetAgendaDetail {
       status: object["appointment_status"] ?? "INDETERMINATE",
       is_enabled: schedule["is_enabled"],
       professional: {
-        fullname: `${professional?.["user"]["names"] ?? "Profesional sin nombres"} ${professional?.["user"]["last_names"] ?? "Profesional sin apellidos"}`,
+        full_name: `${professional?.["user"]["names"] ?? "Profesional sin nombres"} ${professional?.["user"]["last_names"] ?? "Profesional sin apellidos"}`,
         professions: professions.map((p) => p.professions.name),
         pay_methods: ["fonasa", "particular (Efectivo, Transferencia)"],
         confirm_methods: ["whatsapp", "teléfono", "correo", "presencial"],
       },
       patient: {
         names: professional?.["user"]["names"] ?? "Paciente sin nombres",
-        lastnames: professional?.["user"]["last_names"] ?? "Paciente sin apellidos",
+        last_names: professional?.["user"]["last_names"] ?? "Paciente sin apellidos",
         rut: patient?.["rut"] ?? "Paciente sin rut",
         phone: patient?.["phone"] ?? "Paciente sin teléfono",
         email: patient?.["email"] ?? "Paciente sin correo",
