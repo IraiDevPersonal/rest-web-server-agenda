@@ -5,16 +5,16 @@ import { safeArray } from "@/lib/utils";
 
 const ProfessionSchema = z.object({
   id: z.number().positive(),
-  name: z.string(),
+  name: z.string().min(1, { message: "El nombre de la profesión no puede estar vacío" }),
 })
 
-type Init = z.infer<typeof ProfessionSchema>
+type ProfessionModel = z.infer<typeof ProfessionSchema>
 
 export class ProfessionEntity {
-  public id: Init["id"];
-  public name: Init["name"];
+  public id: ProfessionModel["id"];
+  public name: ProfessionModel["name"];
 
-  private constructor(init: Init) {
+  private constructor(init: ProfessionModel) {
     this.id = init.id;
     this.name = init.name;
   }
@@ -40,7 +40,10 @@ export class ProfessionEntity {
 
   static responseAdapter(data: any): ProfessionEntity[] {
     try {
-      return safeArray<ProfessionEntity>(data).map(ProfessionEntity.itemAdapter);
+      return safeArray<ProfessionEntity>(data, {
+        throwErrors: true,
+        errorMessage: "profession-entity.ts: (responseAdapter) Se esperaba un arreglo",
+      }).map(ProfessionEntity.itemAdapter);
     } catch (error) {
       const errorMessage = CustomError.getErrorMessage(
         error,
@@ -50,7 +53,7 @@ export class ProfessionEntity {
     }
   }
 
-  private static itemAdapter(item: any): Init {
+  private static itemAdapter(item: any): ProfessionModel {
     return {
       id: item["id"],
       name: item["name"],

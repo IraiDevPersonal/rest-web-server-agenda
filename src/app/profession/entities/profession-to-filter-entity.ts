@@ -35,7 +35,10 @@ export class ProfessionToFilterEntity {
 
   static responseAdapter(data: any): ProfessionToFilterEntity[] {
     try {
-      return safeArray<ProfessionToFilterEntity>(data).map(ProfessionToFilterEntity.itemAdapter);
+      return safeArray<ProfessionToFilterEntity>(data, {
+        throwErrors: true,
+        errorMessage: "profession-to-filter-entity.ts: (responseAdapter) Se esperaba un arreglo",
+      }).map(ProfessionToFilterEntity.itemAdapter);
     } catch (error) {
       const errorMessage = CustomError.getErrorMessage(
         error,
