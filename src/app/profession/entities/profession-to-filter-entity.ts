@@ -4,26 +4,25 @@ import { CustomError } from "@/lib/custom-error";
 import { safeArray } from "@/lib/utils";
 import { OptionSchema } from "@/schemas/global";
 
-type ProfessionModel = z.infer<typeof OptionSchema>
+type ProfessionOptionModel = z.infer<typeof OptionSchema>
 
 export class ProfessionToFilterEntity {
-  public value: ProfessionModel["value"];
-  public label: ProfessionModel["label"];
+  public value: ProfessionOptionModel["value"];
+  public label: ProfessionOptionModel["label"];
 
-  private constructor(init: ProfessionModel) {
-    this.value = init.value;
-    this.label = init.label;
+  private constructor(init: ProfessionOptionModel) {
+    this.value = String(init.value);
+    this.label = String(init.label);
   }
 
   static getSchema() {
     return OptionSchema
   }
 
-  static validate(item: any): ProfessionToFilterEntity {
+  static validate(item: any): ProfessionOptionModel {
     try {
       const data = ProfessionToFilterEntity.itemAdapter(item)
-      const profession = ProfessionToFilterEntity.getSchema().parse(data)
-      return new ProfessionToFilterEntity(profession)
+      return ProfessionToFilterEntity.getSchema().parse(data)
     } catch (error) {
       throw new Error(
         CustomError.getErrorMessage(
@@ -33,9 +32,9 @@ export class ProfessionToFilterEntity {
     }
   }
 
-  static responseAdapter(data: any): ProfessionToFilterEntity[] {
+  static responseAdapter(data: any): ProfessionOptionModel[] {
     try {
-      return safeArray<ProfessionToFilterEntity>(data, {
+      return safeArray<ProfessionOptionModel>(data, {
         throwErrors: true,
         errorMessage: "profession-to-filter-entity.ts: (responseAdapter) Se esperaba un arreglo",
       }).map(ProfessionToFilterEntity.itemAdapter);
@@ -44,15 +43,14 @@ export class ProfessionToFilterEntity {
         error,
         "profession-to-filter-entity.ts: (responseAdapter) error inesperado"
       );
-
       throw new Error(errorMessage);
     }
   }
 
-  private static itemAdapter(item: any): ProfessionModel {
-    return {
+  private static itemAdapter(item: any): ProfessionToFilterEntity {
+    return new ProfessionToFilterEntity({
       value: item["id"],
       label: item["name"],
-    };
+    });
   }
 }

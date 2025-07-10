@@ -4,7 +4,7 @@ import { CustomError } from "@/lib/custom-error";
 import { safeArray } from "@/lib/utils";
 
 export const RoleSchema = z.object({
-  id: z.optional(z.number()),
+  id: z.optional(z.number().positive("el valor del id debe ser un número positivo")),
   name: z
     .string()
     .min(0, { message: "El nombre del rol no puede estar vacío" }),
@@ -17,19 +17,18 @@ export class RoleEntity {
   public name: RoleModel["name"];
 
   private constructor(init: RoleModel) {
-    this.id = init.id;
-    this.name = init.name;
+    this.id = init.id ? Number(init.id) : undefined;
+    this.name = String(init.name);
   }
 
   static getSchema() {
     return RoleSchema;
   }
 
-  static validate(object: any) {
+  static validate(object: any): RoleModel {
     try {
       const data = RoleEntity.itemAdapter(object);
-      const role = RoleEntity.getSchema().parse(data);
-      return new RoleEntity(role);
+      return RoleEntity.getSchema().parse(data);
     } catch (error) {
       throw new Error(CustomError.getErrorMessage(
         error,
@@ -38,9 +37,9 @@ export class RoleEntity {
     }
   }
 
-  static responseAdapter(data: any) {
+  static responseAdapter(data: any): RoleModel[] {
     try {
-      return safeArray<RoleEntity>(data, {
+      return safeArray<RoleModel>(data, {
         throwErrors: true,
         errorMessage: "user-entity.ts: (responseAdapter) Se esperaba un arreglo",
       })
@@ -50,10 +49,10 @@ export class RoleEntity {
     }
   }
 
-  private static itemAdapter(item: any): RoleModel {
-    return {
+  private static itemAdapter(item: any): RoleEntity {
+    return new RoleEntity({
       id: item["id"],
       name: item["name"],
-    };
+    });
   }
 }

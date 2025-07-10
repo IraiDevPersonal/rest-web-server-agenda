@@ -15,19 +15,18 @@ export class ProfessionEntity {
   public name: ProfessionModel["name"];
 
   private constructor(init: ProfessionModel) {
-    this.id = init.id;
-    this.name = init.name;
+    this.id = Number(init.id);
+    this.name = String(init.name);
   }
 
   static getSchema() {
     return ProfessionSchema
   }
 
-  static validate(item: any): ProfessionEntity {
+  static validate(item: any): ProfessionModel {
     try {
       const data = ProfessionEntity.itemAdapter(item)
-      const profession = ProfessionEntity.getSchema().parse(data)
-      return new ProfessionEntity(profession)
+      return ProfessionEntity.getSchema().parse(data)
     } catch (error) {
       throw new Error(
         CustomError.getErrorMessage(
@@ -38,9 +37,9 @@ export class ProfessionEntity {
     }
   }
 
-  static responseAdapter(data: any): ProfessionEntity[] {
+  static responseAdapter(data: any): ProfessionModel[] {
     try {
-      return safeArray<ProfessionEntity>(data, {
+      return safeArray<ProfessionModel>(data, {
         throwErrors: true,
         errorMessage: "profession-entity.ts: (responseAdapter) Se esperaba un arreglo",
       }).map(ProfessionEntity.itemAdapter);
@@ -53,10 +52,10 @@ export class ProfessionEntity {
     }
   }
 
-  private static itemAdapter(item: any): ProfessionModel {
-    return {
+  private static itemAdapter(item: any): ProfessionEntity {
+    return new ProfessionEntity({
       id: item["id"],
       name: item["name"],
-    };
+    });
   }
 }

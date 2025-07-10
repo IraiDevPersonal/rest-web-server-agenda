@@ -34,8 +34,8 @@ export class UserEntity {
   public role: UserModel["role"];
 
   private constructor(init: UserModel) {
-    this.id = init.id;
-    this.uid = init.uid;
+    this.id = init.id ? Number(init.id) : undefined;
+    this.uid = init.uid ? String(init.uid) : undefined;
     this.rut = init.rut;
     this.names = init.names;
     this.last_names = init.last_names;
@@ -44,7 +44,7 @@ export class UserEntity {
     this.is_admin = init.is_admin;
     this.phone = init.phone;
     this.role_id = init.role_id;
-    this.role = init.role;
+    this.role = init.role ? RoleEntity.validate(init.role) : init.role;
   }
 
   static getSchema() {
@@ -72,8 +72,8 @@ export class UserEntity {
     }
   }
 
-  private static itemAdapter(item: any): UserModel {
-    return {
+  private static itemAdapter(item: any): UserEntity {
+    return new UserEntity({
       email: item["email"],
       uid: item["uid"],
       rut: item["rut"],
@@ -83,7 +83,8 @@ export class UserEntity {
       phone: item["phone"],
       password: item["password"],
       role_id: item["role_id"],
-      role: RoleEntity.validate(item["role"]),
-    }
+      role: item["role"],
+      id: item["id"],
+    })
   }
 }
