@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { CustomError } from "@/lib/custom-error";
 import { RoleEntity } from "@/app/role/entities/role-entity";
 import { safeArray } from "@/lib/utils";
@@ -14,26 +15,25 @@ const UserSchema = z.object({
   role_id: z.number(),
   rut: z.string().max(12),
   uid: z.optional(z.string()),
+  role: z.optional(RoleEntity.getSchema()),
 });
 
-type Init = z.infer<typeof UserSchema> & {
-  role: RoleEntity;
-};
+type UserModel = z.infer<typeof UserSchema>;
 
 export class UserEntity {
-  public id?: Init["id"]
-  public email: Init["email"]
-  public is_admin: Init["is_admin"]
-  public last_names: Init["last_names"]
-  public names: Init["names"]
-  public password: Init["password"]
-  public phone: Init["phone"]
-  public role_id: Init["role_id"]
-  public rut: Init["rut"]
-  public uid: Init["uid"]
-  public role: Init["role"];
+  public id?: UserModel["id"]
+  public email: UserModel["email"]
+  public is_admin: UserModel["is_admin"]
+  public last_names: UserModel["last_names"]
+  public names: UserModel["names"]
+  public password: UserModel["password"]
+  public phone: UserModel["phone"]
+  public role_id: UserModel["role_id"]
+  public rut: UserModel["rut"]
+  public uid: UserModel["uid"]
+  public role: UserModel["role"];
 
-  private constructor(init: Init) {
+  private constructor(init: UserModel) {
     this.id = init.id;
     this.uid = init.uid;
     this.rut = init.rut;
@@ -47,12 +47,15 @@ export class UserEntity {
     this.role = init.role;
   }
 
-  static validate(object: any): UserEntity {
+  static getSchema() {
+    return UserSchema;
+  }
+
+  static validate(item: any): UserEntity {
     try {
-      const { role, ...user } = object;
-      const userScheme = this.getSchema().parse(user);
-      const roleSchema = RoleEntity.validate(role);
-      return new UserEntity({ ...userScheme, role: roleSchema });
+      const data = UserEntity.itemAdapter(item);
+      const user = UserEntity.getSchema().parse(data);
+      return new UserEntity(user);
     } catch (error) {
       throw new Error(CustomError.getErrorMessage(error));
     }
@@ -60,17 +63,27 @@ export class UserEntity {
 
   static responseAdapter(data: any): UserEntity[] {
     try {
-      if (!Array.isArray(data)) {
-        throw new Error("user-entity.ts: (responseAdapter) Se esperaba un arreglo");
-      }
-
-      return safeArray<UserEntity>(data).map(this.validate)
+      return safeArray<UserEntity>(data, {
+        throwErrors: true,
+        errorMessage: "user-entity.ts: (responseAdapter) Se esperaba un arreglo"
+      }).map(UserEntity.validate)
     } catch (error) {
       throw new Error(CustomError.getErrorMessage(error))
     }
   }
 
-  static getSchema() {
-    return UserSchema;
+  private static itemAdapter(item: any): UserModel {
+    return {
+      email: item["email"],
+      uid: item["uid"],
+      rut: item["rut"],
+      names: item["names"],
+      last_names: item["last_names"],
+      is_admin: item["is_admin"],
+      phone: item["phone"],
+      password: item["password"],
+      role_id: item["role_id"],
+      role: RoleEntity.validate(item["role"]),
+    }
   }
 }

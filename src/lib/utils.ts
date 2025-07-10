@@ -16,6 +16,9 @@ export function isValidObject(value: any | undefined, warningMessage: string) {
   return true;
 }
 
-export function safeArray<T>(data: any): T[] {
+export function safeArray<T>(data: any, options?: { throwErrors?: boolean, errorMessage?: string }): T[] {
+  if (options?.throwErrors && !Array.isArray(data)) {
+    throw new Error(options.errorMessage || "Expected an array");
+  }
   return (Array.isArray(data) ? data : []) as T[];
 }
