@@ -1,9 +1,10 @@
 import { z } from "zod";
 
+import { ProfessionEntity } from "@/app/profession/entities/profession-entity";
+import { RoleEntity } from "@/app/role/entities/role-entity";
+
 import { CustomError } from "@/lib/custom-error";
 import { safeArray } from "@/lib/utils";
-import { RoleEntity } from "@/app/role/entities/role-entity";
-import { ProfessionEntity } from "@/app/profession/entities/profession-entity";
 
 const ProfessionalSchema = z.object({
   id: z.number().positive(),
@@ -30,38 +31,39 @@ export class ProfessionalEntity {
   public professions: ProfessionalModel["professions"]
   public role: ProfessionalModel["role"]
 
-
   private constructor(init: ProfessionalModel) {
-    this.id = init.id;
-    this.names = init.names;
-    this.uid = init.uid;
-    this.rut = init.rut;
-    this.last_names = init.last_names;
-    this.phone = init.phone;
-    this.email = init.email;
-    this.professions = init.professions;
-    this.role = init.role;
+    this.id = init.id ? Number(init.id) : init.id;
+    this.names = String(init.names);
+    this.uid = String(init.uid);
+    this.rut = String(init.rut);
+    this.last_names = String(init.last_names);
+    this.phone = String(init.phone);
+    this.email = String(init.email);
+    this.role = RoleEntity.validate(init.role);
+    this.professions = init.professions.map(ProfessionEntity.validate);
   }
 
   static getSchema() {
     return ProfessionalSchema
   }
 
-  static validate(item: any): ProfessionalEntity {
+  static validate(item: any): ProfessionalModel {
     try {
       const data = ProfessionalEntity.itemAdapter(item);
-      const professional = ProfessionalEntity.getSchema().parse(data);
-      return new ProfessionalEntity(professional);
+      return ProfessionalEntity.getSchema().parse(data);
     } catch (error) {
       throw new Error(CustomError.getErrorMessage(
         error,
-        "profession--entity.ts: (validate) error inesperado"));
+        "profession-entity.ts: (validate) error inesperado"));
     }
   }
 
-  static responseAdapter(data: any): ProfessionalEntity[] {
+  static responseAdapter(data: any): ProfessionalModel[] {
     try {
-      return safeArray<ProfessionalEntity>(data).map(item => ProfessionalEntity.validate(item));
+      return safeArray<ProfessionalModel>(data, {
+        throwErrors: true,
+        errorMessage: "profession-entity.ts: (responseAdapter) Se esperaba un arreglo",
+      }).map(item => ProfessionalEntity.validate(item));
     } catch (error) {
       const errorMessage = CustomError.getErrorMessage(
         error,
@@ -72,13 +74,13 @@ export class ProfessionalEntity {
     }
   }
 
-  private static itemAdapter(item: any): ProfessionalModel {
+  private static itemAdapter(item: any): ProfessionalEntity {
     const user = item["user"];
     const role = user?.["role"];
     const professions = safeArray<any>(item["professional_profession"]);
 
-    return {
-      id: Number(user?.["id"]),
+    return new ProfessionalEntity({
+      id: user?.["id"],
       names: user?.["names"],
       uid: user?.["uid"],
       rut: user?.["rut"],
@@ -86,13 +88,13 @@ export class ProfessionalEntity {
       phone: user?.["phone"],
       email: user?.["email"],
       role: {
-        id: Number(role?.["id"]),
+        id: role?.["id"],
         name: role?.["name"]
       },
       professions: professions.map(p => ({
-        id: Number(p?.["professions"]?.["id"]),
+        id: p?.["professions"]?.["id"],
         name: p?.["professions"]?.["name"],
       })),
-    };
+    });
   }
 }

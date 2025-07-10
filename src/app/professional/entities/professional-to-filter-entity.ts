@@ -5,31 +5,30 @@ import { safeArray } from "@/lib/utils";
 import { OptionSchema } from "@/schemas/global";
 
 const ProfessionalOptionSchema = OptionSchema.extend({
-  professions: z.array(z.number()),
+  professions: z.array(z.string()),
 })
 
-type ProfessionalOption = z.infer<typeof ProfessionalOptionSchema>
+type ProfessionalOptionModel = z.infer<typeof ProfessionalOptionSchema>
 
 export class ProfessionalToFilterEntity {
-  public value: ProfessionalOption["value"];
-  public label: ProfessionalOption["label"];
-  public professions: ProfessionalOption["professions"];
+  public value: ProfessionalOptionModel["value"];
+  public label: ProfessionalOptionModel["label"];
+  public professions: ProfessionalOptionModel["professions"];
 
-  private constructor(init: ProfessionalOption) {
-    this.value = Number(init.value);
-    this.label = init.label;
-    this.professions = init.professions
+  private constructor(init: ProfessionalOptionModel) {
+    this.value = String(init.value);
+    this.label = String(init.label);
+    this.professions = init.professions.map(p => p ? String(p) : p);
   }
 
   static getSchema() {
     return ProfessionalOptionSchema
   }
 
-  static validate(item: any): ProfessionalToFilterEntity {
+  static validate(item: any): ProfessionalOptionModel {
     try {
       const data = ProfessionalToFilterEntity.itemAdapter(item)
-      const professional = ProfessionalOptionSchema.parse(data)
-      return new ProfessionalToFilterEntity(professional)
+      return ProfessionalToFilterEntity.getSchema().parse(data)
     } catch (error) {
       throw new Error(CustomError.getErrorMessage(
         error,
@@ -38,9 +37,12 @@ export class ProfessionalToFilterEntity {
     }
   }
 
-  static responseAdapter(data: any): ProfessionalToFilterEntity[] {
+  static responseAdapter(data: any): ProfessionalOptionModel[] {
     try {
-      return safeArray<ProfessionalToFilterEntity>(data).map(ProfessionalToFilterEntity.validate);
+      return safeArray<ProfessionalOptionModel>(data, {
+        throwErrors: true,
+        errorMessage: "profession-to-filter-entity.ts: (responseAdapter) Se esperaba un arreglo",
+      }).map(ProfessionalToFilterEntity.validate);
     } catch (error) {
       const errorMessage = CustomError.getErrorMessage(
         error,
@@ -50,14 +52,14 @@ export class ProfessionalToFilterEntity {
     }
   }
 
-  private static itemAdapter(item: any): ProfessionalOption {
+  private static itemAdapter(item: any): ProfessionalToFilterEntity {
     const user = item["user"];
     const professions = safeArray<any>(item["professional_profession"])
 
-    return {
-      value: Number(item["id"]),
-      label: `${user?.["names"]} ${user?.["last_names"]}`,
-      professions: professions.map((i: any) => Number(i?.profession_id))
-    }
+    return new ProfessionalToFilterEntity({
+      value: item["id"],
+      label: user?.["names"] + user?.["last_names"],
+      professions: professions.map(i => i?.profession_id)
+    })
   }
 }
