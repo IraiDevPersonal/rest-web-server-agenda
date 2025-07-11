@@ -19,7 +19,6 @@ export class AppointmentService {
             time_from: true,
             time_to: true,
             is_enabled: true,
-            week_day: true,
             professional: {
               select: {
                 professional_profession: {

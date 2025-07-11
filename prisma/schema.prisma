@@ -79,23 +79,12 @@ model schedules {
   id              BigInt        @id @default(autoincrement())
   uid             String        @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   professional_id BigInt
-  week_day        WeekDay
   date            DateTime      @db.Date
   time_from       String
   time_to         String
   is_enabled      Boolean       @default(true)
   professional    professionals @relation(fields: [professional_id], references: [id])
   appointments    appointment[]
-}
-
-enum WeekDay {
-  MONDAY    @map("lunes")
-  TUESDAY   @map("martes")
-  WEDNESDAY @map("miercoles")
-  THURSDAY  @map("jueves")
-  FRIDAY    @map("viernes")
-  SATURDAY  @map("sabado")
-  SUNDAY    @map("domingo")
 }
 
 model patients {

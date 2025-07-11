@@ -148,7 +148,6 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 1,
-      week_day: WeekDay.MONDAY,
       time_from: "08:00",
       time_to: "08:45",
       is_enabled: true,
@@ -159,7 +158,6 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 1,
-      week_day: WeekDay.MONDAY,
       time_from: "15:00",
       time_to: "15:45",
       is_enabled: true,
@@ -170,7 +168,6 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 1,
-      week_day: WeekDay.MONDAY,
       time_from: "16:00",
       time_to: "16:45",
       is_enabled: false,
@@ -181,7 +178,6 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 1,
-      week_day: WeekDay.WEDNESDAY,
       time_from: "08:00",
       time_to: "08:45",
       is_enabled: true,
@@ -192,7 +188,6 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 1,
-      week_day: WeekDay.WEDNESDAY,
       time_from: "15:00",
       time_to: "15:45",
       is_enabled: true,
@@ -203,7 +198,6 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 1,
-      week_day: WeekDay.WEDNESDAY,
       time_from: "16:00",
       time_to: "16:45",
       is_enabled: false,
@@ -214,7 +208,6 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 1,
-      week_day: WeekDay.FRIDAY,
       time_from: "08:00",
       time_to: "08:45",
       is_enabled: true,
@@ -225,7 +218,6 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 1,
-      week_day: WeekDay.FRIDAY,
       time_from: "15:00",
       time_to: "15:45",
       is_enabled: true,
@@ -236,7 +228,6 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 1,
-      week_day: WeekDay.FRIDAY,
       time_from: "16:00",
       time_to: "16:45",
       is_enabled: false,
@@ -248,7 +239,6 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: WeekDay.TUESDAY,
       time_from: "08:00",
       time_to: "08:45",
       is_enabled: true,
@@ -259,7 +249,6 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: WeekDay.TUESDAY,
       time_from: "15:00",
       time_to: "15:45",
       is_enabled: true,
@@ -270,7 +259,6 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: WeekDay.TUESDAY,
       time_from: "16:00",
       time_to: "16:45",
       is_enabled: false,
@@ -281,7 +269,6 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: WeekDay.THURSDAY,
       time_from: "08:00",
       time_to: "08:45",
       is_enabled: true,
@@ -292,7 +279,6 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: WeekDay.THURSDAY,
       time_from: "15:00",
       time_to: "15:45",
       is_enabled: true,
@@ -303,7 +289,6 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: WeekDay.THURSDAY,
       time_from: "16:00",
       time_to: "16:45",
       is_enabled: false,
@@ -314,7 +299,6 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: WeekDay.SATURDAY,
       time_from: "08:00",
       time_to: "08:45",
       is_enabled: true,
@@ -325,7 +309,6 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: WeekDay.SATURDAY,
       time_from: "15:00",
       time_to: "15:45",
       is_enabled: true,
@@ -336,7 +319,6 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: WeekDay.SATURDAY,
       time_from: "16:00",
       time_to: "16:45",
       is_enabled: false,
@@ -347,7 +329,6 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: WeekDay.MONDAY,
       time_from: "10:00",
       time_to: "10:45",
       is_enabled: true,
@@ -358,7 +339,6 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: WeekDay.MONDAY,
       time_from: "12:00",
       time_to: "12:45",
       is_enabled: true,
@@ -369,7 +349,6 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: WeekDay.MONDAY,
       time_from: "14:00",
       time_to: "14:45",
       is_enabled: false,
@@ -380,7 +359,6 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: WeekDay.WEDNESDAY,
       time_from: "09:00",
       time_to: "09:15",
       is_enabled: true,
@@ -391,7 +369,6 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: WeekDay.WEDNESDAY,
       time_from: "09:30",
       time_to: "09:45",
       is_enabled: true,
@@ -402,7 +379,6 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: WeekDay.WEDNESDAY,
       time_from: "12:00",
       time_to: "12:15",
       is_enabled: false,
@@ -413,7 +389,6 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: WeekDay.FRIDAY,
       time_from: "08:00",
       time_to: "08:45",
       is_enabled: true,
@@ -424,7 +399,6 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: WeekDay.FRIDAY,
       time_from: "15:00",
       time_to: "15:45",
       is_enabled: true,
@@ -435,7 +409,6 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: WeekDay.FRIDAY,
       time_from: "16:00",
       time_to: "16:45",
       is_enabled: false,

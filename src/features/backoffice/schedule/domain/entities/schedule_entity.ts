@@ -1,5 +1,4 @@
 import { CustomError } from "@core/domain/custom.error";
-import { WeekDay } from "@prisma/client";
 import { ProfessionalEntity } from "@professionals/domain/entities/professional_entity";
 import { ScheduleSchema } from "@schedules/presentation/schemas/schedule_schema";
 
@@ -7,7 +6,6 @@ type Init = {
   id?: number | undefined;
   uid?: string | undefined;
   professional_id: number;
-  week_day: WeekDay;
   date: Date;
   time_from: string;
   time_to: string;
@@ -19,7 +17,6 @@ export class ScheduleEntity {
   public id?: number | undefined;
   public uid?: string | undefined;
   public professional_id: number;
-  public week_day: WeekDay;
   public date: Date;
   public time_from: string;
   public time_to: string;
@@ -29,7 +26,6 @@ export class ScheduleEntity {
   private constructor(init: Init) {
     this.id = init.id;
     this.professional_id = init.professional_id;
-    this.week_day = init.week_day;
     this.date = init.date;
     this.time_from = init.time_from;
     this.time_to = init.time_to;
@@ -42,7 +38,6 @@ export class ScheduleEntity {
   ): Omit<ScheduleEntity, "professional_id"> {
     return {
       uid: object["uid"],
-      week_day: object["week_day"],
       date: object["date"],
       time_from: object["time_from"],
       time_to: object["time_to"],
