@@ -1,114 +1,134 @@
 import { CustomError } from "@/lib/custom-error";
-import { isValidObject } from "@/lib/utils";
+import { isValidObject, safeArray } from "@/lib/utils";
 import { DateFormatter } from "@core/domain/date_formatter";
 import { AppointmentStatus } from "@prisma/client";
+import { z } from "zod";
 
-type PatientHistory = {
-  date_time: string;
-  status: AppointmentStatus;
-};
-type Init = {
-  date: string;
-  time_from: string;
-  time_to: string;
-  status: AppointmentStatus;
-  is_enabled: boolean;
-  professional: {
-    full_name: string;
-    professions: string[];
-    pay_methods: string[];
-    confirm_methods: string[];
-  };
-  patient: {
-    names: string;
-    last_names: string;
-    rut: string;
-    phone: string;
-    email: string;
-    address: string;
-  };
-  alert: {
-    message: string;
-    is_required: boolean
-  };
-  patient_history: PatientHistory[];
-};
+const OneAppointmentSchema = z.object(
+  {
+    uid: z.string().uuid("El UID debe ser un UUID válido"),
+    date: z.string(),
+    time_from: z.string(),
+    time_to: z.string(),
+    status: z.nativeEnum(AppointmentStatus),
+    is_enabled: z.boolean(),
+    professional: z.object({
+      full_name: z.string(),
+      professions: z.array(z.string()),
+      pay_methods: z.array(z.string()),
+      confirm_methods: z.array(z.string()),
+    }),
+    patient: z.object({
+      names: z.string(),
+      last_names: z.string(),
+      rut: z.string(),
+      phone: z.string(),
+      email: z.string(),
+      address: z.string(),
+    }),
+    alert: z.object({
+      message: z.string(),
+      is_required: z.boolean()
+    }),
+    patient_history: z.array(z.object({
+      date_time: z.string(),
+      status: z.nativeEnum(AppointmentStatus),
+    }))
+  }
+)
+
+type OneAppointmentModel = z.infer<typeof OneAppointmentSchema>;
 
 export class OneAppointmentEntity {
-  public professional;
-  public patient;
-  public alert;
-  public patient_history;
-  public date;
-  public time_from;
-  public time_to;
-  public status;
-  public is_enabled;
+  public professional: OneAppointmentModel["professional"];
+  public patient: OneAppointmentModel["patient"];
+  public alert: OneAppointmentModel["alert"];
+  public patient_history: OneAppointmentModel["patient_history"];
+  public uid: OneAppointmentModel["uid"];
+  public date: OneAppointmentModel["date"];
+  public time_from: OneAppointmentModel["time_from"];
+  public time_to: OneAppointmentModel["time_to"];
+  public status: OneAppointmentModel["status"];
+  public is_enabled: OneAppointmentModel["is_enabled"];
 
-  private constructor(init: Init) {
-    this.professional = init.professional;
-    this.patient = init.patient;
-    this.alert = init.alert;
-    this.patient_history = init.patient_history;
+  private constructor(init: OneAppointmentModel) {
+    this.professional = {
+      full_name: String(init.professional.full_name),
+      professions: init.professional.professions.map(String),
+      pay_methods: init.professional.pay_methods,
+      confirm_methods: init.professional.confirm_methods,
+    };
+    this.patient = {
+      names: init.patient.names,
+      last_names: init.patient.last_names,
+      rut: init.patient.rut,
+      phone: init.patient.phone,
+      email: init.patient.email,
+      address: init.patient.address,
+    };
+    this.alert = init.alert //TODO: revisar cuando se maneje a traves de bd;
+    this.patient_history = init.patient_history.map((history) => ({
+      date_time: String(history.date_time),
+      status: history.status,
+    }));
+    this.uid = init.uid;
     this.date = init.date;
     this.time_from = init.time_from;
     this.time_to = init.time_to;
-    this.status = init.status;
-    this.is_enabled = init.is_enabled;
+    this.status = init.status ?? AppointmentStatus.INDETERMINATE;
+    this.is_enabled = init.is_enabled ?? false;
+  }
+
+  static getSchema() {
+    return OneAppointmentSchema;
   }
 
   static responseAdapter(object: any): OneAppointmentEntity {
-    const message = "one-appointment-entity.ts: (itemAdapter) entreada no esperada, se esperaba un objeto"
-
-    if (!isValidObject(object, message)) {
-      throw new Error(message);
-    }
-
-    const appointment = OneAppointmentEntity.itemAdapter(object);
-    return new OneAppointmentEntity(appointment);
+    return OneAppointmentEntity.validate(object);
   }
 
-  private static itemAdapter(item: Record<string, any>): Init {
-    const schedule = item["schedule"];
-    const professional = schedule?.["professional"];
-    const patient = item["patient"];
-    const patienHistory: any[] = patient?.appointments ?? [];
-    const professions: any[] = professional?.["professional_profession"] ?? [];
+  static validate(item: any): OneAppointmentModel {
+    try {
+      const data = OneAppointmentEntity.itemAdapter(item);
+      return OneAppointmentEntity.getSchema().parse(data);
+    } catch (error) {
+      throw new Error(
+        CustomError.getErrorMessage(
+          error,
+          "one-appointment-entity.ts: (validate) error inesperado")
+      )
+    }
+  }
 
-    const history: PatientHistory[] = patienHistory.map((appointment: any) => {
-      const schedule = appointment["schedule"]
+  private static itemAdapter(item: any): OneAppointmentEntity {
+    const schedule = item.schedule;
+    const patient = item.patient;
+    const professional = schedule?.professional;
+    const professions = safeArray<any>(professional?.professional_profession).map(p => p?.professions?.name);
+    const patienHistory = safeArray<any>(patient?.appointments).map((p) => ({
+      date_time: (p?.schedule?.date ? DateFormatter.formatDate(p.schedule.date, "dmy") : "aaaa-mm-dd") + " " + p?.schedule?.time_from + "-" + p?.schedule?.time_to,
+      status: p?.appointment_statuss ?? AppointmentStatus.INDETERMINATE,
+    }));
 
-      return {
-        date_time: `${DateFormatter.formatDate(schedule["date"], "dmy")} ${schedule["time_from"]}-${schedule["time_to"]}`,
-        status: appointment.appointment_status ?? "INDETERMINATE"
-      } satisfies PatientHistory
-    })
-
-    return {
+    return new OneAppointmentEntity({
+      uid: item["uid"],
       date: schedule?.["date"] ? DateFormatter.formatDate(schedule["date"], "ymd") : "aaaa-mm-dd",
-      time_from: schedule?.["time_from"] ?? "hh:mm",
-      time_to: schedule?.["time_to"] ?? "hh:mm",
-      status: item["appointment_status"] ?? "INDETERMINATE",
-      is_enabled: schedule?.["is_enabled"] ?? false,
+      time_from: schedule?.["time_from"],
+      time_to: schedule?.["time_to"],
+      status: item["appointment_status"],
+      is_enabled: schedule?.["is_enabled"],
       professional: {
-        full_name: `${professional?.["user"]["names"] ?? "sin nombres"} ${professional?.["user"]["last_names"] ?? "sin apellidos"}`,
-        professions: professions.map((p) => p?.professions?.name ?? "profesión indeterminada..."),
+        full_name: professional?.["user"]?.["names"] + professional?.["user"]?.["last_names"],
+        professions: professions,
         pay_methods: ["fonasa", "particular (Efectivo, Transferencia)"],
         confirm_methods: ["whatsapp", "teléfono", "correo", "presencial"],
       },
-      patient: {
-        names: professional?.["user"]["names"] ?? "Paciente sin nombres",
-        last_names: professional?.["user"]["last_names"] ?? "Paciente sin apellidos",
-        rut: patient?.["rut"] ?? "Paciente sin rut",
-        phone: patient?.["phone"] ?? "Paciente sin teléfono",
-        email: patient?.["email"] ?? "Paciente sin correo",
-        address: patient?.["address"] ?? "Paciente sin dirección",
-      },
-      patient_history: history,
+      patient: patient,
+      patient_history: patienHistory,
       alert: {
         message: "Profesional exige bono para confirmar paciente",
         is_required: true
       },
-    } satisfies OneAppointmentEntity;
+    });
   }
 }
