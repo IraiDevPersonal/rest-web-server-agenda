@@ -1,8 +1,9 @@
-import { CustomError } from "@/lib/custom-error";
-import { isValidObject, safeArray } from "@/lib/utils";
-import { DateFormatter } from "@core/domain/date_formatter";
 import { AppointmentStatus } from "@prisma/client";
 import { z } from "zod";
+
+import { CustomError } from "@/lib/custom-error";
+import { safeArray } from "@/lib/utils";
+import { DateFormatter } from "@/lib/date-formatter";
 
 const OneAppointmentSchema = z.object(
   {
@@ -107,7 +108,7 @@ export class OneAppointmentEntity {
     const professions = safeArray<any>(professional?.professional_profession).map(p => p?.professions?.name);
     const patienHistory = safeArray<any>(patient?.appointments).map((p) => ({
       date_time: (p?.schedule?.date ? DateFormatter.formatDate(p.schedule.date, "dmy") : "aaaa-mm-dd") + " " + p?.schedule?.time_from + "-" + p?.schedule?.time_to,
-      status: p?.appointment_statuss ?? AppointmentStatus.INDETERMINATE,
+      status: p?.appointment_status ?? AppointmentStatus.INDETERMINATE,
     }));
 
     return new OneAppointmentEntity({

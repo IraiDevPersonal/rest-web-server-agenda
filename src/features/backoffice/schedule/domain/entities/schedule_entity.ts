@@ -1,15 +1,7 @@
 import { CustomError } from "@core/domain/custom.error";
+import { WeekDay } from "@prisma/client";
 import { ProfessionalEntity } from "@professionals/domain/entities/professional_entity";
 import { ScheduleSchema } from "@schedules/presentation/schemas/schedule_schema";
-
-export type WeekDay =
-  | "LUNES"
-  | "MARTES"
-  | "MIERCOLES"
-  | "JUEVES"
-  | "VIERNES"
-  | "SABADO"
-  | "DOMINGO";
 
 type Init = {
   id?: number | undefined;

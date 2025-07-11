@@ -89,13 +89,13 @@ model schedules {
 }
 
 enum WeekDay {
-  LUNES
-  MARTES
-  MIERCOLES
-  JUEVES
-  VIERNES
-  SABADO
-  DOMINGO
+  MONDAY    @map("lunes")
+  TUESDAY   @map("martes")
+  WEDNESDAY @map("miercoles")
+  THURSDAY  @map("jueves")
+  FRIDAY    @map("viernes")
+  SATURDAY  @map("sabado")
+  SUNDAY    @map("domingo")
 }
 
 model patients {
@@ -122,8 +122,9 @@ model appointment {
 }
 
 enum AppointmentStatus {
-  TO_CONFIRM
-  CONFIRMED
-  CANCELLED
-  AVAILABLE
+  TO_CONFIRM    @map("to-confirm")
+  CONFIRMED     @map("confirmed")
+  CANCELLED     @map("cancelled")
+  AVAILABLE     @map("available")
+  INDETERMINATE @map("indeterminate")
 }

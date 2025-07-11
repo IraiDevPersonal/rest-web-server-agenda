@@ -9,6 +9,7 @@ import { ServiceProviderCodesEntity } from "@serviceProviders/domain/entities/se
 import { UserEntity } from "@users/domain/entities/user_entity";
 import { ProfessionalProfession } from "@professionals/domain/entities/professionalProfession_entity";
 import { v4 } from "uuid";
+import { AppointmentStatus, WeekDay } from "@prisma/client";
 
 export const professions: ProfessionEntity[] = [
   ProfessionEntity.fromJson({
@@ -147,7 +148,7 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 1,
-      week_day: "LUNES",
+      week_day: WeekDay.MONDAY,
       time_from: "08:00",
       time_to: "08:45",
       is_enabled: true,
@@ -158,7 +159,7 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 1,
-      week_day: "LUNES",
+      week_day: WeekDay.MONDAY,
       time_from: "15:00",
       time_to: "15:45",
       is_enabled: true,
@@ -169,7 +170,7 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 1,
-      week_day: "LUNES",
+      week_day: WeekDay.MONDAY,
       time_from: "16:00",
       time_to: "16:45",
       is_enabled: false,
@@ -180,7 +181,7 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 1,
-      week_day: "MIERCOLES",
+      week_day: WeekDay.WEDNESDAY,
       time_from: "08:00",
       time_to: "08:45",
       is_enabled: true,
@@ -191,7 +192,7 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 1,
-      week_day: "MIERCOLES",
+      week_day: WeekDay.WEDNESDAY,
       time_from: "15:00",
       time_to: "15:45",
       is_enabled: true,
@@ -202,7 +203,7 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 1,
-      week_day: "MIERCOLES",
+      week_day: WeekDay.WEDNESDAY,
       time_from: "16:00",
       time_to: "16:45",
       is_enabled: false,
@@ -213,7 +214,7 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 1,
-      week_day: "VIERNES",
+      week_day: WeekDay.FRIDAY,
       time_from: "08:00",
       time_to: "08:45",
       is_enabled: true,
@@ -224,7 +225,7 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 1,
-      week_day: "VIERNES",
+      week_day: WeekDay.FRIDAY,
       time_from: "15:00",
       time_to: "15:45",
       is_enabled: true,
@@ -235,7 +236,7 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 1,
-      week_day: "VIERNES",
+      week_day: WeekDay.FRIDAY,
       time_from: "16:00",
       time_to: "16:45",
       is_enabled: false,
@@ -247,7 +248,7 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: "MARTES",
+      week_day: WeekDay.TUESDAY,
       time_from: "08:00",
       time_to: "08:45",
       is_enabled: true,
@@ -258,7 +259,7 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: "MARTES",
+      week_day: WeekDay.TUESDAY,
       time_from: "15:00",
       time_to: "15:45",
       is_enabled: true,
@@ -269,7 +270,7 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: "MARTES",
+      week_day: WeekDay.TUESDAY,
       time_from: "16:00",
       time_to: "16:45",
       is_enabled: false,
@@ -280,7 +281,7 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: "JUEVES",
+      week_day: WeekDay.THURSDAY,
       time_from: "08:00",
       time_to: "08:45",
       is_enabled: true,
@@ -291,7 +292,7 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: "JUEVES",
+      week_day: WeekDay.THURSDAY,
       time_from: "15:00",
       time_to: "15:45",
       is_enabled: true,
@@ -302,7 +303,7 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: "JUEVES",
+      week_day: WeekDay.THURSDAY,
       time_from: "16:00",
       time_to: "16:45",
       is_enabled: false,
@@ -313,7 +314,7 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: "SABADO",
+      week_day: WeekDay.SATURDAY,
       time_from: "08:00",
       time_to: "08:45",
       is_enabled: true,
@@ -324,7 +325,7 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: "SABADO",
+      week_day: WeekDay.SATURDAY,
       time_from: "15:00",
       time_to: "15:45",
       is_enabled: true,
@@ -335,7 +336,7 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: "SABADO",
+      week_day: WeekDay.SATURDAY,
       time_from: "16:00",
       time_to: "16:45",
       is_enabled: false,
@@ -346,7 +347,7 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: "LUNES",
+      week_day: WeekDay.MONDAY,
       time_from: "10:00",
       time_to: "10:45",
       is_enabled: true,
@@ -357,7 +358,7 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: "LUNES",
+      week_day: WeekDay.MONDAY,
       time_from: "12:00",
       time_to: "12:45",
       is_enabled: true,
@@ -368,7 +369,7 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: "LUNES",
+      week_day: WeekDay.MONDAY,
       time_from: "14:00",
       time_to: "14:45",
       is_enabled: false,
@@ -379,7 +380,7 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: "MIERCOLES",
+      week_day: WeekDay.WEDNESDAY,
       time_from: "09:00",
       time_to: "09:15",
       is_enabled: true,
@@ -390,7 +391,7 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: "MIERCOLES",
+      week_day: WeekDay.WEDNESDAY,
       time_from: "09:30",
       time_to: "09:45",
       is_enabled: true,
@@ -401,7 +402,7 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: "MIERCOLES",
+      week_day: WeekDay.WEDNESDAY,
       time_from: "12:00",
       time_to: "12:15",
       is_enabled: false,
@@ -412,7 +413,7 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: "VIERNES",
+      week_day: WeekDay.FRIDAY,
       time_from: "08:00",
       time_to: "08:45",
       is_enabled: true,
@@ -423,7 +424,7 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: "VIERNES",
+      week_day: WeekDay.FRIDAY,
       time_from: "15:00",
       time_to: "15:45",
       is_enabled: true,
@@ -434,7 +435,7 @@ export const schedules: ScheduleEntity[] = [
     {
       date: new Date(),
       professional_id: 2,
-      week_day: "VIERNES",
+      week_day: WeekDay.FRIDAY,
       time_from: "16:00",
       time_to: "16:45",
       is_enabled: false,
@@ -447,76 +448,76 @@ export const appointment: AppointmentEntity[] = [
   AppointmentEntity.createDTO({
     patient_id: 1,
     schedule_id: 1,
-    appointment_status: "CANCELLED",
+    appointment_status: AppointmentStatus.AVAILABLE,
   }),
   AppointmentEntity.createDTO({
     patient_id: 1,
     schedule_id: 5,
-    appointment_status: "CONFIRMED",
+    appointment_status: AppointmentStatus.CONFIRMED,
   }),
   AppointmentEntity.createDTO({
     patient_id: 1,
     schedule_id: 6,
-    appointment_status: "TO_CONFIRM",
+    appointment_status: AppointmentStatus.TO_CONFIRM,
   }),
   AppointmentEntity.createDTO({
     patient_id: 2,
     schedule_id: 8,
-    appointment_status: "TO_CONFIRM",
+    appointment_status: AppointmentStatus.TO_CONFIRM,
   }),
   AppointmentEntity.createDTO({
     patient_id: 2,
     schedule_id: 2,
-    appointment_status: "CONFIRMED",
+    appointment_status: AppointmentStatus.CONFIRMED,
   }),
   AppointmentEntity.createDTO({
     patient_id: 2,
     schedule_id: 14,
-    appointment_status: "TO_CONFIRM",
+    appointment_status: AppointmentStatus.TO_CONFIRM,
   }),
   AppointmentEntity.createDTO({
     patient_id: 3,
     schedule_id: 9,
-    appointment_status: "CANCELLED",
+    appointment_status: AppointmentStatus.CANCELLED,
   }),
   AppointmentEntity.createDTO({
     patient_id: 3,
     schedule_id: 10,
-    appointment_status: "TO_CONFIRM",
+    appointment_status: AppointmentStatus.TO_CONFIRM,
   }),
   AppointmentEntity.createDTO({
     patient_id: 3,
     schedule_id: 11,
-    appointment_status: "CONFIRMED",
+    appointment_status: AppointmentStatus.CONFIRMED,
   }),
   AppointmentEntity.createDTO({
     patient_id: 4,
     schedule_id: 12,
-    appointment_status: "CONFIRMED",
+    appointment_status: AppointmentStatus.CONFIRMED,
   }),
   AppointmentEntity.createDTO({
     patient_id: 4,
     schedule_id: 13,
-    appointment_status: "TO_CONFIRM",
+    appointment_status: AppointmentStatus.TO_CONFIRM,
   }),
   AppointmentEntity.createDTO({
     patient_id: 4,
     schedule_id: 15,
-    appointment_status: "TO_CONFIRM",
+    appointment_status: AppointmentStatus.TO_CONFIRM,
   }),
   AppointmentEntity.createDTO({
     patient_id: 5,
     schedule_id: 16,
-    appointment_status: "CANCELLED",
+    appointment_status: AppointmentStatus.CANCELLED,
   }),
   AppointmentEntity.createDTO({
     patient_id: 5,
     schedule_id: 17,
-    appointment_status: "TO_CONFIRM",
+    appointment_status: AppointmentStatus.TO_CONFIRM,
   }),
   AppointmentEntity.createDTO({
     patient_id: 5,
     schedule_id: 18,
-    appointment_status: "CANCELLED",
+    appointment_status: AppointmentStatus.CANCELLED,
   }),
 ];
