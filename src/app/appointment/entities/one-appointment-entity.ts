@@ -5,6 +5,7 @@ import { CustomError } from "@/lib/custom-error";
 import { safeArray } from "@/lib/utils";
 import { DateFormatter } from "@/lib/date-formatter";
 
+// TODO: trabajar en dividir el esquema en partes y crear entidades para manejar errores y mapeadores
 const OneAppointmentSchema = z.object(
   {
     uid: z.string().uuid("El UID debe ser un UUID válido"),
@@ -67,7 +68,7 @@ export class OneAppointmentEntity {
       email: init.patient.email,
       address: init.patient.address,
     };
-    this.alert = init.alert //TODO: revisar cuando se maneje a traves de bd;
+    this.alert = init.alert;
     this.patient_history = init.patient_history.map((history) => ({
       date_time: String(history.date_time),
       status: history.status,
