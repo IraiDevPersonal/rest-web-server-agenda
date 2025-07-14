@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { CustomError } from "@/lib/custom-error";
 import { safeArray } from "@/lib/utils";
-import { OptionSchema } from "@/schemas/global";
+import { OptionSchema } from "@/lib/schemas/global";
 
 const ProfessionalOptionSchema = OptionSchema.extend({
   professions: z.array(z.string())
