@@ -1,9 +1,6 @@
-import { WeekDay } from '@prisma/client';
-import { z } from 'zod';
+import { z } from "zod";
 
 export const OptionSchema = z.object({
-  value: z.string().min(1, 'El valor no puede estar vacío'),
-  label: z.string().min(1, 'El label no puede estar vacío')
+  value: z.string().min(1, "El valor no puede estar vacío"),
+  label: z.string().min(1, "El label no puede estar vacío")
 });
-
-export const WeekDaySchema = z.nativeEnum(WeekDay);

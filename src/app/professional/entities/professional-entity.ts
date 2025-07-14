@@ -1,10 +1,11 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-import { ProfessionEntity } from '@/app/profession/entities/profession-entity';
-import { RoleEntity } from '@/app/role/entities/role-entity';
+import { ProfessionEntity } from "@/app/profession/entities/profession-entity";
+import { RoleEntity } from "@/app/role/entities/role-entity";
 
-import { CustomError } from '@/lib/custom-error';
-import { safeArray } from '@/lib/utils';
+import { CustomError } from "@/lib/custom-error";
+import { safeArray } from "@/lib/utils";
+import { Uid } from "@/lib/uid";
 
 const ProfessionalSchema = z.object({
   id: z.number().positive(),
@@ -14,33 +15,33 @@ const ProfessionalSchema = z.object({
   last_names: z.string(),
   phone: z.string(),
   email: z.string().email(),
-  professions: z.array(ProfessionEntity.getSchema()),
-  role: RoleEntity.getSchema()
+  role: RoleEntity.getSchema(),
+  professions: z.array(ProfessionEntity.getSchema())
 });
 
 type ProfessionalModel = z.infer<typeof ProfessionalSchema>;
 
 export class ProfessionalEntity {
-  public id: ProfessionalModel['id'];
-  public names: ProfessionalModel['names'];
-  public uid: ProfessionalModel['uid'];
-  public rut: ProfessionalModel['rut'];
-  public last_names: ProfessionalModel['last_names'];
-  public phone: ProfessionalModel['phone'];
-  public email: ProfessionalModel['email'];
-  public professions: ProfessionalModel['professions'];
-  public role: ProfessionalModel['role'];
+  public id: ProfessionalModel["id"];
+  public names: ProfessionalModel["names"];
+  public uid: ProfessionalModel["uid"];
+  public rut: ProfessionalModel["rut"];
+  public last_names: ProfessionalModel["last_names"];
+  public phone: ProfessionalModel["phone"];
+  public email: ProfessionalModel["email"];
+  public professions: ProfessionalModel["professions"];
+  public role: ProfessionalModel["role"];
 
   private constructor(init: ProfessionalModel) {
-    this.id = init.id ? Number(init.id) : init.id;
-    this.names = String(init.names);
-    this.uid = String(init.uid);
-    this.rut = String(init.rut);
-    this.last_names = String(init.last_names);
-    this.phone = String(init.phone);
-    this.email = String(init.email);
-    this.role = RoleEntity.validate(init.role);
-    this.professions = init.professions.map(ProfessionEntity.validate);
+    this.id = init.id;
+    this.names = init.names;
+    this.uid = init.uid;
+    this.rut = init.rut;
+    this.last_names = init.last_names;
+    this.phone = init.phone;
+    this.email = init.email;
+    this.role = init.role;
+    this.professions = init.professions;
   }
 
   static getSchema() {
@@ -49,14 +50,11 @@ export class ProfessionalEntity {
 
   static validate(item: any): ProfessionalModel {
     try {
-      const data = ProfessionalEntity.itemAdapter(item);
+      const data = ProfessionalEntity.mapper(item);
       return ProfessionalEntity.getSchema().parse(data);
     } catch (error) {
       throw new Error(
-        CustomError.getErrorMessage(
-          error,
-          'profession-entity.ts: (validate) error inesperado'
-        )
+        CustomError.getErrorMessage(error, "profession-entity.ts: (validate)")
       );
     }
   }
@@ -65,40 +63,31 @@ export class ProfessionalEntity {
     try {
       return safeArray<ProfessionalModel>(data, {
         throwErrors: true,
-        errorMessage:
-          'profession-entity.ts: (responseAdapter) Se esperaba un arreglo'
-      }).map((item) => ProfessionalEntity.validate(item));
+        errorMessage: "Se esperaba un arreglo de profesionales"
+      }).map(ProfessionalEntity.validate);
     } catch (error) {
       const errorMessage = CustomError.getErrorMessage(
         error,
-        'profession-entity.ts: (responseAdapter) error inesperado'
+        "profession-entity.ts: (responseAdapter)"
       );
 
       throw new Error(errorMessage);
     }
   }
 
-  private static itemAdapter(item: any): ProfessionalEntity {
-    const user = item['user'];
-    const role = user?.['role'];
-    const professions = safeArray<any>(item['professional_profession']);
+  private static mapper(item: any): ProfessionalModel {
+    const user = item?.user;
 
-    return new ProfessionalEntity({
-      id: user?.['id'],
-      names: user?.['names'],
-      uid: user?.['uid'],
-      rut: user?.['rut'],
-      last_names: user?.['last_names'],
-      phone: user?.['phone'],
-      email: user?.['email'],
-      role: {
-        id: role?.['id'],
-        name: role?.['name']
-      },
-      professions: professions.map((p) => ({
-        id: p?.['professions']?.['id'],
-        name: p?.['professions']?.['name']
-      }))
-    });
+    return {
+      id: user?.id ?? null,
+      names: user?.names ?? "sin nombres",
+      uid: user?.uid ?? Uid.createV4(),
+      rut: user?.rut ?? "sin rut",
+      last_names: user?.last_names ?? "sin apellidos",
+      phone: user?.phone ?? "sin teléfono",
+      email: user?.email ?? "sin correo",
+      role: RoleEntity.validate(user?.role),
+      professions: ProfessionEntity.toArray(item?.professional_profession)
+    };
   }
 }

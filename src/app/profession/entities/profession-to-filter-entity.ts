@@ -1,18 +1,18 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-import { CustomError } from '@/lib/custom-error';
-import { safeArray } from '@/lib/utils';
-import { OptionSchema } from '@/schemas/global';
+import { CustomError } from "@/lib/custom-error";
+import { safeArray } from "@/lib/utils";
+import { OptionSchema } from "@/schemas/global";
 
 type ProfessionOptionModel = z.infer<typeof OptionSchema>;
 
 export class ProfessionToFilterEntity {
-  public value: ProfessionOptionModel['value'];
-  public label: ProfessionOptionModel['label'];
+  public value: ProfessionOptionModel["value"];
+  public label: ProfessionOptionModel["label"];
 
   private constructor(init: ProfessionOptionModel) {
-    this.value = String(init.value);
-    this.label = String(init.label);
+    this.value = init.value;
+    this.label = init.label;
   }
 
   static getSchema() {
@@ -21,13 +21,13 @@ export class ProfessionToFilterEntity {
 
   static validate(item: any): ProfessionOptionModel {
     try {
-      const data = ProfessionToFilterEntity.itemAdapter(item);
+      const data = ProfessionToFilterEntity.mapper(item);
       return ProfessionToFilterEntity.getSchema().parse(data);
     } catch (error) {
       throw new Error(
         CustomError.getErrorMessage(
           error,
-          'profession-to-filter-entity.ts: (validate) error inesperado'
+          "profession-to-filter-entity.ts: (validate)"
         )
       );
     }
@@ -37,22 +37,21 @@ export class ProfessionToFilterEntity {
     try {
       return safeArray<ProfessionOptionModel>(data, {
         throwErrors: true,
-        errorMessage:
-          'profession-to-filter-entity.ts: (responseAdapter) Se esperaba un arreglo'
-      }).map(ProfessionToFilterEntity.itemAdapter);
+        errorMessage: "Se esperaba un arreglo de profesiones para filtros"
+      }).map(ProfessionToFilterEntity.mapper);
     } catch (error) {
       const errorMessage = CustomError.getErrorMessage(
         error,
-        'profession-to-filter-entity.ts: (responseAdapter) error inesperado'
+        "profession-to-filter-entity.ts: (responseAdapter)"
       );
       throw new Error(errorMessage);
     }
   }
 
-  private static itemAdapter(item: any): ProfessionToFilterEntity {
+  private static mapper(item: any): ProfessionToFilterEntity {
     return new ProfessionToFilterEntity({
-      value: item['id'],
-      label: item['name']
+      value: `${item.id}`,
+      label: item.name ?? "profesión indeterminada"
     });
   }
 }
