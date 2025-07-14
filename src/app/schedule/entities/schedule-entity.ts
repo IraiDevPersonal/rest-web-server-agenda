@@ -6,7 +6,7 @@ import { CustomError } from "@/lib/custom-error";
 import { safeArray } from "@/lib/utils";
 import { Uid } from "@/lib/uid";
 
-export const ScheduleSchema = z.object({
+const ScheduleSchema = z.object({
   id: z.optional(
     z.number().positive("el valor del id debe ser un número positivo")
   ),
@@ -73,7 +73,7 @@ export class ScheduleEntity {
     }
   }
 
-  static upsertDTO(object: Record<string, any>, action: "insert" | "update") {
+  static upsertDTO(object: any, action: "insert" | "update") {
     const schedule = ScheduleEntity.validate(object);
     delete schedule.professional;
 
