@@ -1,6 +1,6 @@
-import { Router } from "express";
-import { CalendarController } from "./controllers/calendar_controller";
-import { CalendarService } from "./service/calendar_service";
+import { Router } from 'express';
+import { CalendarController } from './controllers/calendar_controller';
+import { CalendarService } from './service/calendar_service';
 
 export class CalendarRoutes {
   static get routes(): Router {
@@ -8,7 +8,7 @@ export class CalendarRoutes {
 
     const service = new CalendarService();
     const controller = new CalendarController(service);
-    router.get("/", [], controller.getCalendar);
+    router.get('/', [], controller.getCalendar);
 
     return router;
   }

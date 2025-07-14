@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-import { AppointmentFilters } from "./models/appointment";
+import { PrismaClient } from '@prisma/client';
+import { AppointmentFilters } from './models/appointment';
 
 export class AppointmentService {
   private readonly db: PrismaClient;
@@ -25,21 +25,21 @@ export class AppointmentService {
                   select: {
                     professions: {
                       select: {
-                        name: true,
-                      },
-                    },
-                  },
+                        name: true
+                      }
+                    }
+                  }
                 },
                 user: {
                   select: {
                     names: true,
                     last_names: true,
                     rut: true
-                  },
-                },
-              },
-            },
-          },
+                  }
+                }
+              }
+            }
+          }
         },
         patient: {
           select: {
@@ -52,7 +52,7 @@ export class AppointmentService {
             appointments: {
               orderBy: {
                 schedule: {
-                  date: "desc"
+                  date: 'desc'
                 }
               },
               take: 4,
@@ -63,17 +63,17 @@ export class AppointmentService {
                   select: {
                     date: true,
                     time_from: true,
-                    time_to: true,
+                    time_to: true
                   }
                 }
               }
             }
-          },
-        },
+          }
+        }
       },
       where: {
-        uid: appointment_uid,
-      },
+        uid: appointment_uid
+      }
     });
   }
 
@@ -84,7 +84,7 @@ export class AppointmentService {
     date_from,
     date_to,
     date,
-    type,
+    type
   }: AppointmentFilters) {
     return await this.db.appointment.findMany({
       select: {
@@ -100,61 +100,61 @@ export class AppointmentService {
                 user: {
                   select: {
                     names: true,
-                    last_names: true,
-                  },
+                    last_names: true
+                  }
                 },
                 professional_profession: {
                   select: {
-                    professions: true,
-                  },
-                },
-              },
-            },
-          },
+                    professions: true
+                  }
+                }
+              }
+            }
+          }
         },
         patient: {
           select: {
             names: true,
             last_names: true,
             rut: true,
-            phone: true,
-          },
-        },
+            phone: true
+          }
+        }
       },
       where: {
         appointment_status: type,
         schedule: {
           date: date ?? {
             gte: date_from,
-            lte: date_to,
+            lte: date_to
           },
 
           professional_id: professional_id,
           professional: {
             professional_profession: {
               some: {
-                profession_id: profession_id,
-              },
-            },
-          },
+                profession_id: profession_id
+              }
+            }
+          }
         },
 
         patient: {
-          rut: { contains: patient_rut },
-        },
+          rut: { contains: patient_rut }
+        }
       },
       orderBy: [
         {
           schedule: {
-            date: 'asc',
-          },
+            date: 'asc'
+          }
         },
         {
           schedule: {
-            time_from: 'asc',
-          },
-        },
-      ],
+            time_from: 'asc'
+          }
+        }
+      ]
     });
   }
 }

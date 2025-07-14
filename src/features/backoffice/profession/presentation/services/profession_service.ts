@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-import { ProfessionFilters } from "@professions/domain/entities/profession_filters";
+import { PrismaClient } from '@prisma/client';
+import { ProfessionFilters } from '@professions/domain/entities/profession_filters';
 
 export class ProfessionService {
   private readonly db: PrismaClient;
@@ -14,9 +14,9 @@ export class ProfessionService {
         id: filters?.id,
         name: {
           contains: filters?.name,
-          mode: "insensitive",
-        },
-      },
+          mode: 'insensitive'
+        }
+      }
     });
   }
 }

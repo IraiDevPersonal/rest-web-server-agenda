@@ -1,11 +1,11 @@
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 
 dayjs.extend(utc);
 
 const dateFormat: { ymd: string; dmy: string } = {
-  ymd: "YYYY-MM-DD",
-  dmy: "DD-MM-YYYY",
+  ymd: 'YYYY-MM-DD',
+  dmy: 'DD-MM-YYYY'
 };
 
 type formatType = typeof dateFormat;
@@ -16,7 +16,7 @@ export class DateFormatter {
   }
 
   static getLastDayOfMonth(date?: Date | string, format?: keyof formatType) {
-    const endOfMonth = dayjs.utc(date).endOf("month");
+    const endOfMonth = dayjs.utc(date).endOf('month');
     if (format) {
       return endOfMonth.format(dateFormat[format]);
     }

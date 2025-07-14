@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-import { ProfessionFilters } from "./models/profession";
+import { PrismaClient } from '@prisma/client';
+import { ProfessionFilters } from './models/profession';
 
 export class ProfessionService {
   private readonly db: PrismaClient;
@@ -11,10 +11,8 @@ export class ProfessionService {
   async getProfessions({ id }: ProfessionFilters) {
     return await this.db.professions.findMany({
       where: {
-        id: id,
-      },
-    }
-    );
+        id: id
+      }
+    });
   }
 }
-

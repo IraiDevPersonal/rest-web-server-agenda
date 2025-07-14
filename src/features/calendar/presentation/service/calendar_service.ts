@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-import { GetCalendarFilter } from "../../domain/entities/filters";
+import { PrismaClient } from '@prisma/client';
+import { GetCalendarFilter } from '../../domain/entities/filters';
 
 export class CalendarService {
   private readonly db: PrismaClient;
@@ -10,15 +10,15 @@ export class CalendarService {
 
   async getCountAppointmentsByDateAndStatus({
     date_from,
-    type,
-  }: Pick<GetCalendarFilter, "date_from" | "type">) {
+    type
+  }: Pick<GetCalendarFilter, 'date_from' | 'type'>) {
     return await this.db.appointment.count({
       where: {
         appointment_status: type,
         schedule: {
-          date: date_from,
-        },
-      },
+          date: date_from
+        }
+      }
     });
   }
 
@@ -28,7 +28,7 @@ export class CalendarService {
     patient_rut,
     profession_id,
     professional_id,
-    type,
+    type
   }: GetCalendarFilter) {
     return await this.db.schedules.findMany({
       select: {
@@ -41,10 +41,10 @@ export class CalendarService {
             user: {
               select: {
                 names: true,
-                last_names: true,
-              },
-            },
-          },
+                last_names: true
+              }
+            }
+          }
         },
         appointments: {
           select: {
@@ -53,37 +53,37 @@ export class CalendarService {
               select: {
                 names: true,
                 last_names: true,
-                rut: true,
-              },
-            },
-          },
-        },
+                rut: true
+              }
+            }
+          }
+        }
       },
       where: {
         date: {
           gte: date_from,
-          lte: date_to,
+          lte: date_to
         },
         professional_id: professional_id,
         professional: {
           professional_profession: {
             some: {
-              profession_id: profession_id,
-            },
-          },
+              profession_id: profession_id
+            }
+          }
         },
         appointments: {
           some: {
             patient: {
               rut: {
                 contains: patient_rut,
-                mode: "insensitive",
-              },
+                mode: 'insensitive'
+              }
             },
-            appointment_status: type,
-          },
-        },
-      },
+            appointment_status: type
+          }
+        }
+      }
     });
   }
 }

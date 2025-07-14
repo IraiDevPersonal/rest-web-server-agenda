@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const ScheduleSchema = z.object({
   id: z.optional(z.number()),
@@ -7,5 +7,5 @@ export const ScheduleSchema = z.object({
   date: z.date(),
   time_from: z.string(),
   time_to: z.string(),
-  is_enabled: z.boolean(),
+  is_enabled: z.boolean()
 });

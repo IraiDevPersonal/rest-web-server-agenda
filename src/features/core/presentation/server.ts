@@ -1,6 +1,6 @@
-import express, { Router } from "express";
-import path from "path";
-import cors from "cors";
+import express, { Router } from 'express';
+import path from 'path';
+import cors from 'cors';
 
 interface Options {
   port: number;
@@ -16,7 +16,7 @@ export class Server {
   private readonly routes: Router;
 
   constructor(options: Options) {
-    const { port, routes, public_path = "public" } = options;
+    const { port, routes, public_path = 'public' } = options;
     this.port = port;
     this.publicPath = public_path;
     this.routes = routes;

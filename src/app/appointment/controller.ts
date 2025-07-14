@@ -6,14 +6,14 @@ import { AppointmentService } from "./service";
 import { DateFormatter } from "@/lib/date-formatter";
 import { CustomError } from "@/lib/custom-error";
 import { Controllers } from "@/lib/controllers";
-import { isYearMonth } from '@lib/utils'
+import { isYearMonth } from "@lib/utils";
 
 import type { AppointmentFilters } from "./models/appointment";
 import { AppointmentEntity } from "./entities/appointment-entity";
-import { OneAppointmentEntity } from "./entities/one-appointment-entity";
+import { AppointmentDetailEntity } from "./entities/appointment-detail-entity";
 
 export class AppointmentController implements Controllers<AppointmentFilters> {
-  public constructor(private readonly service: AppointmentService) { }
+  public constructor(private readonly service: AppointmentService) {}
 
   public getAppointments = async (req: Request, res: Response) => {
     try {
@@ -37,7 +37,8 @@ export class AppointmentController implements Controllers<AppointmentFilters> {
         throw CustomError.badRequest(`No se encontró cita para el UID: ${uid}`);
       }
 
-      const adaptedAppointments = OneAppointmentEntity.responseAdapter(bdAppoitnment);
+      const adaptedAppointments =
+        AppointmentDetailEntity.responseAdapter(bdAppoitnment);
       return res.status(200).json(adaptedAppointments);
     } catch (error) {
       const err = CustomError.internalServer(`${error}`);
@@ -46,25 +47,33 @@ export class AppointmentController implements Controllers<AppointmentFilters> {
   };
 
   public getFilters(req: Request) {
-    const { date, patient_rut, professional_id, profession_id, date_to, month } =
-      req.query;
+    const {
+      date,
+      patient_rut,
+      professional_id,
+      profession_id,
+      date_to,
+      month
+    } = req.query;
     const type = req.params.type ?? req.query.type;
 
-    let queryDate: Date | undefined = date ? DateFormatter.stringToDate(date as string) : undefined
-    let queryDateFrom: Date | undefined = undefined
-    let queryDateTo: Date | undefined = undefined
+    let queryDate: Date | undefined = date
+      ? DateFormatter.stringToDate(date as string)
+      : undefined;
+    let queryDateFrom: Date | undefined = undefined;
+    let queryDateTo: Date | undefined = undefined;
 
     if (date_to && date) {
-      queryDate = undefined
-      queryDateFrom = DateFormatter.stringToDate(date as string)
-      queryDateTo = DateFormatter.stringToDate(date_to as string)
+      queryDate = undefined;
+      queryDateFrom = DateFormatter.stringToDate(date as string);
+      queryDateTo = DateFormatter.stringToDate(date_to as string);
     }
 
     if (isYearMonth(month as string | undefined)) {
-      queryDate = undefined
-      const currentDate = `${month}-01`
-      queryDateFrom = DateFormatter.stringToDate(currentDate)
-      queryDateTo = DateFormatter.getLastDayOfMonth(currentDate) as Date
+      queryDate = undefined;
+      const currentDate = `${month}-01`;
+      queryDateFrom = DateFormatter.stringToDate(currentDate);
+      queryDateTo = DateFormatter.getLastDayOfMonth(currentDate) as Date;
     }
 
     return {
@@ -74,7 +83,7 @@ export class AppointmentController implements Controllers<AppointmentFilters> {
       type: type as AppointmentStatus,
       date_from: queryDateFrom,
       date_to: queryDateTo,
-      date: queryDate,
+      date: queryDate
     };
   }
 }

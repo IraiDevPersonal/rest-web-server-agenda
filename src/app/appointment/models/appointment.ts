@@ -1,5 +1,5 @@
-import { UndefinedObject } from "@/types/global";
-import { AppointmentStatus } from "@prisma/client";
+import { UndefinedObject } from '@/types/global';
+import { AppointmentStatus } from '@prisma/client';
 
 export type AppointmentFilters = UndefinedObject<{
   type: AppointmentStatus;
@@ -9,4 +9,4 @@ export type AppointmentFilters = UndefinedObject<{
   date_from: Date;
   date_to: Date;
   date: Date;
-}>
+}>;

@@ -1,14 +1,14 @@
-import { z } from "zod";
-import { ProfessionEntity } from "@professions/domain/entities/profession_entity";
-import { ServiceProviderEntity } from "@serviceProviders/domain/entities/serviceProvider_entity";
-import { UserEntity } from "@users/domain/entities/user_entity";
-import { CustomError } from "@core/domain/custom.error";
-import { ScheduleEntity } from "@schedules/domain/entities/schedule_entity";
+import { z } from 'zod';
+import { ProfessionEntity } from '@professions/domain/entities/profession_entity';
+import { ServiceProviderEntity } from '@serviceProviders/domain/entities/serviceProvider_entity';
+import { UserEntity } from '@users/domain/entities/user_entity';
+import { CustomError } from '@core/domain/custom.error';
+import { ScheduleEntity } from '@schedules/domain/entities/schedule_entity';
 
 const scheme = z.object({
   id: z.number().optional(),
   userId: z.number(),
-  serviceProviderId: z.number().optional(),
+  serviceProviderId: z.number().optional()
 });
 
 type Init = {
@@ -49,7 +49,7 @@ export class ProfessionalEntity {
         professions,
         serviceProvider,
         schedules,
-        user,
+        user
       });
     } catch (error) {
       throw CustomError.badRequest(`${error}`);
@@ -58,16 +58,16 @@ export class ProfessionalEntity {
 
   static toResponse(object: Record<string, any>) {
     return {
-      userId: object?.["userId"],
-      serviceProviderId: object?.["serviceProviderId"],
-      user: object?.["user"]
-        ? UserEntity.toResponse(object?.["user"])
+      userId: object?.['userId'],
+      serviceProviderId: object?.['serviceProviderId'],
+      user: object?.['user']
+        ? UserEntity.toResponse(object?.['user'])
         : undefined,
-      schedules: object?.["schedules"]?.map(ScheduleEntity.toResponse) ?? [],
-      serviceProvider: object?.["serviceProvider"]
-        ? ServiceProviderEntity.toResponse(object?.["serviceProvider"])
+      schedules: object?.['schedules']?.map(ScheduleEntity.toResponse) ?? [],
+      serviceProvider: object?.['serviceProvider']
+        ? ServiceProviderEntity.toResponse(object?.['serviceProvider'])
         : undefined,
-      professions: object?.["professions"],
+      professions: object?.['professions']
     };
   }
 }

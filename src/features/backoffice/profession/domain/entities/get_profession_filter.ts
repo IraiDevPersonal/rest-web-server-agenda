@@ -1,4 +1,4 @@
-import { FilterInit } from "@core/domain/filters";
+import { FilterInit } from '@core/domain/filters';
 
 export class GetProfessionFilter {
   public value: string;
@@ -17,8 +17,8 @@ export class GetProfessionFilter {
 
   static adapter(object: Record<string, any>) {
     return {
-      value: object["id"],
-      label: object["name"],
+      value: object['id'],
+      label: object['name']
     };
   }
 }

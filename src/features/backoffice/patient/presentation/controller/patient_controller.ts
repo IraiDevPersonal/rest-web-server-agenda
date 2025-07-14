@@ -1,11 +1,11 @@
-import { Request, Response } from "express";
-import { Controllers } from "@core/domain/controllers";
-import { PatientService } from "@patients/presentation/service/patient_service";
-import { CustomError } from "@core/domain/custom.error";
-import { PatientEntity } from "@patients/domain/entities/patient_entity";
+import { Request, Response } from 'express';
+import { Controllers } from '@core/domain/controllers';
+import { PatientService } from '@patients/presentation/service/patient_service';
+import { CustomError } from '@core/domain/custom.error';
+import { PatientEntity } from '@patients/domain/entities/patient_entity';
 
 export class PatientController implements Controllers {
-  public constructor(private readonly service: PatientService) { }
+  public constructor(private readonly service: PatientService) {}
 
   public getAll = async (req: Request, res: Response) => {
     try {
@@ -14,11 +14,11 @@ export class PatientController implements Controllers {
 
       return res.status(200).json(patients);
     } catch (error) {
-      console.log("catch ", error);
+      console.log('catch ', error);
       const e = CustomError.internalServer(`${error}`);
       return CustomError.handleError(e, res);
     }
-  }
+  };
 
   public create = async (req: Request, res: Response) => {
     try {
@@ -41,12 +41,12 @@ export class PatientController implements Controllers {
         email: patient.email,
         phone: patient.phone,
         address: patient.address,
-        is_deleted: false,
+        is_deleted: false
       });
 
       return res.status(201).json(PatientEntity.fromJson(createdPatient));
     } catch (error) {
-      console.log("catch ", error);
+      console.log('catch ', error);
       const e = CustomError.internalServer(`${error}`);
       return CustomError.handleError(e, res);
     }
@@ -67,7 +67,7 @@ export class PatientController implements Controllers {
 
       return res.status(204).json();
     } catch (error) {
-      console.log("catch ", error);
+      console.log('catch ', error);
       const e = CustomError.internalServer(`${error}`);
       return CustomError.handleError(e, res);
     }
@@ -93,7 +93,7 @@ export class PatientController implements Controllers {
 
       if (rutAndEmail) {
         throw CustomError.badRequest(
-          `Paciente con rut (${rut ?? ""}) o email (${email ?? ""}) ya existe`
+          `Paciente con rut (${rut ?? ''}) o email (${email ?? ''}) ya existe`
         );
       }
 
@@ -103,14 +103,14 @@ export class PatientController implements Controllers {
         last_names,
         email,
         phone,
-        address,
+        address
       };
 
       await this.service.update(payload, findedPatient.id);
 
       return res.status(200).json();
     } catch (error) {
-      console.log("catch ", error);
+      console.log('catch ', error);
       const e = CustomError.internalServer(`${error}`);
       return CustomError.handleError(e, res);
     }
@@ -123,7 +123,7 @@ export class PatientController implements Controllers {
       rut,
       names,
       last_names,
-      email,
-    }
+      email
+    };
   }
 }

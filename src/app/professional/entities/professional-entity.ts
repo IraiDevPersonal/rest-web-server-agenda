@@ -1,10 +1,10 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-import { ProfessionEntity } from "@/app/profession/entities/profession-entity";
-import { RoleEntity } from "@/app/role/entities/role-entity";
+import { ProfessionEntity } from '@/app/profession/entities/profession-entity';
+import { RoleEntity } from '@/app/role/entities/role-entity';
 
-import { CustomError } from "@/lib/custom-error";
-import { safeArray } from "@/lib/utils";
+import { CustomError } from '@/lib/custom-error';
+import { safeArray } from '@/lib/utils';
 
 const ProfessionalSchema = z.object({
   id: z.number().positive(),
@@ -15,21 +15,21 @@ const ProfessionalSchema = z.object({
   phone: z.string(),
   email: z.string().email(),
   professions: z.array(ProfessionEntity.getSchema()),
-  role: RoleEntity.getSchema(),
+  role: RoleEntity.getSchema()
 });
 
 type ProfessionalModel = z.infer<typeof ProfessionalSchema>;
 
 export class ProfessionalEntity {
-  public id: ProfessionalModel["id"]
-  public names: ProfessionalModel["names"]
-  public uid: ProfessionalModel["uid"]
-  public rut: ProfessionalModel["rut"]
-  public last_names: ProfessionalModel["last_names"]
-  public phone: ProfessionalModel["phone"]
-  public email: ProfessionalModel["email"]
-  public professions: ProfessionalModel["professions"]
-  public role: ProfessionalModel["role"]
+  public id: ProfessionalModel['id'];
+  public names: ProfessionalModel['names'];
+  public uid: ProfessionalModel['uid'];
+  public rut: ProfessionalModel['rut'];
+  public last_names: ProfessionalModel['last_names'];
+  public phone: ProfessionalModel['phone'];
+  public email: ProfessionalModel['email'];
+  public professions: ProfessionalModel['professions'];
+  public role: ProfessionalModel['role'];
 
   private constructor(init: ProfessionalModel) {
     this.id = init.id ? Number(init.id) : init.id;
@@ -44,7 +44,7 @@ export class ProfessionalEntity {
   }
 
   static getSchema() {
-    return ProfessionalSchema
+    return ProfessionalSchema;
   }
 
   static validate(item: any): ProfessionalModel {
@@ -52,9 +52,12 @@ export class ProfessionalEntity {
       const data = ProfessionalEntity.itemAdapter(item);
       return ProfessionalEntity.getSchema().parse(data);
     } catch (error) {
-      throw new Error(CustomError.getErrorMessage(
-        error,
-        "profession-entity.ts: (validate) error inesperado"));
+      throw new Error(
+        CustomError.getErrorMessage(
+          error,
+          'profession-entity.ts: (validate) error inesperado'
+        )
+      );
     }
   }
 
@@ -62,12 +65,13 @@ export class ProfessionalEntity {
     try {
       return safeArray<ProfessionalModel>(data, {
         throwErrors: true,
-        errorMessage: "profession-entity.ts: (responseAdapter) Se esperaba un arreglo",
-      }).map(item => ProfessionalEntity.validate(item));
+        errorMessage:
+          'profession-entity.ts: (responseAdapter) Se esperaba un arreglo'
+      }).map((item) => ProfessionalEntity.validate(item));
     } catch (error) {
       const errorMessage = CustomError.getErrorMessage(
         error,
-        "profession-entity.ts: (responseAdapter) error inesperado"
+        'profession-entity.ts: (responseAdapter) error inesperado'
       );
 
       throw new Error(errorMessage);
@@ -75,26 +79,26 @@ export class ProfessionalEntity {
   }
 
   private static itemAdapter(item: any): ProfessionalEntity {
-    const user = item["user"];
-    const role = user?.["role"];
-    const professions = safeArray<any>(item["professional_profession"]);
+    const user = item['user'];
+    const role = user?.['role'];
+    const professions = safeArray<any>(item['professional_profession']);
 
     return new ProfessionalEntity({
-      id: user?.["id"],
-      names: user?.["names"],
-      uid: user?.["uid"],
-      rut: user?.["rut"],
-      last_names: user?.["last_names"],
-      phone: user?.["phone"],
-      email: user?.["email"],
+      id: user?.['id'],
+      names: user?.['names'],
+      uid: user?.['uid'],
+      rut: user?.['rut'],
+      last_names: user?.['last_names'],
+      phone: user?.['phone'],
+      email: user?.['email'],
       role: {
-        id: role?.["id"],
-        name: role?.["name"]
+        id: role?.['id'],
+        name: role?.['name']
       },
-      professions: professions.map(p => ({
-        id: p?.["professions"]?.["id"],
-        name: p?.["professions"]?.["name"],
-      })),
+      professions: professions.map((p) => ({
+        id: p?.['professions']?.['id'],
+        name: p?.['professions']?.['name']
+      }))
     });
   }
 }

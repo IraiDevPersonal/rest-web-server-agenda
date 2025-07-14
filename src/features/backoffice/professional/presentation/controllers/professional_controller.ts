@@ -1,9 +1,9 @@
-import { Controllers } from "@core/domain/controllers";
-import { CustomError } from "@core/domain/custom.error";
-import { GetProfessionalFilter } from "@professionals/domain/entities/get_professional_filter";
-import { ProfessionalEntity } from "@professionals/domain/entities/professional_entity";
-import { ProfessionalService } from "@professionals/presentation/services/professional_service";
-import { Request, Response } from "express";
+import { Controllers } from '@core/domain/controllers';
+import { CustomError } from '@core/domain/custom.error';
+import { GetProfessionalFilter } from '@professionals/domain/entities/get_professional_filter';
+import { ProfessionalEntity } from '@professionals/domain/entities/professional_entity';
+import { ProfessionalService } from '@professionals/presentation/services/professional_service';
+import { Request, Response } from 'express';
 
 export class ProfessionalController implements Controllers {
   public constructor(
@@ -20,7 +20,7 @@ export class ProfessionalController implements Controllers {
 
       return response.status(200).json(aps);
     } catch (error) {
-      console.log("catch ", error);
+      console.log('catch ', error);
       const e = CustomError.internalServer(`${error}`);
       return CustomError.handleError(e, response);
     }
@@ -30,7 +30,7 @@ export class ProfessionalController implements Controllers {
     const { profession_id } = request.query;
 
     return {
-      profession_id: profession_id ? Number(profession_id) : undefined,
+      profession_id: profession_id ? Number(profession_id) : undefined
     };
   }
 }

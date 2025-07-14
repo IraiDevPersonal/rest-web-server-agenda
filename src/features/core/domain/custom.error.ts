@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Response } from 'express';
 
 export class CustomError extends Error {
   constructor(
@@ -24,7 +24,7 @@ export class CustomError extends Error {
     return new CustomError(404, message);
   }
 
-  static internalServer(message: string = "Internal server error") {
+  static internalServer(message: string = 'Internal server error') {
     return new CustomError(500, message);
   }
 
@@ -33,6 +33,6 @@ export class CustomError extends Error {
       return res.status(error.statusCode).json({ error: error.message });
     }
 
-    return res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: 'Internal server error' });
   };
 }

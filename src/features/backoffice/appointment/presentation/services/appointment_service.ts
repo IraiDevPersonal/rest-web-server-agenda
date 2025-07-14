@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 
 export class AppointmentService {
   private readonly db: PrismaClient;
@@ -9,7 +9,7 @@ export class AppointmentService {
 
   async get() {
     return await this.db.appointment.findMany({
-      select: { id: false },
+      select: { id: false }
     });
   }
 }

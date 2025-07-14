@@ -1,5 +1,5 @@
-import { CustomError } from "@core/domain/custom.error";
-import { patientSchema } from "@patients/presentation/schemas/patient_schema";
+import { CustomError } from '@core/domain/custom.error';
+import { patientSchema } from '@patients/presentation/schemas/patient_schema';
 
 type Init = {
   id?: number | undefined;
@@ -38,15 +38,15 @@ export class PatientEntity {
 
   static adapter(object: Record<string, any>): PatientEntity {
     return {
-      id: object?.["id"],
-      uid: object?.["uid"] ?? "",
-      rut: object?.["rut"] ?? "",
-      names: object?.["names"] ?? "",
-      last_names: object?.["last_names"] ?? "",
-      email: object?.["email"] ?? "",
-      phone: object?.["phone"] ?? "",
-      address: object?.["address"] ?? "",
-      is_deleted: object?.["is_deleted"] ?? false,
+      id: object?.['id'],
+      uid: object?.['uid'] ?? '',
+      rut: object?.['rut'] ?? '',
+      names: object?.['names'] ?? '',
+      last_names: object?.['last_names'] ?? '',
+      email: object?.['email'] ?? '',
+      phone: object?.['phone'] ?? '',
+      address: object?.['address'] ?? '',
+      is_deleted: object?.['is_deleted'] ?? false
     };
   }
   static fromJson(object: Record<string, any>) {

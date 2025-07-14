@@ -20,7 +20,6 @@
    - ejecutar `docker-compose up -d`,
    - ejecutar `npx prisma db push`
 3. una vez creada la bd con las tablas:
-
    - _appointment_
    - _appointment_status_
    - _patients_

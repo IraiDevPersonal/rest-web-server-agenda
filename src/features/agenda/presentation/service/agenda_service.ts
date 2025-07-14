@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-import { GetMyDayFilter } from "../../domain/entities/filters";
+import { PrismaClient } from '@prisma/client';
+import { GetMyDayFilter } from '../../domain/entities/filters';
 
 export class AgendaService {
   private readonly db: PrismaClient;
@@ -26,21 +26,21 @@ export class AgendaService {
                   select: {
                     professions: {
                       select: {
-                        name: true,
-                      },
-                    },
-                  },
+                        name: true
+                      }
+                    }
+                  }
                 },
                 user: {
                   select: {
                     names: true,
                     last_names: true,
                     rut: true
-                  },
-                },
-              },
-            },
-          },
+                  }
+                }
+              }
+            }
+          }
         },
         patient: {
           select: {
@@ -53,7 +53,7 @@ export class AgendaService {
             appointments: {
               orderBy: {
                 schedule: {
-                  date: "desc"
+                  date: 'desc'
                 }
               },
               take: 4,
@@ -64,17 +64,17 @@ export class AgendaService {
                   select: {
                     date: true,
                     time_from: true,
-                    time_to: true,
+                    time_to: true
                   }
                 }
               }
             }
-          },
-        },
+          }
+        }
       },
       where: {
-        uid: appointment_uid,
-      },
+        uid: appointment_uid
+      }
     });
   }
 
@@ -85,7 +85,7 @@ export class AgendaService {
     date_to,
     patient_rut,
     professional_id,
-    profession_id,
+    profession_id
   }: GetMyDayFilter) {
     return await this.db.appointment.findMany({
       select: {
@@ -101,26 +101,26 @@ export class AgendaService {
                 user: {
                   select: {
                     names: true,
-                    last_names: true,
-                  },
+                    last_names: true
+                  }
                 },
                 professional_profession: {
                   select: {
-                    professions: true,
-                  },
-                },
-              },
-            },
-          },
+                    professions: true
+                  }
+                }
+              }
+            }
+          }
         },
         patient: {
           select: {
             names: true,
             last_names: true,
             rut: true,
-            phone: true,
-          },
-        },
+            phone: true
+          }
+        }
       },
       where: {
         appointment_status: type,
@@ -128,35 +128,35 @@ export class AgendaService {
           // date: date,
           date: date ?? {
             gte: date_from,
-            lte: date_to,
+            lte: date_to
           },
 
           professional_id: professional_id,
           professional: {
             professional_profession: {
               some: {
-                profession_id: profession_id,
-              },
-            },
-          },
+                profession_id: profession_id
+              }
+            }
+          }
         },
 
         patient: {
-          rut: { contains: patient_rut },
-        },
+          rut: { contains: patient_rut }
+        }
       },
       orderBy: [
         {
           schedule: {
-            date: 'asc',
-          },
+            date: 'asc'
+          }
         },
         {
           schedule: {
-            time_from: 'asc',
-          },
-        },
-      ],
+            time_from: 'asc'
+          }
+        }
+      ]
     });
   }
 }

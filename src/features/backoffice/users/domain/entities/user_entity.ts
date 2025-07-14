@@ -1,6 +1,6 @@
-import { z } from "zod";
-import { CustomError } from "@core/domain/custom.error";
-import { RoleEntity } from "@roles/domain/entities/role_entity";
+import { z } from 'zod';
+import { CustomError } from '@core/domain/custom.error';
+import { RoleEntity } from '@roles/domain/entities/role_entity';
 
 const userSchema = z.object({
   id: z.optional(z.number()),
@@ -12,7 +12,7 @@ const userSchema = z.object({
   phone: z.string(),
   role_id: z.number(),
   rut: z.string().max(12),
-  uid: z.optional(z.string()),
+  uid: z.optional(z.string())
 });
 
 type Init = {
@@ -58,16 +58,16 @@ export class UserEntity {
 
   static toResponse(
     object: Record<string, any>
-  ): Omit<UserEntity, "password" | "role_id"> {
+  ): Omit<UserEntity, 'password' | 'role_id'> {
     return {
-      email: object["email"],
-      uid: object["uid"],
-      rut: object["rut"],
-      names: object["names"],
-      last_names: object["last_names"],
-      is_admin: object["is_admin"],
-      phone: object["phone"],
-      role: RoleEntity.toResponse(object["role"]),
+      email: object['email'],
+      uid: object['uid'],
+      rut: object['rut'],
+      names: object['names'],
+      last_names: object['last_names'],
+      is_admin: object['is_admin'],
+      phone: object['phone'],
+      role: RoleEntity.toResponse(object['role'])
     };
   }
 

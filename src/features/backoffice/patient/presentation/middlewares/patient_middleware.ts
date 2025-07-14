@@ -1,9 +1,9 @@
-import { CustomError } from "@core/domain/custom.error";
-import { Middlewares } from "@core/domain/middleware";
-import { RutManager } from "@core/domain/rut";
-import { NextFunction, Request, Response } from "express";
-import { patientSchema } from "../schemas/patient_schema";
-import { ZodError } from "zod";
+import { CustomError } from '@core/domain/custom.error';
+import { Middlewares } from '@core/domain/middleware';
+import { RutManager } from '@core/domain/rut';
+import { NextFunction, Request, Response } from 'express';
+import { patientSchema } from '../schemas/patient_schema';
+import { ZodError } from 'zod';
 
 export class PatientMiddleware implements Middlewares {
   static insertValidation(req: Request, res: Response, next: NextFunction) {
@@ -16,7 +16,7 @@ export class PatientMiddleware implements Middlewares {
         last_names,
         email,
         phone,
-        address,
+        address
       });
       req.patient = patient;
 
@@ -24,7 +24,7 @@ export class PatientMiddleware implements Middlewares {
     } catch (error) {
       if (error instanceof ZodError) {
         const e = CustomError.internalServer(
-          error.issues.map((e) => `${e.path} ${e.message}`).join(",")
+          error.issues.map((e) => `${e.path} ${e.message}`).join(',')
         );
         return CustomError.handleError(e, res);
       }
@@ -60,7 +60,7 @@ export class PatientMiddleware implements Middlewares {
     } catch (error) {
       if (error instanceof ZodError) {
         const e = CustomError.internalServer(
-          error.issues.map((e) => `${e.path} ${e.message}`).join(",")
+          error.issues.map((e) => `${e.path} ${e.message}`).join(',')
         );
         return CustomError.handleError(e, res);
       }

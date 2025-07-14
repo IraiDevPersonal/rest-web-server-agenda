@@ -1,18 +1,20 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-import { CustomError } from "@/lib/custom-error";
-import { safeArray } from "@/lib/utils";
+import { CustomError } from '@/lib/custom-error';
+import { safeArray } from '@/lib/utils';
 
 const ProfessionSchema = z.object({
   id: z.number().positive(),
-  name: z.string().min(1, { message: "El nombre de la profesión no puede estar vacío" }),
-})
+  name: z
+    .string()
+    .min(1, { message: 'El nombre de la profesión no puede estar vacío' })
+});
 
-type ProfessionModel = z.infer<typeof ProfessionSchema>
+type ProfessionModel = z.infer<typeof ProfessionSchema>;
 
 export class ProfessionEntity {
-  public id: ProfessionModel["id"];
-  public name: ProfessionModel["name"];
+  public id: ProfessionModel['id'];
+  public name: ProfessionModel['name'];
 
   private constructor(init: ProfessionModel) {
     this.id = Number(init.id);
@@ -20,20 +22,20 @@ export class ProfessionEntity {
   }
 
   static getSchema() {
-    return ProfessionSchema
+    return ProfessionSchema;
   }
 
   static validate(item: any): ProfessionModel {
     try {
-      const data = ProfessionEntity.itemAdapter(item)
-      return ProfessionEntity.getSchema().parse(data)
+      const data = ProfessionEntity.itemAdapter(item);
+      return ProfessionEntity.getSchema().parse(data);
     } catch (error) {
       throw new Error(
         CustomError.getErrorMessage(
           error,
-          "profession-entity.ts: (validate) error inesperado"
+          'profession-entity.ts: (validate) error inesperado'
         )
-      )
+      );
     }
   }
 
@@ -41,12 +43,13 @@ export class ProfessionEntity {
     try {
       return safeArray<ProfessionModel>(data, {
         throwErrors: true,
-        errorMessage: "profession-entity.ts: (responseAdapter) Se esperaba un arreglo",
+        errorMessage:
+          'profession-entity.ts: (responseAdapter) Se esperaba un arreglo'
       }).map(ProfessionEntity.itemAdapter);
     } catch (error) {
       const errorMessage = CustomError.getErrorMessage(
         error,
-        "profession-entity.ts: (responseAdapter) error inesperado"
+        'profession-entity.ts: (responseAdapter) error inesperado'
       );
       throw new Error(errorMessage);
     }
@@ -54,8 +57,8 @@ export class ProfessionEntity {
 
   private static itemAdapter(item: any): ProfessionEntity {
     return new ProfessionEntity({
-      id: item["id"],
-      name: item["name"],
+      id: item['id'],
+      name: item['name']
     });
   }
 }

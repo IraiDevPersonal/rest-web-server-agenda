@@ -1,11 +1,11 @@
-import { z } from "zod";
-import { CustomError } from "@core/domain/custom.error";
+import { z } from 'zod';
+import { CustomError } from '@core/domain/custom.error';
 
 const scheme = z.object({
   id: z.number().optional(),
   code: z.string(),
   title: z.string(),
-  serviceProviderId: z.number(),
+  serviceProviderId: z.number()
 });
 
 type Init = {
@@ -39,10 +39,10 @@ export class ServiceProviderCodesEntity {
 
   static toResponse(object: Record<string, any>) {
     return {
-      id: object?.["id"],
-      code: object["code"],
-      title: object["title"],
-      serviceProviderId: object["serviceProviderId"],
+      id: object?.['id'],
+      code: object['code'],
+      title: object['title'],
+      serviceProviderId: object['serviceProviderId']
     };
   }
 }

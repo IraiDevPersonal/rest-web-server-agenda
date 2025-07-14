@@ -1,5 +1,5 @@
-import { DateFormatter } from "@core/domain/date_formatter";
-import { AppointmentStatus } from "@prisma/client";
+import { DateFormatter } from '@core/domain/date_formatter';
+import { AppointmentStatus } from '@prisma/client';
 
 type Init = {
   uid: string;
@@ -14,16 +14,16 @@ type Init = {
   professions: string[];
 };
 export class GetMyDay {
-  public uid: Init["uid"];
-  public date: Init["date"];
-  public time_from: Init["time_from"];
-  public time_to: Init["time_to"];
-  public patient_name: Init["patient_name"];
-  public patient_rut: Init["patient_rut"];
-  public patient_phone: Init["patient_phone"];
-  public professional_name: Init["professional_name"];
-  public appointment_status: Init["appointment_status"];
-  public professions: Init["professions"];
+  public uid: Init['uid'];
+  public date: Init['date'];
+  public time_from: Init['time_from'];
+  public time_to: Init['time_to'];
+  public patient_name: Init['patient_name'];
+  public patient_rut: Init['patient_rut'];
+  public patient_phone: Init['patient_phone'];
+  public professional_name: Init['professional_name'];
+  public appointment_status: Init['appointment_status'];
+  public professions: Init['professions'];
 
   private constructor(init: Init) {
     this.uid = init.uid;
@@ -44,26 +44,26 @@ export class GetMyDay {
   }
 
   static adapter(appointment: Record<string, any>): Init {
-    const schedule = appointment["schedule"];
-    const patient = appointment?.["patient"] ?? null;
-    const professional = schedule["professional"];
+    const schedule = appointment['schedule'];
+    const patient = appointment?.['patient'] ?? null;
+    const professional = schedule['professional'];
 
     return {
-      uid: appointment["uid"],
-      appointment_status: appointment["appointment_status"],
-      date: DateFormatter.formatDate(schedule["date"], "ymd"),
-      time_from: schedule["time_from"],
-      time_to: schedule["time_to"],
+      uid: appointment['uid'],
+      appointment_status: appointment['appointment_status'],
+      date: DateFormatter.formatDate(schedule['date'], 'ymd'),
+      time_from: schedule['time_from'],
+      time_to: schedule['time_to'],
       patient_name: patient
-        ? `${patient["names"]} ${patient["last_names"]}`
+        ? `${patient['names']} ${patient['last_names']}`
         : null,
-      patient_rut: patient?.["rut"] ?? null,
-      patient_phone: patient?.["phone"] ?? null,
-      professional_name: `${professional["user"]["names"]} ${professional["user"]["last_names"]}`,
+      patient_rut: patient?.['rut'] ?? null,
+      patient_phone: patient?.['phone'] ?? null,
+      professional_name: `${professional['user']['names']} ${professional['user']['last_names']}`,
       professions:
-        professional?.["professional_profession"]?.map(
+        professional?.['professional_profession']?.map(
           (p: any) => p.professions.name
-        ) ?? [],
+        ) ?? []
     };
   }
 }

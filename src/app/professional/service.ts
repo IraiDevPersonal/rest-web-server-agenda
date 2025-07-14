@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-import type { ProfessionalFilters } from "../professional/models/professional";
+import { PrismaClient } from '@prisma/client';
+import type { ProfessionalFilters } from '../professional/models/professional';
 
 export class ProfessionalService {
   private readonly db: PrismaClient;
@@ -15,15 +15,15 @@ export class ProfessionalService {
         user: {
           omit: {
             password: true,
-            role_id: true,
+            role_id: true
           },
           include: {
             role: {
               select: {
                 name: true,
-                id: true,
-              },
-            },
+                id: true
+              }
+            }
           }
         },
         professional_profession: {
@@ -31,25 +31,25 @@ export class ProfessionalService {
             professions: {
               select: {
                 id: true,
-                name: true,
+                name: true
               }
             }
           }
-        },
+        }
       },
       where: {
         id: filters?.id,
         user: {
-          names: { contains: filters?.names, mode: "insensitive" },
-          last_names: { contains: filters?.last_names, mode: "insensitive" },
-          rut: { equals: filters?.rut, mode: "insensitive" },
+          names: { contains: filters?.names, mode: 'insensitive' },
+          last_names: { contains: filters?.last_names, mode: 'insensitive' },
+          rut: { equals: filters?.rut, mode: 'insensitive' }
         },
         professional_profession: {
           some: {
-            profession_id: filters?.profession_id,
-          },
-        },
-      },
+            profession_id: filters?.profession_id
+          }
+        }
+      }
     });
   }
 
@@ -60,22 +60,22 @@ export class ProfessionalService {
         user: {
           select: {
             names: true,
-            last_names: true,
-          },
+            last_names: true
+          }
         },
         professional_profession: {
           select: {
-            profession_id: true,
-          },
-        },
+            profession_id: true
+          }
+        }
       },
       where: {
         professional_profession: {
           some: {
-            profession_id: filters?.profession_id,
-          },
-        },
-      },
+            profession_id: filters?.profession_id
+          }
+        }
+      }
     });
   }
 }

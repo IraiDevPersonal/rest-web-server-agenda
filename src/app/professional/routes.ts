@@ -1,6 +1,6 @@
-import { Router } from "express";
-import { ProfessionalService } from "./service";
-import { ProfessionalController } from "./controller";
+import { Router } from 'express';
+import { ProfessionalService } from './service';
+import { ProfessionalController } from './controller';
 
 export class ProfessionalRoutes {
   static get routes(): Router {
@@ -8,8 +8,8 @@ export class ProfessionalRoutes {
     const service = new ProfessionalService();
     const controller = new ProfessionalController(service);
 
-    router.get("/", [], controller.getProfessionals);
-    router.get("/to-filter", [], controller.getProfessionalsToFilter);
+    router.get('/', [], controller.getProfessionals);
+    router.get('/to-filter', [], controller.getProfessionalsToFilter);
 
     return router;
   }

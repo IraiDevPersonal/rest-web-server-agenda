@@ -1,4 +1,4 @@
-import { clean, format, validate } from "rut.js";
+import { clean, format, validate } from 'rut.js';
 
 export class RutManager {
   static validate(rut: string) {

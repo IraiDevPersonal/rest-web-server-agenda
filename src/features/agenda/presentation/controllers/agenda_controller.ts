@@ -1,15 +1,15 @@
-import { Request, Response } from "express";
-import { AppointmentStatus } from "@prisma/client";
-import { CustomError } from "@core/domain/custom.error";
-import { AgendaService } from "../service/agenda_service";
-import { GetMyDay } from "../../domain/entities/get_my_day";
-import { DateFormatter } from "@core/domain/date_formatter";
-import { Controllers } from "@core/domain/controllers";
-import { GetAgendaDetail } from "../../domain/entities/get_agenda_detail";
-import { isYearMonth } from '@lib/utils'
+import { Request, Response } from 'express';
+import { AppointmentStatus } from '@prisma/client';
+import { CustomError } from '@core/domain/custom.error';
+import { AgendaService } from '../service/agenda_service';
+import { GetMyDay } from '../../domain/entities/get_my_day';
+import { DateFormatter } from '@core/domain/date_formatter';
+import { Controllers } from '@core/domain/controllers';
+import { GetAgendaDetail } from '../../domain/entities/get_agenda_detail';
+import { isYearMonth } from '@lib/utils';
 
 export class AgendaController implements Controllers {
-  public constructor(private readonly agendaService: AgendaService) { }
+  public constructor(private readonly agendaService: AgendaService) {}
 
   public getMyDay = async (req: Request, res: Response) => {
     try {
@@ -20,7 +20,7 @@ export class AgendaController implements Controllers {
 
       return res.status(200).json(aps);
     } catch (error) {
-      console.log("catch ", error);
+      console.log('catch ', error);
       const e = CustomError.internalServer(`${error}`);
       return CustomError.handleError(e, res);
     }
@@ -38,7 +38,7 @@ export class AgendaController implements Controllers {
       const adaptedAppointments = GetAgendaDetail.fromObject(appoitnment);
       return res.status(200).json(adaptedAppointments);
     } catch (error) {
-      console.log("catch ", error);
+      console.log('catch ', error);
       const e = CustomError.internalServer(`${error}`);
       return CustomError.handleError(e, res);
     }
@@ -48,25 +48,33 @@ export class AgendaController implements Controllers {
   // Se agrego la query date_to, que cuando se recibe es para obtener los datos entre un rango desde date hasta date_to, si solo viene date, entonces es para esa fecha en especifico, date_to no deberia llegar sin un date
   // se agrego la query month, llegara en formato yyyy-mm
   public getFilters(req: Request) {
-    const { date, patient_rut, professional_id, profession_id, date_to, month } =
-      req.query;
+    const {
+      date,
+      patient_rut,
+      professional_id,
+      profession_id,
+      date_to,
+      month
+    } = req.query;
     const type = req.params.type ?? req.query.type;
 
-    let queryDate: Date | undefined = date ? DateFormatter.stringToDate(date as string) : undefined
-    let queryDateFrom: Date | undefined = undefined
-    let queryDateTo: Date | undefined = undefined
+    let queryDate: Date | undefined = date
+      ? DateFormatter.stringToDate(date as string)
+      : undefined;
+    let queryDateFrom: Date | undefined = undefined;
+    let queryDateTo: Date | undefined = undefined;
 
     if (date_to && date) {
-      queryDate = undefined
-      queryDateFrom = DateFormatter.stringToDate(date as string)
-      queryDateTo = DateFormatter.stringToDate(date_to as string)
+      queryDate = undefined;
+      queryDateFrom = DateFormatter.stringToDate(date as string);
+      queryDateTo = DateFormatter.stringToDate(date_to as string);
     }
 
     if (isYearMonth(month as string | undefined)) {
-      queryDate = undefined
-      const currentDate = `${month}-01`
-      queryDateFrom = DateFormatter.stringToDate(currentDate)
-      queryDateTo = DateFormatter.getLastDayOfMonth(currentDate) as Date
+      queryDate = undefined;
+      const currentDate = `${month}-01`;
+      queryDateFrom = DateFormatter.stringToDate(currentDate);
+      queryDateTo = DateFormatter.getLastDayOfMonth(currentDate) as Date;
     }
 
     return {
@@ -76,7 +84,7 @@ export class AgendaController implements Controllers {
       patient_rut: patient_rut as string,
       type: type as AppointmentStatus,
       profession_id: profession_id ? Number(profession_id) : undefined,
-      professional_id: professional_id ? Number(professional_id) : undefined,
+      professional_id: professional_id ? Number(professional_id) : undefined
     };
   }
 

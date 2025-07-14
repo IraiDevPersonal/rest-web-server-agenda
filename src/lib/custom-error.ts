@@ -1,4 +1,5 @@
 import { Response } from "express";
+import { ZodError } from "zod";
 
 export class CustomError extends Error {
   constructor(
@@ -37,14 +38,24 @@ export class CustomError extends Error {
     return res.status(500).json({ error: "Internal server error" });
   };
 
-  static getErrorMessage(error: unknown, defaultErrorMessage?: string) {
-    if (error instanceof Error) {
-      return error.message;
-    }
+  static getErrorMessage(error: unknown, fileName?: string) {
+    console.log({ fileName });
+    // El orden es importante: las clases de error más específicas deben comprobarse primero.
     if (error instanceof CustomError) {
       return error.message;
     }
-    console.log(error)
-    return defaultErrorMessage ?? "Error inesperado...";
+
+    if (error instanceof ZodError) {
+      const issues = error.errors.map(
+        (issue) => `[${issue.path.join(".")}] ${issue.message}`
+      );
+      return `Error de validación: ${issues.join("; ")}`;
+    }
+
+    if (error instanceof Error) {
+      return error.message;
+    }
+
+    return "Error inesperado...";
   }
 }

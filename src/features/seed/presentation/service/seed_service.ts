@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 import {
   appointment,
   patients,
@@ -8,9 +8,9 @@ import {
   roles,
   schedules,
   serviceProvider,
-  users,
-} from "@users/data/seed";
-import { SeedServiceModel } from "../../domain/model/seed_service_model";
+  users
+} from '@users/data/seed';
+import { SeedServiceModel } from '../../domain/model/seed_service_model';
 
 export class SeedService implements SeedServiceModel {
   private readonly db: PrismaClient;
@@ -54,14 +54,14 @@ export class SeedService implements SeedServiceModel {
       );
 
       await this.db.roles.createMany({
-        data: roles,
+        data: roles
       });
       await this.db.professions.createMany({
-        data: professions,
+        data: professions
       });
 
       await this.db.users.createMany({
-        data: users,
+        data: users
       });
 
       for (const sp of serviceProvider) {
@@ -73,39 +73,39 @@ export class SeedService implements SeedServiceModel {
               create:
                 sp.serviceProviderCode?.map((spc) => ({
                   title: spc.title,
-                  code: spc.code,
-                })) ?? [],
-            },
-          },
+                  code: spc.code
+                })) ?? []
+            }
+          }
         });
       }
 
       await this.db.professionals.createMany({
         data: professionals.map((p) => ({
           user_id: p.userId,
-          service_provider_id: p?.serviceProviderId,
-        })),
+          service_provider_id: p?.serviceProviderId
+        }))
       });
 
       await this.db.professional_professions.createMany({
         data:
           professionalProfession.map((pp) => ({
             professional_id: pp.professionalId,
-            profession_id: pp.professionId,
-          })) ?? [],
+            profession_id: pp.professionId
+          })) ?? []
       });
 
       await this.db.patients.createMany({
-        data: patients,
+        data: patients
       });
       await this.db.schedules.createMany({
-        data: schedules,
+        data: schedules
       });
       await this.db.appointment.createMany({
-        data: appointment,
+        data: appointment
       });
     } catch (error) {
-      throw new Error("Error" + error);
+      throw new Error('Error' + error);
     }
   }
 }

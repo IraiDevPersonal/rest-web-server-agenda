@@ -1,9 +1,9 @@
-import { Controllers } from "@core/domain/controllers";
-import { CustomError } from "@core/domain/custom.error";
-import { GetProfessionFilter } from "@professions/domain/entities/get_profession_filter";
-import { ProfessionEntity } from "@professions/domain/entities/profession_entity";
-import { ProfessionService } from "@professions/presentation/services/profession_service";
-import { Request, Response } from "express";
+import { Controllers } from '@core/domain/controllers';
+import { CustomError } from '@core/domain/custom.error';
+import { GetProfessionFilter } from '@professions/domain/entities/get_profession_filter';
+import { ProfessionEntity } from '@professions/domain/entities/profession_entity';
+import { ProfessionService } from '@professions/presentation/services/profession_service';
+import { Request, Response } from 'express';
 
 export class ProfessionController implements Controllers {
   public constructor(private readonly professionService: ProfessionService) {}
@@ -15,7 +15,7 @@ export class ProfessionController implements Controllers {
 
       return res.json(professions.map(ProfessionEntity.adapter));
     } catch (error) {
-      console.log("catch ", error);
+      console.log('catch ', error);
       const e = CustomError.internalServer(`${error}`);
       return CustomError.handleError(e, res);
     }
@@ -28,7 +28,7 @@ export class ProfessionController implements Controllers {
 
       return res.json(professions.map(GetProfessionFilter.adapter));
     } catch (error) {
-      console.log("catch ", error);
+      console.log('catch ', error);
       const e = CustomError.internalServer(`${error}`);
       return CustomError.handleError(e, res);
     }
@@ -39,7 +39,7 @@ export class ProfessionController implements Controllers {
 
     return {
       id: id ? Number(id) : undefined,
-      name: name as string,
+      name: name as string
     };
   }
 }

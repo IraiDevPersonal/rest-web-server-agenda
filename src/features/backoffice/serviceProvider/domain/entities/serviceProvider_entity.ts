@@ -1,11 +1,11 @@
-import { z } from "zod";
-import { ServiceProviderCodesEntity } from "./serviceProviderCodes_entity";
-import { CustomError } from "@core/domain/custom.error";
+import { z } from 'zod';
+import { ServiceProviderCodesEntity } from './serviceProviderCodes_entity';
+import { CustomError } from '@core/domain/custom.error';
 
 const scheme = z.object({
   id: z.number().optional(),
   name: z.string(),
-  rut: z.string().max(12, { message: "Máximo de caracteres es 12" }),
+  rut: z.string().max(12, { message: 'Máximo de caracteres es 12' })
 });
 
 type Init = {
@@ -40,13 +40,13 @@ export class ServiceProviderEntity {
 
   static toResponse(object: Record<string, any>) {
     return {
-      id: object?.["id"],
-      name: object?.["name"] ?? "",
-      rut: object?.["rut"] ?? "",
+      id: object?.['id'],
+      name: object?.['name'] ?? '',
+      rut: object?.['rut'] ?? '',
       serviceProviderCode:
-        object?.["serviceProviderCode"]?.map(
+        object?.['serviceProviderCode']?.map(
           ServiceProviderCodesEntity.toResponse
-        ) ?? [],
+        ) ?? []
     };
   }
 }

@@ -1,4 +1,4 @@
-import { FilterInit } from "@core/domain/filters";
+import { FilterInit } from '@core/domain/filters';
 
 export type ProfessionalFilter = FilterInit & {
   professions: string[];
@@ -23,12 +23,12 @@ export class GetProfessionalFilter {
 
   static adapter(object: Record<string, any>) {
     return {
-      value: object["id"],
-      label: `${object["user"]["names"]} ${object["user"]["last_names"]}`,
+      value: object['id'],
+      label: `${object['user']['names']} ${object['user']['last_names']}`,
       professions:
-        object["professional_profession"]?.map(
-          (profession: any) => profession["profession_id"]
-        ) ?? [],
+        object['professional_profession']?.map(
+          (profession: any) => profession['profession_id']
+        ) ?? []
     };
   }
 }

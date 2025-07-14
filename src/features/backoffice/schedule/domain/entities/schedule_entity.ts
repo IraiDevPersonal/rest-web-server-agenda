@@ -1,6 +1,6 @@
-import { CustomError } from "@core/domain/custom.error";
-import { ProfessionalEntity } from "@professionals/domain/entities/professional_entity";
-import { ScheduleSchema } from "@schedules/presentation/schemas/schedule_schema";
+import { CustomError } from '@core/domain/custom.error';
+import { ProfessionalEntity } from '@professionals/domain/entities/professional_entity';
+import { ScheduleSchema } from '@schedules/presentation/schemas/schedule_schema';
 
 type Init = {
   id?: number | undefined;
@@ -35,16 +35,16 @@ export class ScheduleEntity {
 
   static toResponse(
     object: Record<string, any>
-  ): Omit<ScheduleEntity, "professional_id"> {
+  ): Omit<ScheduleEntity, 'professional_id'> {
     return {
-      uid: object["uid"],
-      date: object["date"],
-      time_from: object["time_from"],
-      time_to: object["time_to"],
-      is_enabled: object["is_enabled"],
+      uid: object['uid'],
+      date: object['date'],
+      time_from: object['time_from'],
+      time_to: object['time_to'],
+      is_enabled: object['is_enabled'],
       professional: ProfessionalEntity.toResponse(
-        object["professional"]
-      ) as ProfessionalEntity,
+        object['professional']
+      ) as ProfessionalEntity
     };
   }
   static fromJson(object: Record<string, any>) {
@@ -58,17 +58,17 @@ export class ScheduleEntity {
     }
   }
 
-  static scheduleDTO(object: Record<string, any>, action: "insert" | "update") {
+  static scheduleDTO(object: Record<string, any>, action: 'insert' | 'update') {
     const schedule = ScheduleEntity.fromJson(object);
 
     delete schedule.professional;
-    if (action === "insert") {
+    if (action === 'insert') {
       delete schedule.id;
       delete schedule.uid;
     }
 
-    if (action === "update" && !schedule.id) {
-      throw CustomError.badRequest("Id es requerida para actualizar");
+    if (action === 'update' && !schedule.id) {
+      throw CustomError.badRequest('Id es requerida para actualizar');
     }
 
     return schedule;

@@ -1,5 +1,5 @@
-import { CustomError } from "@core/domain/custom.error";
-import { roleSchema } from "@roles/presentation/schemas/roles_schema";
+import { CustomError } from '@core/domain/custom.error';
+import { roleSchema } from '@roles/presentation/schemas/roles_schema';
 
 type Init = {
   id?: number | undefined;
@@ -17,8 +17,8 @@ export class RoleEntity {
 
   static toResponse(object: Record<string, any>): RoleEntity {
     return {
-      id: object?.["id"],
-      name: object["name"],
+      id: object?.['id'],
+      name: object['name']
     };
   }
 

@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-import { ProfessionalFilters } from "@professionals/domain/entities/professional_filters";
+import { PrismaClient } from '@prisma/client';
+import { ProfessionalFilters } from '@professionals/domain/entities/professional_filters';
 
 export class ProfessionalService {
   private readonly db: PrismaClient;
@@ -14,16 +14,16 @@ export class ProfessionalService {
         id: filters?.id,
         user: {
           OR: [
-            { names: { contains: filters?.name, mode: "insensitive" } },
-            { last_names: { contains: filters?.name, mode: "insensitive" } },
-          ],
+            { names: { contains: filters?.name, mode: 'insensitive' } },
+            { last_names: { contains: filters?.name, mode: 'insensitive' } }
+          ]
         },
         professional_profession: {
           some: {
-            profession_id: filters?.profession_id,
-          },
-        },
-      },
+            profession_id: filters?.profession_id
+          }
+        }
+      }
     });
   }
 
@@ -34,22 +34,22 @@ export class ProfessionalService {
         user: {
           select: {
             names: true,
-            last_names: true,
-          },
+            last_names: true
+          }
         },
         professional_profession: {
           select: {
-            profession_id: true,
-          },
-        },
+            profession_id: true
+          }
+        }
       },
       where: {
         professional_profession: {
           some: {
-            profession_id: filters?.profession_id,
-          },
-        },
-      },
+            profession_id: filters?.profession_id
+          }
+        }
+      }
     });
   }
 }

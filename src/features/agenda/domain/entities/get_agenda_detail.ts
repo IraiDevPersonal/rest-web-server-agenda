@@ -1,5 +1,5 @@
-import { DateFormatter } from "@core/domain/date_formatter";
-import { AppointmentStatus } from "@prisma/client";
+import { DateFormatter } from '@core/domain/date_formatter';
+import { AppointmentStatus } from '@prisma/client';
 
 type PatientHistory = {
   date_time: string;
@@ -27,7 +27,7 @@ type Init = {
   };
   alert: {
     message: string;
-    is_required: boolean
+    is_required: boolean;
   };
   patient_history: PatientHistory[];
 };
@@ -61,46 +61,47 @@ export class GetAgendaDetail {
   }
 
   static adapter(object: Record<string, any>) {
-    const schedule = object["schedule"];
-    const professional = schedule?.["professional"];
-    const patient = object["patient"];
+    const schedule = object['schedule'];
+    const professional = schedule?.['professional'];
+    const patient = object['patient'];
     const patienHistory: any[] = patient?.appointments ?? [];
-    const professions: any[] = professional?.["professional_profession"] ?? [];
+    const professions: any[] = professional?.['professional_profession'] ?? [];
 
     const history: PatientHistory[] = patienHistory.map((appointment: any) => {
-      const schedule = appointment["schedule"]
+      const schedule = appointment['schedule'];
 
       return {
-        date_time: `${DateFormatter.formatDate(schedule["date"], "dmy")} ${schedule["time_from"]}-${schedule["time_to"]}`,
-        status: appointment.appointment_status ?? "INDETERMINATE"
-      } satisfies PatientHistory
-    })
+        date_time: `${DateFormatter.formatDate(schedule['date'], 'dmy')} ${schedule['time_from']}-${schedule['time_to']}`,
+        status: appointment.appointment_status ?? 'INDETERMINATE'
+      } satisfies PatientHistory;
+    });
 
     return {
-      date: DateFormatter.formatDate(schedule["date"], "ymd"),
-      time_from: schedule["time_from"],
-      time_to: schedule["time_to"],
-      status: object["appointment_status"] ?? "INDETERMINATE",
-      is_enabled: schedule["is_enabled"],
+      date: DateFormatter.formatDate(schedule['date'], 'ymd'),
+      time_from: schedule['time_from'],
+      time_to: schedule['time_to'],
+      status: object['appointment_status'] ?? 'INDETERMINATE',
+      is_enabled: schedule['is_enabled'],
       professional: {
-        full_name: `${professional?.["user"]["names"] ?? "Profesional sin nombres"} ${professional?.["user"]["last_names"] ?? "Profesional sin apellidos"}`,
+        full_name: `${professional?.['user']['names'] ?? 'Profesional sin nombres'} ${professional?.['user']['last_names'] ?? 'Profesional sin apellidos'}`,
         professions: professions.map((p) => p.professions.name),
-        pay_methods: ["fonasa", "particular (Efectivo, Transferencia)"],
-        confirm_methods: ["whatsapp", "teléfono", "correo", "presencial"],
+        pay_methods: ['fonasa', 'particular (Efectivo, Transferencia)'],
+        confirm_methods: ['whatsapp', 'teléfono', 'correo', 'presencial']
       },
       patient: {
-        names: professional?.["user"]["names"] ?? "Paciente sin nombres",
-        last_names: professional?.["user"]["last_names"] ?? "Paciente sin apellidos",
-        rut: patient?.["rut"] ?? "Paciente sin rut",
-        phone: patient?.["phone"] ?? "Paciente sin teléfono",
-        email: patient?.["email"] ?? "Paciente sin correo",
-        address: patient?.["address"] ?? "Paciente sin dirección",
+        names: professional?.['user']['names'] ?? 'Paciente sin nombres',
+        last_names:
+          professional?.['user']['last_names'] ?? 'Paciente sin apellidos',
+        rut: patient?.['rut'] ?? 'Paciente sin rut',
+        phone: patient?.['phone'] ?? 'Paciente sin teléfono',
+        email: patient?.['email'] ?? 'Paciente sin correo',
+        address: patient?.['address'] ?? 'Paciente sin dirección'
       },
       patient_history: history,
       alert: {
-        message: "Profesional exige bono para confirmar paciente",
+        message: 'Profesional exige bono para confirmar paciente',
         is_required: true
-      },
+      }
     } satisfies GetAgendaDetail;
   }
 }

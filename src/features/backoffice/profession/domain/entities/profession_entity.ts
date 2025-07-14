@@ -1,9 +1,9 @@
-import { z } from "zod";
-import { CustomError } from "@core/domain/custom.error";
+import { z } from 'zod';
+import { CustomError } from '@core/domain/custom.error';
 
 const scheme = z.object({
   id: z.number().optional(),
-  name: z.string().min(1, { message: "Minimo de caracteres es 1" }),
+  name: z.string().min(1, { message: 'Minimo de caracteres es 1' })
 });
 
 type Init = {
@@ -22,8 +22,8 @@ export class ProfessionEntity {
 
   static adapter(object: Record<string, any>) {
     return {
-      id: object["id"],
-      name: object["name"],
+      id: object['id'],
+      name: object['name']
     };
   }
 
@@ -46,7 +46,7 @@ export class ProfessionEntity {
     const model = ProfessionEntity.fromJson(object);
 
     if (!model.id) {
-      throw CustomError.badRequest("Id es requerida para actualizar");
+      throw CustomError.badRequest('Id es requerida para actualizar');
     }
     return { data: model, id: model.id };
   }

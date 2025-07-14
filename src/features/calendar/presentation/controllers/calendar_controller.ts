@@ -1,10 +1,10 @@
-import { Controllers } from "@core/domain/controllers";
-import { Request, Response } from "express";
-import { CalendarService } from "../service/calendar_service";
-import { CustomError } from "@core/domain/custom.error";
-import { GetCalendar } from "../../domain/entities/get_calendar";
-import { DateFormatter } from "@core/domain/date_formatter";
-import { AppointmentStatus } from "@prisma/client";
+import { Controllers } from '@core/domain/controllers';
+import { Request, Response } from 'express';
+import { CalendarService } from '../service/calendar_service';
+import { CustomError } from '@core/domain/custom.error';
+import { GetCalendar } from '../../domain/entities/get_calendar';
+import { DateFormatter } from '@core/domain/date_formatter';
+import { AppointmentStatus } from '@prisma/client';
 
 export class CalendarController implements Controllers {
   public constructor(private readonly service: CalendarService) {}
@@ -14,7 +14,7 @@ export class CalendarController implements Controllers {
       const filters = this.getFilters(req);
       const rawCalendars = await this.service.getCalendar({
         ...filters,
-        type: "CONFIRMED",
+        type: 'CONFIRMED'
       });
       const calendars = rawCalendars.map(GetCalendar.fromObject);
 
@@ -28,15 +28,15 @@ export class CalendarController implements Controllers {
 
         const availableAppointmetns =
           await this.service.getCountAppointmentsByDateAndStatus({
-            type: "AVAILABLE",
-            date_from: DateFormatter.stringToDate(calendar.date),
+            type: 'AVAILABLE',
+            date_from: DateFormatter.stringToDate(calendar.date)
           });
 
         if (index === -1) {
           calendarResponse.push({
             date: calendar.date,
             available_appointments_count: availableAppointmetns,
-            appointments: [...calendar.appointments],
+            appointments: [...calendar.appointments]
           });
         }
         if (index !== -1) {
@@ -46,7 +46,7 @@ export class CalendarController implements Controllers {
 
       return res.status(200).json(calendarResponse);
     } catch (error) {
-      console.log("catch ", error);
+      console.log('catch ', error);
       const e = CustomError.internalServer(`${error}`);
       return CustomError.handleError(e, res);
     }
@@ -71,7 +71,7 @@ export class CalendarController implements Controllers {
       profession_id: profession_id ? Number(profession_id) : undefined,
       professional_id: professional_id ? Number(professional_id) : undefined,
       date_from: date_from,
-      date_to: date_to,
+      date_to: date_to
     };
   }
 }

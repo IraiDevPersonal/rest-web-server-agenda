@@ -1,6 +1,6 @@
-import { Router } from "express";
-import { ProfessionService } from "./service";
-import { ProfessionController } from "./controller";
+import { Router } from 'express';
+import { ProfessionService } from './service';
+import { ProfessionController } from './controller';
 
 export class ProfessionRoutes {
   static get routes(): Router {
@@ -8,8 +8,8 @@ export class ProfessionRoutes {
     const service = new ProfessionService();
     const controller = new ProfessionController(service);
 
-    router.get("/", [], controller.getProfessions);
-    router.get("/to-filter", [], controller.getProfessionsToFilter);
+    router.get('/', [], controller.getProfessions);
+    router.get('/to-filter', [], controller.getProfessionsToFilter);
 
     return router;
   }

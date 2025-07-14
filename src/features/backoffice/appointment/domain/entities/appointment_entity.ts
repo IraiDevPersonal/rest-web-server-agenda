@@ -1,6 +1,6 @@
-import { CustomError } from "@core/domain/custom.error";
-import { AppointmentStatus } from "@prisma/client";
-import { z } from "zod";
+import { CustomError } from '@core/domain/custom.error';
+import { AppointmentStatus } from '@prisma/client';
+import { z } from 'zod';
 
 export const appointmentSchema = z.object({
   id: z.optional(z.number()),
@@ -8,11 +8,11 @@ export const appointmentSchema = z.object({
   patient_id: z.number(),
   schedule_id: z.number(),
   appointment_status: z.enum([
-    "CANCELLED",
-    "TO_CONFIRM",
-    "CONFIRMED",
-    "AVAILABLE",
-  ]),
+    'CANCELLED',
+    'TO_CONFIRM',
+    'CONFIRMED',
+    'AVAILABLE'
+  ])
 });
 
 type Init = {
@@ -39,10 +39,10 @@ export class AppointmentEntity {
 
   static adapter(object: Record<string, any>) {
     return {
-      uid: object["uid"],
-      patient_id: object["patient_id"],
-      schedule_id: object["schedule_id"],
-      appointment_status: object["appointment_status"],
+      uid: object['uid'],
+      patient_id: object['patient_id'],
+      schedule_id: object['schedule_id'],
+      appointment_status: object['appointment_status']
     };
   }
 
@@ -65,7 +65,7 @@ export class AppointmentEntity {
     const model = AppointmentEntity.fromJson(object);
 
     if (!model.id) {
-      throw CustomError.badRequest("Id es requerida para actualizar");
+      throw CustomError.badRequest('Id es requerida para actualizar');
     }
     return { data: model, id: model.id };
   }
