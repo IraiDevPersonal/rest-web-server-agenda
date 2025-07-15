@@ -5,10 +5,10 @@ import {
 
 import { CustomError } from "@/lib/custom-error";
 
-export class AlertAppointmentDetailEntity {
+export class AlertAppointmentEntity {
   static validate(item: any): AlertAppointmentDetailModel {
     try {
-      const data = AlertAppointmentDetailEntity.mapper(item);
+      const data = AlertAppointmentEntity.mapper(item);
       return AlertAppointmentDetailEntitySchema.parse(data);
     } catch (error) {
       throw new Error(

@@ -30,12 +30,25 @@ export class CustomError extends Error {
   }
 
   static handleError = (error: unknown, res: Response) => {
+    let errorMessage = "Internal server error";
     console.log("catch ", error);
+
     if (error instanceof CustomError) {
-      return res.status(error.statusCode).json({ error: error.message });
+      errorMessage = error.message;
     }
 
-    return res.status(500).json({ error: "Internal server error" });
+    if (error instanceof ZodError) {
+      const issues = error.errors.map(
+        (issue) => `[${issue.path.join(".")}] ${issue.message}`
+      );
+      errorMessage = `Error de validación: ${issues.join("; ")}`;
+    }
+
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+
+    return res.status(500).json({ error: errorMessage });
   };
 
   static getErrorMessage(error: unknown, fileName?: string) {

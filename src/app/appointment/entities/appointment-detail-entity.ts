@@ -1,6 +1,6 @@
 import { AppointmentStatus } from "@prisma/client";
 
-import { AlertAppointmentDetailEntity } from "./alert-appointment-detail-entity";
+import { AlertAppointmentEntity } from "./alert-appointment-entity";
 import { PatientAppointmentDetailEntity } from "./patient-appointment-detail-entity";
 import { PatientHistoryAppointmentDetailEntity } from "./patient-history-appointment-detail-entity";
 import { ProfessionalAppointmentDetailEntity } from "./professional-appointment-detail-entity";
@@ -52,7 +52,7 @@ export class AppointmentDetailEntity {
         schedule?.professional
       ),
       patient: PatientAppointmentDetailEntity.validate(patient),
-      alert: AlertAppointmentDetailEntity.validate(item?.alert)
+      alert: AlertAppointmentEntity.validate(item?.alert)
     };
   }
 }
