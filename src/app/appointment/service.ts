@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-import { AppointmentFilters } from './models/appointment';
+import { PrismaClient } from "@prisma/client";
+import { AppointmentFilters } from "./models/appointment-filters";
 
 export class AppointmentService {
   private readonly db: PrismaClient;
@@ -52,7 +52,7 @@ export class AppointmentService {
             appointments: {
               orderBy: {
                 schedule: {
-                  date: 'desc'
+                  date: "desc"
                 }
               },
               take: 4,
@@ -146,12 +146,12 @@ export class AppointmentService {
       orderBy: [
         {
           schedule: {
-            date: 'asc'
+            date: "asc"
           }
         },
         {
           schedule: {
-            time_from: 'asc'
+            time_from: "asc"
           }
         }
       ]

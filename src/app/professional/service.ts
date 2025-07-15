@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-import type { ProfessionalFilters } from '../professional/models/professional';
+import { PrismaClient } from "@prisma/client";
+import type { ProfessionalFilters } from "./models/professional-filters";
 
 export class ProfessionalService {
   private readonly db: PrismaClient;
@@ -40,9 +40,9 @@ export class ProfessionalService {
       where: {
         id: filters?.id,
         user: {
-          names: { contains: filters?.names, mode: 'insensitive' },
-          last_names: { contains: filters?.last_names, mode: 'insensitive' },
-          rut: { equals: filters?.rut, mode: 'insensitive' }
+          names: { contains: filters?.names, mode: "insensitive" },
+          last_names: { contains: filters?.last_names, mode: "insensitive" },
+          rut: { equals: filters?.rut, mode: "insensitive" }
         },
         professional_profession: {
           some: {

@@ -1,40 +1,16 @@
-import { z } from "zod";
+import {
+  type ProfessionalAppointmentDetailModel,
+  ProfessionalAppointmentDetailSchema
+} from "../models/appointment-detail";
 
 import { CustomError } from "@/lib/custom-error";
 import { safeArray } from "@/lib/utils";
 
-const ProfessionalAppointmentDetailSchema = z.object({
-  full_name: z.string(),
-  professions: z.array(z.string()),
-  pay_methods: z.array(z.string()),
-  confirm_methods: z.array(z.string())
-});
-
-type ProfessionalAppointmentDetailModel = z.infer<
-  typeof ProfessionalAppointmentDetailSchema
->;
-
 export class ProfessionalAppointmentDetailEntity {
-  public full_name: ProfessionalAppointmentDetailModel["full_name"];
-  public professions: ProfessionalAppointmentDetailModel["professions"];
-  public pay_methods: ProfessionalAppointmentDetailModel["pay_methods"];
-  public confirm_methods: ProfessionalAppointmentDetailModel["confirm_methods"];
-
-  private constructor(init: ProfessionalAppointmentDetailModel) {
-    this.full_name = init.full_name;
-    this.professions = init.professions;
-    this.pay_methods = init.pay_methods;
-    this.confirm_methods = init.confirm_methods;
-  }
-
-  static getSchema() {
-    return ProfessionalAppointmentDetailSchema;
-  }
-
   static validate(item: any): ProfessionalAppointmentDetailModel {
     try {
       const data = ProfessionalAppointmentDetailEntity.mapper(item);
-      return ProfessionalAppointmentDetailEntity.getSchema().parse(data);
+      return ProfessionalAppointmentDetailSchema.parse(data);
     } catch (error) {
       throw new Error(
         CustomError.getErrorMessage(error, "profesional-entity.ts: (validate)")

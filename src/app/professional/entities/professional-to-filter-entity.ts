@@ -39,7 +39,7 @@ export class ProfessionalToFilterEntity {
     }
   }
 
-  static responseAdapter(data: any): ProfessionalOptionModel[] {
+  static serverResponse(data: any): ProfessionalOptionModel[] {
     try {
       return safeArray<ProfessionalOptionModel>(data, {
         throwErrors: true,
@@ -48,7 +48,7 @@ export class ProfessionalToFilterEntity {
     } catch (error) {
       const errorMessage = CustomError.getErrorMessage(
         error,
-        "profession-to-filter-entity.ts: (responseAdapter)"
+        "profession-to-filter-entity.ts: (serverResponse)"
       );
       throw new Error(errorMessage);
     }

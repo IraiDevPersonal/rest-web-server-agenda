@@ -1,55 +1,15 @@
-import { z } from "zod";
-
 import { ProfessionalEntity } from "@/app/professional/entities/professional-entity";
+import { type ScheduleModel, ScheduleSchema } from "../models/schedule";
 
 import { CustomError } from "@/lib/custom-error";
-import { safeArray } from "@/lib/utils";
 import { Uid } from "@/lib/uid";
-
-const ScheduleSchema = z.object({
-  id: z.optional(
-    z.number().positive("el valor del id debe ser un número positivo")
-  ),
-  uid: z.optional(z.string().uuid("el uid debe ser un UUID válido")),
-  professional_id: z.number(),
-  date: z.date(),
-  time_from: z.string(),
-  time_to: z.string(),
-  is_enabled: z.boolean(),
-  professional: z.optional(ProfessionalEntity.getSchema())
-});
-
-type ScheduleModel = z.infer<typeof ScheduleSchema>;
+import { safeArray } from "@/lib/utils";
 
 export class ScheduleEntity {
-  public id: ScheduleModel["id"];
-  public uid: ScheduleModel["uid"];
-  public professional_id: ScheduleModel["professional_id"];
-  public date: ScheduleModel["date"];
-  public time_from: ScheduleModel["time_from"];
-  public time_to: ScheduleModel["time_to"];
-  public is_enabled: ScheduleModel["is_enabled"];
-  public professional: ScheduleModel["professional"];
-
-  private constructor(init: ScheduleModel) {
-    this.id = init.id;
-    this.uid = init.uid;
-    this.professional_id = init.professional_id;
-    this.date = init.date;
-    this.time_from = init.time_from;
-    this.time_to = init.time_to;
-    this.is_enabled = init.is_enabled;
-    this.professional = init.professional;
-  }
-
-  static getSchema() {
-    return ScheduleSchema;
-  }
-
   static validate(item: any): ScheduleModel {
     try {
       const data = ScheduleEntity.mapper(item);
-      return ScheduleEntity.getSchema().parse(data);
+      return ScheduleSchema.parse(data);
     } catch (error) {
       throw new Error(
         CustomError.getErrorMessage(error, "schedule-entity.ts: (validate)")
@@ -57,7 +17,7 @@ export class ScheduleEntity {
     }
   }
 
-  static responseAdapter(object: any): ScheduleModel[] {
+  static serverResponse(object: any): ScheduleModel[] {
     try {
       return safeArray<ScheduleModel>(object, {
         throwErrors: true,
@@ -67,7 +27,7 @@ export class ScheduleEntity {
       throw new Error(
         CustomError.getErrorMessage(
           error,
-          "schedule-entity.ts: (responseAdapter)"
+          "schedule-entity.ts: (serverResponse)"
         )
       );
     }

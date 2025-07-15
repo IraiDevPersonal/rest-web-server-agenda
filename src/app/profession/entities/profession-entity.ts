@@ -1,34 +1,13 @@
-import { z } from "zod";
+import { type ProfessionModel, ProfessionSchema } from "../models/profession";
 
 import { CustomError } from "@/lib/custom-error";
 import { safeArray } from "@/lib/utils";
 
-const ProfessionSchema = z.object({
-  id: z.number().positive(),
-  name: z
-    .string()
-    .min(1, { message: "El nombre de la profesión no puede estar vacío" })
-});
-
-type ProfessionModel = z.infer<typeof ProfessionSchema>;
-
 export class ProfessionEntity {
-  public id: ProfessionModel["id"];
-  public name: ProfessionModel["name"];
-
-  private constructor(init: ProfessionModel) {
-    this.id = init.id;
-    this.name = init.name;
-  }
-
-  static getSchema() {
-    return ProfessionSchema;
-  }
-
   static validate(item: any): ProfessionModel {
     try {
       const data = ProfessionEntity.mapper(item);
-      return ProfessionEntity.getSchema().parse(data);
+      return ProfessionSchema.parse(data);
     } catch (error) {
       throw new Error(
         CustomError.getErrorMessage(error, "profession-entity.ts: (validate)")
@@ -36,7 +15,7 @@ export class ProfessionEntity {
     }
   }
 
-  static responseAdapter(data: any): ProfessionModel[] {
+  static serverResponse(data: any): ProfessionModel[] {
     return ProfessionEntity.toArray(data);
   }
 
@@ -57,7 +36,7 @@ export class ProfessionEntity {
 
   private static mapper(item: any): ProfessionModel {
     return {
-      id: Number(item.id),
+      id: item?.id ?? null,
       name: item.names ?? "profesión indeterminada"
     };
   }

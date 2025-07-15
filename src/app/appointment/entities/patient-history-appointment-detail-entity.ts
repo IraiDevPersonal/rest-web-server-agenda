@@ -1,39 +1,19 @@
-import { z } from "zod";
+import { AppointmentStatus } from "@prisma/client";
+
+import {
+  type PatientHistoryAppointmentDetailModel,
+  PatientHistoryAppointmentDetailSchema
+} from "../models/appointment-detail";
 
 import { CustomError } from "@/lib/custom-error";
-import { AppointmentStatus } from "@prisma/client";
 import { DateFormatter } from "@/lib/date-formatter";
 import { safeArray } from "@/lib/utils";
 
-const PatientHistoryAppointmentDetailSchema = z.object({
-  uid: z.string().uuid("El UID debe ser un UUID válido"),
-  date_time: z.string(),
-  status: z.nativeEnum(AppointmentStatus)
-});
-
-type PatientHistoryAppointmentDetailModel = z.infer<
-  typeof PatientHistoryAppointmentDetailSchema
->;
-
 export class PatientHistoryAppointmentDetailEntity {
-  public uid: PatientHistoryAppointmentDetailModel["uid"];
-  public date_time: PatientHistoryAppointmentDetailModel["date_time"];
-  public status: PatientHistoryAppointmentDetailModel["status"];
-
-  private constructor(init: PatientHistoryAppointmentDetailModel) {
-    this.uid = init.uid;
-    this.date_time = init.date_time;
-    this.status = init.status;
-  }
-
-  static getSchema() {
-    return PatientHistoryAppointmentDetailSchema;
-  }
-
   static validate(item: any): PatientHistoryAppointmentDetailModel {
     try {
       const data = PatientHistoryAppointmentDetailEntity.mapper(item);
-      return PatientHistoryAppointmentDetailEntity.getSchema().parse(data);
+      return PatientHistoryAppointmentDetailSchema.parse(data);
     } catch (error) {
       throw new Error(
         CustomError.getErrorMessage(

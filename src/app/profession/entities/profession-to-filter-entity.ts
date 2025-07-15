@@ -1,28 +1,14 @@
-import { z } from "zod";
+import { type ProfessionOptionModel } from "../models/professional-to-filter";
 
 import { CustomError } from "@/lib/custom-error";
-import { safeArray } from "@/lib/utils";
 import { OptionSchema } from "@/lib/schemas/global";
-
-type ProfessionOptionModel = z.infer<typeof OptionSchema>;
+import { safeArray } from "@/lib/utils";
 
 export class ProfessionToFilterEntity {
-  public value: ProfessionOptionModel["value"];
-  public label: ProfessionOptionModel["label"];
-
-  private constructor(init: ProfessionOptionModel) {
-    this.value = init.value;
-    this.label = init.label;
-  }
-
-  static getSchema() {
-    return OptionSchema;
-  }
-
   static validate(item: any): ProfessionOptionModel {
     try {
       const data = ProfessionToFilterEntity.mapper(item);
-      return ProfessionToFilterEntity.getSchema().parse(data);
+      return OptionSchema.parse(data);
     } catch (error) {
       throw new Error(
         CustomError.getErrorMessage(
@@ -33,7 +19,7 @@ export class ProfessionToFilterEntity {
     }
   }
 
-  static responseAdapter(data: any): ProfessionOptionModel[] {
+  static serverResponse(data: any): ProfessionOptionModel[] {
     try {
       return safeArray<ProfessionOptionModel>(data, {
         throwErrors: true,
@@ -42,16 +28,16 @@ export class ProfessionToFilterEntity {
     } catch (error) {
       const errorMessage = CustomError.getErrorMessage(
         error,
-        "profession-to-filter-entity.ts: (responseAdapter)"
+        "profession-to-filter-entity.ts: (serverResponse)"
       );
       throw new Error(errorMessage);
     }
   }
 
-  private static mapper(item: any): ProfessionToFilterEntity {
-    return new ProfessionToFilterEntity({
+  private static mapper(item: any): ProfessionOptionModel {
+    return {
       value: `${item.id}`,
       label: item.name ?? "profesión indeterminada"
-    });
+    };
   }
 }

@@ -1,33 +1,15 @@
-import { z } from "zod";
+import {
+  AlertAppointmentDetailEntitySchema,
+  type AlertAppointmentDetailModel
+} from "../models/appointment-detail";
 
 import { CustomError } from "@/lib/custom-error";
 
-const AlertAppointmentDetailEntitySchema = z.object({
-  message: z.string(),
-  is_required: z.boolean()
-});
-
-type AlertAppointmentDetailModel = z.infer<
-  typeof AlertAppointmentDetailEntitySchema
->;
-
 export class AlertAppointmentDetailEntity {
-  public message: AlertAppointmentDetailModel["message"];
-  public is_required: AlertAppointmentDetailModel["is_required"];
-
-  private constructor(init: AlertAppointmentDetailModel) {
-    this.message = init.message;
-    this.is_required = init.is_required;
-  }
-
-  static getSchema() {
-    return AlertAppointmentDetailEntitySchema;
-  }
-
   static validate(item: any): AlertAppointmentDetailModel {
     try {
       const data = AlertAppointmentDetailEntity.mapper(item);
-      return AlertAppointmentDetailEntity.getSchema().parse(data);
+      return AlertAppointmentDetailEntitySchema.parse(data);
     } catch (error) {
       throw new Error(
         CustomError.getErrorMessage(

@@ -1,45 +1,15 @@
-import { z } from "zod";
+import {
+  PatientAppointmDetailEntitySchema,
+  type PatientAppointmentDetailModel
+} from "../models/appointment-detail";
 
 import { CustomError } from "@/lib/custom-error";
 
-const PatientAppointmDetailEntitySchema = z.object({
-  names: z.string(),
-  last_names: z.string(),
-  rut: z.string(),
-  phone: z.string(),
-  email: z.string(),
-  address: z.string()
-});
-
-type PatientAppointmentDetailModel = z.infer<
-  typeof PatientAppointmDetailEntitySchema
->;
-
 export class PatientAppointmentDetailEntity {
-  public names: PatientAppointmentDetailModel["names"];
-  public last_names: PatientAppointmentDetailModel["last_names"];
-  public rut: PatientAppointmentDetailModel["rut"];
-  public phone: PatientAppointmentDetailModel["phone"];
-  public email: PatientAppointmentDetailModel["email"];
-  public address: PatientAppointmentDetailModel["address"];
-
-  private constructor(init: PatientAppointmentDetailModel) {
-    this.names = init.names;
-    this.last_names = init.last_names;
-    this.rut = init.rut;
-    this.phone = init.phone;
-    this.email = init.email;
-    this.address = init.address;
-  }
-
-  static getSchema() {
-    return PatientAppointmDetailEntitySchema;
-  }
-
   static validate(item: any): PatientAppointmentDetailModel {
     try {
       const data = PatientAppointmentDetailEntity.mapper(item);
-      return PatientAppointmentDetailEntity.getSchema().parse(data);
+      return PatientAppointmDetailEntitySchema.parse(data);
     } catch (error) {
       throw new Error(
         CustomError.getErrorMessage(

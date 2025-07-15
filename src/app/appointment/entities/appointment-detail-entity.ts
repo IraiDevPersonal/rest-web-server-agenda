@@ -1,63 +1,23 @@
 import { AppointmentStatus } from "@prisma/client";
-import { z } from "zod";
 
+import { AlertAppointmentDetailEntity } from "./alert-appointment-detail-entity";
 import { PatientAppointmentDetailEntity } from "./patient-appointment-detail-entity";
 import { PatientHistoryAppointmentDetailEntity } from "./patient-history-appointment-detail-entity";
 import { ProfessionalAppointmentDetailEntity } from "./professional-appointment-detail-entity";
-import { AlertAppointmentDetailEntity } from "./alert-appointment-detail-entity";
+import {
+  type AppointmentDetailModel,
+  AppointmentDetailSchema
+} from "../models/appointment-detail";
 
 import { CustomError } from "@/lib/custom-error";
 import { DateFormatter } from "@/lib/date-formatter";
 import { Uid } from "@/lib/uid";
 
-const AppointmentDetailSchema = z.object({
-  uid: z.string().uuid("El UID debe ser un UUID válido"),
-  date: z.string(),
-  time_from: z.string(),
-  time_to: z.string(),
-  is_enabled: z.boolean(),
-  status: z.nativeEnum(AppointmentStatus),
-  patient_history: z.array(PatientHistoryAppointmentDetailEntity.getSchema()),
-  professional: ProfessionalAppointmentDetailEntity.getSchema(),
-  patient: PatientAppointmentDetailEntity.getSchema(),
-  alert: AlertAppointmentDetailEntity.getSchema()
-});
-
-type AppointmentDetailModel = z.infer<typeof AppointmentDetailSchema>;
-
 export class AppointmentDetailEntity {
-  public professional: AppointmentDetailModel["professional"];
-  public patient: AppointmentDetailModel["patient"];
-  public alert: AppointmentDetailModel["alert"];
-  public patient_history: AppointmentDetailModel["patient_history"];
-  public uid: AppointmentDetailModel["uid"];
-  public date: AppointmentDetailModel["date"];
-  public time_from: AppointmentDetailModel["time_from"];
-  public time_to: AppointmentDetailModel["time_to"];
-  public status: AppointmentDetailModel["status"];
-  public is_enabled: AppointmentDetailModel["is_enabled"];
-
-  private constructor(init: AppointmentDetailModel) {
-    this.professional = init.professional;
-    this.patient = init.patient;
-    this.alert = init.alert;
-    this.patient_history = init.patient_history;
-    this.uid = init.uid;
-    this.date = init.date;
-    this.time_from = init.time_from;
-    this.time_to = init.time_to;
-    this.status = init.status;
-    this.is_enabled = init.is_enabled;
-  }
-
-  static getSchema() {
-    return AppointmentDetailSchema;
-  }
-
   static validate(item: any): AppointmentDetailModel {
     try {
       const data = AppointmentDetailEntity.mapper(item);
-      return AppointmentDetailEntity.getSchema().parse(data);
+      return AppointmentDetailSchema.parse(data);
     } catch (error) {
       throw new Error(
         CustomError.getErrorMessage(
@@ -68,7 +28,7 @@ export class AppointmentDetailEntity {
     }
   }
 
-  static responseAdapter(object: any): AppointmentDetailEntity {
+  static serverResponse(object: any): AppointmentDetailModel {
     return AppointmentDetailEntity.validate(object);
   }
 

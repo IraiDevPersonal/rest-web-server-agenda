@@ -1,34 +1,13 @@
-import { z } from "zod";
+import { RoleSchema, type RoleModel } from "../models/role";
 
 import { CustomError } from "@/lib/custom-error";
 import { safeArray } from "@/lib/utils";
 
-export const RoleSchema = z.object({
-  id: z.optional(
-    z.number().positive("el valor del id debe ser un número positivo")
-  ),
-  name: z.string().min(0, { message: "El nombre del rol no puede estar vacío" })
-});
-
-type RoleModel = z.infer<typeof RoleSchema>;
-
 export class RoleEntity {
-  public id: RoleModel["id"];
-  public name: RoleModel["name"];
-
-  private constructor(init: RoleModel) {
-    this.id = init.id;
-    this.name = init.name;
-  }
-
-  static getSchema() {
-    return RoleSchema;
-  }
-
   static validate(object: any): RoleModel {
     try {
       const data = RoleEntity.mapper(object);
-      return RoleEntity.getSchema().parse(data);
+      return RoleSchema.parse(data);
     } catch (error) {
       throw new Error(
         CustomError.getErrorMessage(error, "role-entity.ts: (validate)")
@@ -36,7 +15,7 @@ export class RoleEntity {
     }
   }
 
-  static responseAdapter(data: any): RoleModel[] {
+  static serverResponse(data: any): RoleModel[] {
     try {
       return safeArray<RoleModel>(data, {
         throwErrors: true,
@@ -48,9 +27,9 @@ export class RoleEntity {
   }
 
   private static mapper(item: any): RoleModel {
-    return new RoleEntity({
-      id: item?.id,
+    return {
+      id: Number(item?.id),
       name: item?.name ?? "Rol indeterminado"
-    });
+    };
   }
 }

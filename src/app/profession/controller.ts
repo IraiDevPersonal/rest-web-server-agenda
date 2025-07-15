@@ -1,11 +1,11 @@
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
 
-import { Controllers } from '@/lib/controllers';
-import { CustomError } from '@/lib/custom-error';
-import { ProfessionFilters } from './models/profession';
-import { ProfessionToFilterEntity } from './entities/profession-to-filter-entity';
-import { ProfessionEntity } from './entities/profession-entity';
-import { ProfessionService } from './service';
+import { Controllers } from "@/lib/controllers";
+import { CustomError } from "@/lib/custom-error";
+import { ProfessionFilters } from "./models/profession-filters";
+import { ProfessionToFilterEntity } from "./entities/profession-to-filter-entity";
+import { ProfessionEntity } from "./entities/profession-entity";
+import { ProfessionService } from "./service";
 
 export class ProfessionController implements Controllers<ProfessionFilters> {
   public constructor(private readonly service: ProfessionService) {}
@@ -14,7 +14,7 @@ export class ProfessionController implements Controllers<ProfessionFilters> {
     try {
       const filters = this.getFilters(req);
       const bdProfessions = await this.service.getProfessions(filters);
-      const professions = ProfessionEntity.responseAdapter(bdProfessions);
+      const professions = ProfessionEntity.serverResponse(bdProfessions);
 
       return res.json(professions);
     } catch (error) {
@@ -28,7 +28,7 @@ export class ProfessionController implements Controllers<ProfessionFilters> {
       const filters = this.getFilters(req);
       const bdProfessions = await this.service.getProfessions(filters);
       const professions =
-        ProfessionToFilterEntity.responseAdapter(bdProfessions);
+        ProfessionToFilterEntity.serverResponse(bdProfessions);
 
       return res.json(professions);
     } catch (error) {
