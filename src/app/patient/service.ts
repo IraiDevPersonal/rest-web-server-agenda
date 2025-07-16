@@ -1,4 +1,4 @@
-import { PatientMapper } from "@patients/domain/entities/patient_Mapper";
+import { PatientMapper } from "@patients/domain/mappers/patient_Mapper";
 import { PrismaClient } from "@prisma/client";
 import { PatientFilters } from "./models/patient-filters";
 

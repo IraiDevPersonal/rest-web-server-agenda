@@ -1,4 +1,4 @@
-import { ProfessionalMapper } from "@/app/professional/entities/professional-mapper";
+import { ProfessionalMapper } from "@/app/professional/mappers/professional-mapper";
 import { type ScheduleModel, ScheduleSchema } from "../models/schedule";
 
 import { CustomError } from "@/lib/custom-error";

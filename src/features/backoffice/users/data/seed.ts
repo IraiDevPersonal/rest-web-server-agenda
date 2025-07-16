@@ -1,13 +1,13 @@
-import { OldAppointmentMapper } from "@appointments/domain/entities/appointment_Mapper";
-import { PatientMapper } from "@patients/domain/entities/patient_Mapper";
-import { ProfessionMapper } from "@professions/domain/entities/profession_Mapper";
-import { ProfessionalMapper } from "@professionals/domain/entities/professional_Mapper";
-import { RoleMapper } from "@roles/domain/entities/role_Mapper";
-import { ScheduleMapper } from "@schedules/domain/entities/schedule_Mapper";
-import { ServiceProviderMapper } from "@serviceProviders/domain/entities/serviceProvider_Mapper";
-import { ServiceProviderCodesMapper } from "@serviceProviders/domain/entities/serviceProviderCodes_Mapper";
-import { UserMapper } from "@users/domain/entities/user_Mapper";
-import { ProfessionalProfession } from "@professionals/domain/entities/professionalProfession_Mapper";
+import { OldAppointmentMapper } from "@appointments/domain/mappers/appointment_Mapper";
+import { PatientMapper } from "@patients/domain/mappers/patient_Mapper";
+import { ProfessionMapper } from "@professions/domain/mappers/profession_Mapper";
+import { ProfessionalMapper } from "@professionals/domain/mappers/professional_Mapper";
+import { RoleMapper } from "@roles/domain/mappers/role_Mapper";
+import { ScheduleMapper } from "@schedules/domain/mappers/schedule_Mapper";
+import { ServiceProviderMapper } from "@serviceProviders/domain/mappers/serviceProvider_Mapper";
+import { ServiceProviderCodesMapper } from "@serviceProviders/domain/mappers/serviceProviderCodes_Mapper";
+import { UserMapper } from "@users/domain/mappers/user_Mapper";
+import { ProfessionalProfession } from "@professionals/domain/mappers/professionalProfession_Mapper";
 import { v4 } from "uuid";
 import { AppointmentStatus, WeekDay } from "@prisma/client";
 

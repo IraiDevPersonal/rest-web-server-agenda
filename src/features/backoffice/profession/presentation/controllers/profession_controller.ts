@@ -1,7 +1,7 @@
 import { Controllers } from "@core/domain/controllers";
 import { CustomError } from "@core/domain/custom.error";
-import { GetProfessionFilter } from "@professions/domain/entities/get_profession_filter";
-import { ProfessionMapper } from "@professions/domain/entities/profession_Mapper";
+import { GetProfessionFilter } from "@professions/domain/mappers/get_profession_filter";
+import { ProfessionMapper } from "@professions/domain/mappers/profession_Mapper";
 import { ProfessionService } from "@professions/presentation/services/profession_service";
 import { Request, Response } from "express";
 

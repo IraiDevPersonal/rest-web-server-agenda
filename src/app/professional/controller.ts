@@ -4,8 +4,8 @@ import { Controllers } from "@/lib/controllers";
 import { ProfessionalService } from "./service";
 import { CustomError } from "@/lib/custom-error";
 import { ProfessionalFilters } from "./models/professional-filters";
-import { ProfessionalToFilterMapper } from "./entities/professional-to-filter-mapper";
-import { ProfessionalMapper } from "./entities/professional-mapper";
+import { ProfessionalToFilterMapper } from "./mappers/professional-to-filter-mapper";
+import { ProfessionalMapper } from "./mappers/professional-mapper";
 
 export class ProfessionalController
   implements Controllers<ProfessionalFilters>

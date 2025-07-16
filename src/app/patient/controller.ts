@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import { type PatientFilters } from "./models/patient-filters";
-import { PatientMapper } from "./entities/patient-mapper";
+import { PatientMapper } from "./mappers/patient-mapper";
 import { PatientService } from "./service";
 
 import { CustomError } from "@/lib/custom-error";

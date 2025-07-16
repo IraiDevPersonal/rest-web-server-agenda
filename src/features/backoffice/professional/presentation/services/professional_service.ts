@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-import { ProfessionalFilters } from '@professionals/domain/entities/professional_filters';
+import { PrismaClient } from "@prisma/client";
+import { ProfessionalFilters } from "@professionals/domain/mappers/professional_filters";
 
 export class ProfessionalService {
   private readonly db: PrismaClient;
@@ -14,8 +14,8 @@ export class ProfessionalService {
         id: filters?.id,
         user: {
           OR: [
-            { names: { contains: filters?.name, mode: 'insensitive' } },
-            { last_names: { contains: filters?.name, mode: 'insensitive' } }
+            { names: { contains: filters?.name, mode: "insensitive" } },
+            { last_names: { contains: filters?.name, mode: "insensitive" } }
           ]
         },
         professional_profession: {

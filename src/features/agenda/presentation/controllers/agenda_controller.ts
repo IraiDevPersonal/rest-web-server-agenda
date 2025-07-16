@@ -1,12 +1,12 @@
-import { Request, Response } from 'express';
-import { AppointmentStatus } from '@prisma/client';
-import { CustomError } from '@core/domain/custom.error';
-import { AgendaService } from '../service/agenda_service';
-import { GetMyDay } from '../../domain/entities/get_my_day';
-import { DateFormatter } from '@core/domain/date_formatter';
-import { Controllers } from '@core/domain/controllers';
-import { GetAgendaDetail } from '../../domain/entities/get_agenda_detail';
-import { isYearMonth } from '@lib/utils';
+import { Request, Response } from "express";
+import { AppointmentStatus } from "@prisma/client";
+import { CustomError } from "@core/domain/custom.error";
+import { AgendaService } from "../service/agenda_service";
+import { GetMyDay } from "../../domain/mappers/get_my_day";
+import { DateFormatter } from "@core/domain/date_formatter";
+import { Controllers } from "@core/domain/controllers";
+import { GetAgendaDetail } from "../../domain/mappers/get_agenda_detail";
+import { isYearMonth } from "@lib/utils";
 
 export class AgendaController implements Controllers {
   public constructor(private readonly agendaService: AgendaService) {}
@@ -20,7 +20,7 @@ export class AgendaController implements Controllers {
 
       return res.status(200).json(aps);
     } catch (error) {
-      console.log('catch ', error);
+      console.log("catch ", error);
       const e = CustomError.internalServer(`${error}`);
       return CustomError.handleError(e, res);
     }
@@ -38,7 +38,7 @@ export class AgendaController implements Controllers {
       const adaptedAppointments = GetAgendaDetail.fromObject(appoitnment);
       return res.status(200).json(adaptedAppointments);
     } catch (error) {
-      console.log('catch ', error);
+      console.log("catch ", error);
       const e = CustomError.internalServer(`${error}`);
       return CustomError.handleError(e, res);
     }

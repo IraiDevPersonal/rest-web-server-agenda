@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { ProfessionMapper } from "@professions/domain/entities/profession_Mapper";
-import { ServiceProviderMapper } from "@serviceProviders/domain/entities/serviceProvider_Mapper";
-import { UserMapper } from "@users/domain/entities/user_Mapper";
+import { ProfessionMapper } from "@professions/domain/mappers/profession_Mapper";
+import { ServiceProviderMapper } from "@serviceProviders/domain/mappers/serviceProvider_Mapper";
+import { UserMapper } from "@users/domain/mappers/user_Mapper";
 import { CustomError } from "@core/domain/custom.error";
-import { ScheduleMapper } from "@schedules/domain/entities/schedule_Mapper";
+import { ScheduleMapper } from "@schedules/domain/mappers/schedule_Mapper";
 
 const scheme = z.object({
   id: z.number().optional(),

@@ -3,8 +3,8 @@ import { Request, Response } from "express";
 import { Controllers } from "@/lib/controllers";
 import { CustomError } from "@/lib/custom-error";
 import { ProfessionFilters } from "./models/profession-filters";
-import { ProfessionToFilterMapper } from "./entities/profession-to-filter-mapper";
-import { ProfessionMapper } from "./entities/profession-mapper";
+import { ProfessionToFilterMapper } from "./mappers/profession-to-filter-mapper";
+import { ProfessionMapper } from "./mappers/profession-mapper";
 import { ProfessionService } from "./service";
 
 export class ProfessionController implements Controllers<ProfessionFilters> {

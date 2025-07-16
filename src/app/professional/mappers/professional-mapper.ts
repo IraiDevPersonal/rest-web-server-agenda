@@ -1,5 +1,5 @@
-import { ProfessionMapper } from "@/app/profession/entities/profession-mapper";
-import { RoleMapper } from "@/app/role/entities/role-mapper";
+import { ProfessionMapper } from "@/app/profession/mappers/profession-mapper";
+import { RoleMapper } from "@/app/role/mappers/role-mapper";
 import {
   type ProfessionalModel,
   ProfessionalSchema

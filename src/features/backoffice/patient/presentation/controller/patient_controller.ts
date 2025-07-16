@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { Controllers } from "@core/domain/controllers";
 import { PatientService } from "@patients/presentation/service/patient_service";
 import { CustomError } from "@core/domain/custom.error";
-import { PatientMapper } from "@patients/domain/entities/patient_Mapper";
+import { PatientMapper } from "@patients/domain/mappers/patient_Mapper";
 
 export class PatientController implements Controllers {
   public constructor(private readonly service: PatientService) {}

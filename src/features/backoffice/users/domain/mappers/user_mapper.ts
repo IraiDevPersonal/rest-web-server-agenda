@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { CustomError } from "@core/domain/custom.error";
-import { RoleMapper } from "@roles/domain/entities/role_Mapper";
+import { RoleMapper } from "@roles/domain/mappers/role_Mapper";
 
 const userSchema = z.object({
   id: z.optional(z.number()),

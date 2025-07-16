@@ -1,5 +1,5 @@
 import { CustomError } from "@core/domain/custom.error";
-import { ProfessionalMapper } from "@professionals/domain/entities/professional_Mapper";
+import { ProfessionalMapper } from "@professionals/domain/mappers/professional_Mapper";
 import { ScheduleSchema } from "@schedules/presentation/schemas/schedule_schema";
 
 type Init = {

@@ -9,8 +9,8 @@ import { Controllers } from "@/lib/controllers";
 import { isYearMonth } from "@lib/utils";
 
 import type { AppointmentFilters } from "./models/appointment-filters";
-import { AppointmentMapper } from "./entities/appointment-mapper";
-import { AppointmentDetailMapper } from "./entities/appointment-detail-mapper";
+import { AppointmentMapper } from "./mappers/appointment-mapper";
+import { AppointmentDetailMapper } from "./mappers/appointment-detail-mapper";
 
 export class AppointmentController implements Controllers<AppointmentFilters> {
   public constructor(private readonly service: AppointmentService) {}

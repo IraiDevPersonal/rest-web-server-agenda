@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-import { GetCalendarFilter } from '../../domain/entities/filters';
+import { PrismaClient } from "@prisma/client";
+import { GetCalendarFilter } from "../../domain/mappers/filters";
 
 export class CalendarService {
   private readonly db: PrismaClient;
@@ -11,7 +11,7 @@ export class CalendarService {
   async getCountAppointmentsByDateAndStatus({
     date_from,
     type
-  }: Pick<GetCalendarFilter, 'date_from' | 'type'>) {
+  }: Pick<GetCalendarFilter, "date_from" | "type">) {
     return await this.db.appointment.count({
       where: {
         appointment_status: type,
@@ -77,7 +77,7 @@ export class CalendarService {
             patient: {
               rut: {
                 contains: patient_rut,
-                mode: 'insensitive'
+                mode: "insensitive"
               }
             },
             appointment_status: type

@@ -1,6 +1,6 @@
 import { type UserModel, UserSchema } from "../models/user";
 
-import { RoleMapper } from "@/app/role/entities/role-mapper";
+import { RoleMapper } from "@/app/role/mappers/role-mapper";
 import { CustomError } from "@/lib/custom-error";
 import { safeArray } from "@/lib/utils";
 
