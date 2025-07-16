@@ -15,4 +15,14 @@ export const ProfessionalSchema = z.object({
   professions: z.array(ProfessionSchema)
 });
 
+export const ProfessionalForAppointmentDetailSchema = z.object({
+  full_name: z.string(),
+  professions: z.array(z.string()),
+  pay_methods: z.array(z.string()),
+  confirm_methods: z.array(z.string())
+});
+
 export type ProfessionalModel = z.infer<typeof ProfessionalSchema>;
+export type ProfessionalForAppointmentDetailModel = z.infer<
+  typeof ProfessionalForAppointmentDetailSchema
+>;

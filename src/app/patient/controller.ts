@@ -47,7 +47,9 @@ export class PatientController implements Controllers<PatientFilters> {
         is_deleted: false
       });
 
-      return res.status(201).json(PatientMapper.validate(createdPatient));
+      return res
+        .status(201)
+        .json(PatientMapper.validatePatient(createdPatient));
     } catch (error) {
       return CustomError.handleError(error, res);
     }

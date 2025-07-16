@@ -6,25 +6,21 @@ import {
 import { CustomError } from "@/lib/custom-error";
 
 export class AlertAppointmentMapper {
-  static validate(item: any): AlertAppointmentDetailModel {
+  static validateAlertAppointment(item: any): AlertAppointmentDetailModel {
     try {
-      const data = AlertAppointmentMapper.mapper(item);
+      const data: AlertAppointmentDetailModel = {
+        message:
+          item?.message ?? "Profesional exige bono para confirmar paciente",
+        is_required: true
+      };
       return AlertAppointmentDetailMapperSchema.parse(data);
     } catch (error) {
       throw new Error(
         CustomError.getErrorMessage(
           error,
-          "alert-appointment-detail-mapper.ts: (validate)"
+          "alert-appointment-mapper.ts: (validateAlertAppointment)"
         )
       );
     }
-  }
-
-  private static mapper(item: any): AlertAppointmentDetailModel {
-    return {
-      message:
-        item?.message ?? "Profesional exige bono para confirmar paciente",
-      is_required: true
-    };
   }
 }

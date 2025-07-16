@@ -19,7 +19,8 @@ export class AppointmentController implements Controllers<AppointmentFilters> {
     try {
       const filters = this.getFilters(req);
       const bdAppointments = await this.service.getAppointments(filters);
-      const appointments = AppointmentMapper.serverResponse(bdAppointments);
+      const appointments =
+        AppointmentMapper.appointmentResponse(bdAppointments);
 
       return res.status(200).json(appointments);
     } catch (error) {
@@ -38,7 +39,7 @@ export class AppointmentController implements Controllers<AppointmentFilters> {
       }
 
       const adaptedAppointments =
-        AppointmentDetailMapper.serverResponse(bdAppoitnment);
+        AppointmentDetailMapper.appointmentDetailResponse(bdAppoitnment);
       return res.status(200).json(adaptedAppointments);
     } catch (error) {
       const err = CustomError.internalServer(`${error}`);

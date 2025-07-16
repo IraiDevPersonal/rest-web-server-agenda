@@ -16,7 +16,8 @@ export class ProfessionalController
     try {
       const filters = this.getFilters(req);
       const bdProfessions = await this.service.getProfessionals(filters);
-      const professions = ProfessionalMapper.serverResponse(bdProfessions);
+      const professions =
+        ProfessionalMapper.professionalResponse(bdProfessions);
 
       return res.json(professions);
     } catch (error) {
