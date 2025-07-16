@@ -1,27 +1,27 @@
-import { OldAppointmentEntity } from "@appointments/domain/entities/appointment_entity";
-import { PatientEntity } from "@patients/domain/entities/patient_entity";
-import { ProfessionEntity } from "@professions/domain/entities/profession_entity";
-import { ProfessionalEntity } from "@professionals/domain/entities/professional_entity";
-import { RoleEntity } from "@roles/domain/entities/role_entity";
-import { ScheduleEntity } from "@schedules/domain/entities/schedule_entity";
-import { ServiceProviderEntity } from "@serviceProviders/domain/entities/serviceProvider_entity";
-import { ServiceProviderCodesEntity } from "@serviceProviders/domain/entities/serviceProviderCodes_entity";
-import { UserEntity } from "@users/domain/entities/user_entity";
-import { ProfessionalProfession } from "@professionals/domain/entities/professionalProfession_entity";
+import { OldAppointmentMapper } from "@appointments/domain/entities/appointment_Mapper";
+import { PatientMapper } from "@patients/domain/entities/patient_Mapper";
+import { ProfessionMapper } from "@professions/domain/entities/profession_Mapper";
+import { ProfessionalMapper } from "@professionals/domain/entities/professional_Mapper";
+import { RoleMapper } from "@roles/domain/entities/role_Mapper";
+import { ScheduleMapper } from "@schedules/domain/entities/schedule_Mapper";
+import { ServiceProviderMapper } from "@serviceProviders/domain/entities/serviceProvider_Mapper";
+import { ServiceProviderCodesMapper } from "@serviceProviders/domain/entities/serviceProviderCodes_Mapper";
+import { UserMapper } from "@users/domain/entities/user_Mapper";
+import { ProfessionalProfession } from "@professionals/domain/entities/professionalProfession_Mapper";
 import { v4 } from "uuid";
 import { AppointmentStatus, WeekDay } from "@prisma/client";
 
-export const professions: ProfessionEntity[] = [
-  ProfessionEntity.fromJson({
+export const professions: ProfessionMapper[] = [
+  ProfessionMapper.fromJson({
     name: "Psicologia"
   }),
-  ProfessionEntity.fromJson({
+  ProfessionMapper.fromJson({
     name: "Dentista"
   })
 ];
 
-export const serviceProvider: ServiceProviderEntity[] = [
-  ServiceProviderEntity.fromJson({
+export const serviceProvider: ServiceProviderMapper[] = [
+  ServiceProviderMapper.fromJson({
     name: "Primero llamado",
     rut: "12.109.544-0",
     serviceProviderCode: [
@@ -33,7 +33,7 @@ export const serviceProvider: ServiceProviderEntity[] = [
         title: "Codigo 2",
         code: "123124123112312"
       }
-    ] as ServiceProviderCodesEntity[]
+    ] as ServiceProviderCodesMapper[]
   })
 ];
 
@@ -42,13 +42,13 @@ export const professionalProfession: ProfessionalProfession[] = [
   { professionalId: 2, professionId: 2 }
 ];
 
-export const roles: RoleEntity[] = [
-  RoleEntity.fromJson({ name: "admin" }),
-  RoleEntity.fromJson({ name: "professional" })
+export const roles: RoleMapper[] = [
+  RoleMapper.fromJson({ name: "admin" }),
+  RoleMapper.fromJson({ name: "professional" })
 ];
 
-export const patients: PatientEntity[] = [
-  PatientEntity.fromJson({
+export const patients: PatientMapper[] = [
+  PatientMapper.fromJson({
     email: "cosme_fulano_1@gmail.com",
     last_names: "fulano 1",
     names: "cosme 1",
@@ -58,7 +58,7 @@ export const patients: PatientEntity[] = [
     is_deleted: false,
     uid: v4()
   }),
-  PatientEntity.fromJson({
+  PatientMapper.fromJson({
     email: "cosme_fulano_2@gmail.com",
     last_names: "fulano 2",
     names: "cosme 2",
@@ -68,7 +68,7 @@ export const patients: PatientEntity[] = [
     is_deleted: false,
     uid: v4()
   }),
-  PatientEntity.fromJson({
+  PatientMapper.fromJson({
     email: "cosme_fulano_3@gmail.com",
     last_names: "fulano 3",
     names: "cosme 3",
@@ -78,7 +78,7 @@ export const patients: PatientEntity[] = [
     is_deleted: false,
     uid: v4()
   }),
-  PatientEntity.fromJson({
+  PatientMapper.fromJson({
     email: "cosme_fulano_4@gmail.com",
     last_names: "fulano 4",
     names: "cosme 4",
@@ -88,7 +88,7 @@ export const patients: PatientEntity[] = [
     is_deleted: false,
     uid: v4()
   }),
-  PatientEntity.fromJson({
+  PatientMapper.fromJson({
     email: "cosme_fulano_5@gmail.com",
     last_names: "fulano 5",
     names: "cosme 5",
@@ -100,8 +100,8 @@ export const patients: PatientEntity[] = [
   })
 ];
 
-export const users: UserEntity[] = [
-  UserEntity.fromJson({
+export const users: UserMapper[] = [
+  UserMapper.fromJson({
     email: "pinilla.sebastianm@gmail.com",
     password: "123456",
     role_id: 1,
@@ -111,7 +111,7 @@ export const users: UserEntity[] = [
     phone: "+56948426521",
     rut: "18.804.066-7"
   }),
-  UserEntity.fromJson({
+  UserMapper.fromJson({
     email: "raul.espmol@gmail.com",
     password: "123456",
     role_id: 2,
@@ -121,7 +121,7 @@ export const users: UserEntity[] = [
     phone: "+56948426521",
     rut: "19.051.146-7"
   }),
-  UserEntity.fromJson({
+  UserMapper.fromJson({
     email: "iraidev@gmail.com",
     password: "123456",
     role_id: 1,
@@ -133,18 +133,18 @@ export const users: UserEntity[] = [
   })
 ];
 
-export const professionals: ProfessionalEntity[] = [
-  ProfessionalEntity.fromJson({
+export const professionals: ProfessionalMapper[] = [
+  ProfessionalMapper.fromJson({
     userId: 1,
     serviceProviderId: 1
   }),
-  ProfessionalEntity.fromJson({
+  ProfessionalMapper.fromJson({
     userId: 2
   })
 ];
 
-export const schedules: ScheduleEntity[] = [
-  ScheduleEntity.scheduleDTO(
+export const schedules: ScheduleMapper[] = [
+  ScheduleMapper.scheduleDTO(
     {
       date: new Date(),
       professional_id: 1,
@@ -154,7 +154,7 @@ export const schedules: ScheduleEntity[] = [
     },
     "insert"
   ),
-  ScheduleEntity.scheduleDTO(
+  ScheduleMapper.scheduleDTO(
     {
       date: new Date(),
       professional_id: 1,
@@ -164,7 +164,7 @@ export const schedules: ScheduleEntity[] = [
     },
     "insert"
   ),
-  ScheduleEntity.scheduleDTO(
+  ScheduleMapper.scheduleDTO(
     {
       date: new Date(),
       professional_id: 1,
@@ -174,7 +174,7 @@ export const schedules: ScheduleEntity[] = [
     },
     "insert"
   ),
-  ScheduleEntity.scheduleDTO(
+  ScheduleMapper.scheduleDTO(
     {
       date: new Date(),
       professional_id: 1,
@@ -184,7 +184,7 @@ export const schedules: ScheduleEntity[] = [
     },
     "insert"
   ),
-  ScheduleEntity.scheduleDTO(
+  ScheduleMapper.scheduleDTO(
     {
       date: new Date(),
       professional_id: 1,
@@ -194,7 +194,7 @@ export const schedules: ScheduleEntity[] = [
     },
     "insert"
   ),
-  ScheduleEntity.scheduleDTO(
+  ScheduleMapper.scheduleDTO(
     {
       date: new Date(),
       professional_id: 1,
@@ -204,7 +204,7 @@ export const schedules: ScheduleEntity[] = [
     },
     "insert"
   ),
-  ScheduleEntity.scheduleDTO(
+  ScheduleMapper.scheduleDTO(
     {
       date: new Date(),
       professional_id: 1,
@@ -214,7 +214,7 @@ export const schedules: ScheduleEntity[] = [
     },
     "insert"
   ),
-  ScheduleEntity.scheduleDTO(
+  ScheduleMapper.scheduleDTO(
     {
       date: new Date(),
       professional_id: 1,
@@ -224,7 +224,7 @@ export const schedules: ScheduleEntity[] = [
     },
     "insert"
   ),
-  ScheduleEntity.scheduleDTO(
+  ScheduleMapper.scheduleDTO(
     {
       date: new Date(),
       professional_id: 1,
@@ -235,7 +235,7 @@ export const schedules: ScheduleEntity[] = [
     "insert"
   ),
 
-  ScheduleEntity.scheduleDTO(
+  ScheduleMapper.scheduleDTO(
     {
       date: new Date(),
       professional_id: 2,
@@ -245,7 +245,7 @@ export const schedules: ScheduleEntity[] = [
     },
     "insert"
   ),
-  ScheduleEntity.scheduleDTO(
+  ScheduleMapper.scheduleDTO(
     {
       date: new Date(),
       professional_id: 2,
@@ -255,7 +255,7 @@ export const schedules: ScheduleEntity[] = [
     },
     "insert"
   ),
-  ScheduleEntity.scheduleDTO(
+  ScheduleMapper.scheduleDTO(
     {
       date: new Date(),
       professional_id: 2,
@@ -265,7 +265,7 @@ export const schedules: ScheduleEntity[] = [
     },
     "insert"
   ),
-  ScheduleEntity.scheduleDTO(
+  ScheduleMapper.scheduleDTO(
     {
       date: new Date(),
       professional_id: 2,
@@ -275,7 +275,7 @@ export const schedules: ScheduleEntity[] = [
     },
     "insert"
   ),
-  ScheduleEntity.scheduleDTO(
+  ScheduleMapper.scheduleDTO(
     {
       date: new Date(),
       professional_id: 2,
@@ -285,7 +285,7 @@ export const schedules: ScheduleEntity[] = [
     },
     "insert"
   ),
-  ScheduleEntity.scheduleDTO(
+  ScheduleMapper.scheduleDTO(
     {
       date: new Date(),
       professional_id: 2,
@@ -295,7 +295,7 @@ export const schedules: ScheduleEntity[] = [
     },
     "insert"
   ),
-  ScheduleEntity.scheduleDTO(
+  ScheduleMapper.scheduleDTO(
     {
       date: new Date(),
       professional_id: 2,
@@ -305,7 +305,7 @@ export const schedules: ScheduleEntity[] = [
     },
     "insert"
   ),
-  ScheduleEntity.scheduleDTO(
+  ScheduleMapper.scheduleDTO(
     {
       date: new Date(),
       professional_id: 2,
@@ -315,7 +315,7 @@ export const schedules: ScheduleEntity[] = [
     },
     "insert"
   ),
-  ScheduleEntity.scheduleDTO(
+  ScheduleMapper.scheduleDTO(
     {
       date: new Date(),
       professional_id: 2,
@@ -325,7 +325,7 @@ export const schedules: ScheduleEntity[] = [
     },
     "insert"
   ),
-  ScheduleEntity.scheduleDTO(
+  ScheduleMapper.scheduleDTO(
     {
       date: new Date(),
       professional_id: 2,
@@ -335,7 +335,7 @@ export const schedules: ScheduleEntity[] = [
     },
     "insert"
   ),
-  ScheduleEntity.scheduleDTO(
+  ScheduleMapper.scheduleDTO(
     {
       date: new Date(),
       professional_id: 2,
@@ -345,7 +345,7 @@ export const schedules: ScheduleEntity[] = [
     },
     "insert"
   ),
-  ScheduleEntity.scheduleDTO(
+  ScheduleMapper.scheduleDTO(
     {
       date: new Date(),
       professional_id: 2,
@@ -355,7 +355,7 @@ export const schedules: ScheduleEntity[] = [
     },
     "insert"
   ),
-  ScheduleEntity.scheduleDTO(
+  ScheduleMapper.scheduleDTO(
     {
       date: new Date(),
       professional_id: 2,
@@ -365,7 +365,7 @@ export const schedules: ScheduleEntity[] = [
     },
     "insert"
   ),
-  ScheduleEntity.scheduleDTO(
+  ScheduleMapper.scheduleDTO(
     {
       date: new Date(),
       professional_id: 2,
@@ -375,7 +375,7 @@ export const schedules: ScheduleEntity[] = [
     },
     "insert"
   ),
-  ScheduleEntity.scheduleDTO(
+  ScheduleMapper.scheduleDTO(
     {
       date: new Date(),
       professional_id: 2,
@@ -385,7 +385,7 @@ export const schedules: ScheduleEntity[] = [
     },
     "insert"
   ),
-  ScheduleEntity.scheduleDTO(
+  ScheduleMapper.scheduleDTO(
     {
       date: new Date(),
       professional_id: 2,
@@ -395,7 +395,7 @@ export const schedules: ScheduleEntity[] = [
     },
     "insert"
   ),
-  ScheduleEntity.scheduleDTO(
+  ScheduleMapper.scheduleDTO(
     {
       date: new Date(),
       professional_id: 2,
@@ -405,7 +405,7 @@ export const schedules: ScheduleEntity[] = [
     },
     "insert"
   ),
-  ScheduleEntity.scheduleDTO(
+  ScheduleMapper.scheduleDTO(
     {
       date: new Date(),
       professional_id: 2,
@@ -417,78 +417,78 @@ export const schedules: ScheduleEntity[] = [
   )
 ];
 
-export const appointment: OldAppointmentEntity[] = [
-  OldAppointmentEntity.createDTO({
+export const appointment: OldAppointmentMapper[] = [
+  OldAppointmentMapper.createDTO({
     patient_id: 1,
     schedule_id: 1,
     appointment_status: AppointmentStatus.AVAILABLE
   }),
-  OldAppointmentEntity.createDTO({
+  OldAppointmentMapper.createDTO({
     patient_id: 1,
     schedule_id: 5,
     appointment_status: AppointmentStatus.CONFIRMED
   }),
-  OldAppointmentEntity.createDTO({
+  OldAppointmentMapper.createDTO({
     patient_id: 1,
     schedule_id: 6,
     appointment_status: AppointmentStatus.TO_CONFIRM
   }),
-  OldAppointmentEntity.createDTO({
+  OldAppointmentMapper.createDTO({
     patient_id: 2,
     schedule_id: 8,
     appointment_status: AppointmentStatus.TO_CONFIRM
   }),
-  OldAppointmentEntity.createDTO({
+  OldAppointmentMapper.createDTO({
     patient_id: 2,
     schedule_id: 2,
     appointment_status: AppointmentStatus.CONFIRMED
   }),
-  OldAppointmentEntity.createDTO({
+  OldAppointmentMapper.createDTO({
     patient_id: 2,
     schedule_id: 14,
     appointment_status: AppointmentStatus.TO_CONFIRM
   }),
-  OldAppointmentEntity.createDTO({
+  OldAppointmentMapper.createDTO({
     patient_id: 3,
     schedule_id: 9,
     appointment_status: AppointmentStatus.CANCELLED
   }),
-  OldAppointmentEntity.createDTO({
+  OldAppointmentMapper.createDTO({
     patient_id: 3,
     schedule_id: 10,
     appointment_status: AppointmentStatus.TO_CONFIRM
   }),
-  OldAppointmentEntity.createDTO({
+  OldAppointmentMapper.createDTO({
     patient_id: 3,
     schedule_id: 11,
     appointment_status: AppointmentStatus.CONFIRMED
   }),
-  OldAppointmentEntity.createDTO({
+  OldAppointmentMapper.createDTO({
     patient_id: 4,
     schedule_id: 12,
     appointment_status: AppointmentStatus.CONFIRMED
   }),
-  OldAppointmentEntity.createDTO({
+  OldAppointmentMapper.createDTO({
     patient_id: 4,
     schedule_id: 13,
     appointment_status: AppointmentStatus.TO_CONFIRM
   }),
-  OldAppointmentEntity.createDTO({
+  OldAppointmentMapper.createDTO({
     patient_id: 4,
     schedule_id: 15,
     appointment_status: AppointmentStatus.TO_CONFIRM
   }),
-  OldAppointmentEntity.createDTO({
+  OldAppointmentMapper.createDTO({
     patient_id: 5,
     schedule_id: 16,
     appointment_status: AppointmentStatus.CANCELLED
   }),
-  OldAppointmentEntity.createDTO({
+  OldAppointmentMapper.createDTO({
     patient_id: 5,
     schedule_id: 17,
     appointment_status: AppointmentStatus.TO_CONFIRM
   }),
-  OldAppointmentEntity.createDTO({
+  OldAppointmentMapper.createDTO({
     patient_id: 5,
     schedule_id: 18,
     appointment_status: AppointmentStatus.CANCELLED

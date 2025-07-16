@@ -1,5 +1,5 @@
-import { PatientEntity } from '@patients/domain/entities/patient_entity';
-import { PrismaClient } from '@prisma/client';
+import { PatientMapper } from "@patients/domain/entities/patient_Mapper";
+import { PrismaClient } from "@prisma/client";
 
 export class PatientService {
   private readonly db: PrismaClient;
@@ -22,23 +22,23 @@ export class PatientService {
       where: {
         rut: {
           equals: filters.rut,
-          mode: 'insensitive'
+          mode: "insensitive"
         },
         names: {
           contains: filters.names,
-          mode: 'insensitive'
+          mode: "insensitive"
         },
         last_names: {
           contains: filters.last_names,
-          mode: 'insensitive'
+          mode: "insensitive"
         },
         email: {
           contains: filters.email,
-          mode: 'insensitive'
+          mode: "insensitive"
         }
       },
       orderBy: {
-        last_names: 'asc'
+        last_names: "asc"
       }
     });
   }
@@ -67,7 +67,7 @@ export class PatientService {
     });
   }
 
-  async create(patient: PatientEntity) {
+  async create(patient: PatientMapper) {
     const patientCreated = await this.db.patients.create({
       data: {
         rut: patient.rut,

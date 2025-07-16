@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 import {
   appointment,
   patients,
@@ -9,8 +9,8 @@ import {
   schedules,
   serviceProvider,
   users
-} from '@users/data/seed';
-import { SeedServiceModel } from '../../domain/model/seed_service_model';
+} from "@users/data/seed";
+import { SeedServiceModel } from "../../domain/model/seed_service_model";
 
 export class SeedService implements SeedServiceModel {
   private readonly db: PrismaClient;
@@ -22,35 +22,35 @@ export class SeedService implements SeedServiceModel {
   async createSeed(): Promise<void> {
     try {
       await this.db.$executeRawUnsafe(
-        `TRUNCATE TABLE schedules RESTART IDENTITY CASCADE ;`
+        `TRUNCATE TABLE schedules RESTART IDMapper CASCADE ;`
       );
       await this.db.$executeRawUnsafe(
-        `TRUNCATE TABLE appointment RESTART IDENTITY CASCADE;`
+        `TRUNCATE TABLE appointment RESTART IDMapper CASCADE;`
       );
       await this.db.$executeRawUnsafe(
-        `TRUNCATE TABLE professional_professions RESTART IDENTITY CASCADE;`
+        `TRUNCATE TABLE professional_professions RESTART IDMapper CASCADE;`
       );
       await this.db.$executeRawUnsafe(
-        `TRUNCATE TABLE professionals RESTART IDENTITY CASCADE;`
+        `TRUNCATE TABLE professionals RESTART IDMapper CASCADE;`
       );
       await this.db.$executeRawUnsafe(
-        `TRUNCATE TABLE users RESTART IDENTITY CASCADE;`
+        `TRUNCATE TABLE users RESTART IDMapper CASCADE;`
       );
       await this.db.$executeRawUnsafe(
-        `TRUNCATE TABLE patients RESTART IDENTITY CASCADE;`
+        `TRUNCATE TABLE patients RESTART IDMapper CASCADE;`
       );
       await this.db.$executeRawUnsafe(
-        `TRUNCATE TABLE service_providers RESTART IDENTITY CASCADE;`
+        `TRUNCATE TABLE service_providers RESTART IDMapper CASCADE;`
       );
       await this.db.$executeRawUnsafe(
-        `TRUNCATE TABLE service_provider_codes RESTART IDENTITY CASCADE;`
+        `TRUNCATE TABLE service_provider_codes RESTART IDMapper CASCADE;`
       );
 
       await this.db.$executeRawUnsafe(
-        `TRUNCATE TABLE professions RESTART IDENTITY CASCADE;`
+        `TRUNCATE TABLE professions RESTART IDMapper CASCADE;`
       );
       await this.db.$executeRawUnsafe(
-        `TRUNCATE TABLE roles RESTART IDENTITY CASCADE;`
+        `TRUNCATE TABLE roles RESTART IDMapper CASCADE;`
       );
 
       await this.db.roles.createMany({
@@ -105,7 +105,7 @@ export class SeedService implements SeedServiceModel {
         data: appointment
       });
     } catch (error) {
-      throw new Error('Error' + error);
+      throw new Error("Error" + error);
     }
   }
 }

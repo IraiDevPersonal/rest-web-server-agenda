@@ -9,8 +9,8 @@ import { Controllers } from "@/lib/controllers";
 import { isYearMonth } from "@lib/utils";
 
 import type { AppointmentFilters } from "./models/appointment-filters";
-import { AppointmentEntity } from "./entities/appointment-entity";
-import { AppointmentDetailEntity } from "./entities/appointment-detail-entity";
+import { AppointmentMapper } from "./entities/appointment-mapper";
+import { AppointmentDetailMapper } from "./entities/appointment-detail-mapper";
 
 export class AppointmentController implements Controllers<AppointmentFilters> {
   public constructor(private readonly service: AppointmentService) {}
@@ -19,7 +19,7 @@ export class AppointmentController implements Controllers<AppointmentFilters> {
     try {
       const filters = this.getFilters(req);
       const bdAppointments = await this.service.getAppointments(filters);
-      const appointments = AppointmentEntity.serverResponse(bdAppointments);
+      const appointments = AppointmentMapper.serverResponse(bdAppointments);
 
       return res.status(200).json(appointments);
     } catch (error) {
@@ -38,7 +38,7 @@ export class AppointmentController implements Controllers<AppointmentFilters> {
       }
 
       const adaptedAppointments =
-        AppointmentDetailEntity.serverResponse(bdAppoitnment);
+        AppointmentDetailMapper.serverResponse(bdAppoitnment);
       return res.status(200).json(adaptedAppointments);
     } catch (error) {
       const err = CustomError.internalServer(`${error}`);

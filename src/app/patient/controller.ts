@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import { type PatientFilters } from "./models/patient-filters";
-import { PatientEntity } from "./entities/patient-entity";
+import { PatientMapper } from "./entities/patient-mapper";
 import { PatientService } from "./service";
 
 import { CustomError } from "@/lib/custom-error";
@@ -47,7 +47,7 @@ export class PatientController implements Controllers<PatientFilters> {
         is_deleted: false
       });
 
-      return res.status(201).json(PatientEntity.validate(createdPatient));
+      return res.status(201).json(PatientMapper.validate(createdPatient));
     } catch (error) {
       return CustomError.handleError(error, res);
     }

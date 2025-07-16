@@ -14,7 +14,7 @@ export const ProfessionalAppointmentDetailSchema = z.object({
   confirm_methods: z.array(z.string())
 });
 
-export const PatientAppointmDetailEntitySchema = z.object({
+export const PatientAppointmDetailMapperSchema = z.object({
   names: z.string(),
   last_names: z.string(),
   rut: z.string(),
@@ -23,7 +23,7 @@ export const PatientAppointmDetailEntitySchema = z.object({
   address: z.string()
 });
 
-export const AlertAppointmentDetailEntitySchema = z.object({
+export const AlertAppointmentDetailMapperSchema = z.object({
   message: z.string(),
   is_required: z.boolean()
 });
@@ -37,8 +37,8 @@ export const AppointmentDetailSchema = z.object({
   status: z.nativeEnum(AppointmentStatus),
   patient_history: z.array(PatientHistoryAppointmentDetailSchema),
   professional: ProfessionalAppointmentDetailSchema,
-  patient: PatientAppointmDetailEntitySchema,
-  alert: AlertAppointmentDetailEntitySchema
+  patient: PatientAppointmDetailMapperSchema,
+  alert: AlertAppointmentDetailMapperSchema
 });
 
 export type PatientHistoryAppointmentDetailModel = z.infer<
@@ -50,11 +50,11 @@ export type ProfessionalAppointmentDetailModel = z.infer<
 >;
 
 export type PatientAppointmentDetailModel = z.infer<
-  typeof PatientAppointmDetailEntitySchema
+  typeof PatientAppointmDetailMapperSchema
 >;
 
 export type AlertAppointmentDetailModel = z.infer<
-  typeof AlertAppointmentDetailEntitySchema
+  typeof AlertAppointmentDetailMapperSchema
 >;
 
 export type AppointmentDetailModel = z.infer<typeof AppointmentDetailSchema>;

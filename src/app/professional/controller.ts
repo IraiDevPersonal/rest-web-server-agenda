@@ -4,8 +4,8 @@ import { Controllers } from "@/lib/controllers";
 import { ProfessionalService } from "./service";
 import { CustomError } from "@/lib/custom-error";
 import { ProfessionalFilters } from "./models/professional-filters";
-import { ProfessionalToFilterEntity } from "./entities/professional-to-filter-entity";
-import { ProfessionalEntity } from "./entities/professional-entity";
+import { ProfessionalToFilterMapper } from "./entities/professional-to-filter-mapper";
+import { ProfessionalMapper } from "./entities/professional-mapper";
 
 export class ProfessionalController
   implements Controllers<ProfessionalFilters>
@@ -16,7 +16,7 @@ export class ProfessionalController
     try {
       const filters = this.getFilters(req);
       const bdProfessions = await this.service.getProfessionals(filters);
-      const professions = ProfessionalEntity.serverResponse(bdProfessions);
+      const professions = ProfessionalMapper.serverResponse(bdProfessions);
 
       return res.json(professions);
     } catch (error) {
@@ -31,7 +31,7 @@ export class ProfessionalController
       const bdProfessions =
         await this.service.getProfessionalsToFilter(filters);
       const professions =
-        ProfessionalToFilterEntity.serverResponse(bdProfessions);
+        ProfessionalToFilterMapper.serverResponse(bdProfessions);
 
       return res.json(professions);
     } catch (error) {

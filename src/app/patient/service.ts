@@ -1,4 +1,4 @@
-import { PatientEntity } from "@patients/domain/entities/patient_entity";
+import { PatientMapper } from "@patients/domain/entities/patient_Mapper";
 import { PrismaClient } from "@prisma/client";
 import { PatientFilters } from "./models/patient-filters";
 
@@ -68,7 +68,7 @@ export class PatientService {
     });
   }
 
-  async create(patient: PatientEntity) {
+  async create(patient: PatientMapper) {
     const patientCreated = await this.db.patients.create({
       data: {
         rut: patient.rut,
