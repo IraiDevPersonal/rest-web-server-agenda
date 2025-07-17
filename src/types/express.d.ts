@@ -1,7 +1,7 @@
-import { PatientMapper } from "@/app/patient/mappers/patient-mapper";
+import { PatientModel } from "@/app/patient/models/patient";
 
 declare module "express" {
   interface Request {
-    patient?: PatientMapper;
+    patient?: PatientModel;
   }
 }
