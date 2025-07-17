@@ -20,8 +20,7 @@ export class ProfessionalController
 
       return res.json(professions);
     } catch (error) {
-      const err = CustomError.internalServer(`${error}`);
-      return CustomError.handleError(err, res);
+      return CustomError.handleError(error, res);
     }
   };
 
@@ -34,8 +33,7 @@ export class ProfessionalController
 
       return res.json(professions);
     } catch (error) {
-      const err = CustomError.internalServer(`${error}`);
-      return CustomError.handleError(err, res);
+      return CustomError.handleError(error, res);
     }
   };
 

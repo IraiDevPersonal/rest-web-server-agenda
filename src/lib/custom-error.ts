@@ -30,25 +30,10 @@ export class CustomError extends Error {
   }
 
   static handleError = (error: unknown, res: Response) => {
-    let errorMessage = "Internal server error";
-    console.log("catch ", error);
+    const { message, statusCode } = CustomError.getError(error);
+    console.log("catch ", message);
 
-    if (error instanceof CustomError) {
-      errorMessage = error.message;
-    }
-
-    if (error instanceof ZodError) {
-      const issues = error.errors.map(
-        (issue) => `[${issue.path.join(".")}] ${issue.message}`
-      );
-      errorMessage = `Error de validación: ${issues.join("; ")}`;
-    }
-
-    if (error instanceof Error) {
-      errorMessage = error.message;
-    }
-
-    return res.status(500).json({ error: errorMessage });
+    return res.status(statusCode).json({ error: message });
   };
 
   static getErrorMessage(error: unknown, fileName?: string) {
@@ -70,5 +55,23 @@ export class CustomError extends Error {
     }
 
     return "Error inesperado...";
+  }
+
+  static getError(error: unknown): { statusCode: number; message: string } {
+    const errorMessage = CustomError.getErrorMessage(error);
+
+    if (error instanceof CustomError) {
+      return { message: error.message, statusCode: error.statusCode };
+    }
+
+    if (error instanceof ZodError) {
+      return { message: errorMessage, statusCode: 400 };
+    }
+
+    if (error instanceof Error) {
+      return { message: errorMessage, statusCode: 500 };
+    }
+
+    return { message: errorMessage, statusCode: 500 };
   }
 }

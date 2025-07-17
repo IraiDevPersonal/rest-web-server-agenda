@@ -13,12 +13,12 @@ export class PatientController implements Controllers<PatientFilters> {
   public getPatients = async (req: Request, res: Response) => {
     try {
       const filters = this.getFilters(req);
-      const patients = await this.service.getPatients(filters);
+      const bdPatients = await this.service.getPatients(filters);
+      const patients = PatientMapper.response(bdPatients);
 
       return res.status(200).json(patients);
     } catch (error) {
-      const err = CustomError.internalServer(`${error}`);
-      return CustomError.handleError(err, res);
+      return CustomError.handleError(error, res);
     }
   };
 

@@ -23,8 +23,7 @@ export class AppointmentController implements Controllers<AppointmentFilters> {
 
       return res.status(200).json(appointments);
     } catch (error) {
-      const err = CustomError.internalServer(`${error}`);
-      return CustomError.handleError(err, res);
+      return CustomError.handleError(error, res);
     }
   };
 
@@ -40,8 +39,7 @@ export class AppointmentController implements Controllers<AppointmentFilters> {
       const appointment = AppointmentDetailMapper.response(bdAppoitnment);
       return res.status(200).json(appointment);
     } catch (error) {
-      const err = CustomError.internalServer(`${error}`);
-      return CustomError.handleError(err, res);
+      return CustomError.handleError(error, res);
     }
   };
 
