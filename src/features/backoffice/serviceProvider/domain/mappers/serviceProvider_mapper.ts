@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { ServiceProviderCodesMapper } from "./serviceProviderCodes_Mapper";
 import { CustomError } from "@core/domain/custom.error";
+import { ServiceProviderCodesMapper } from "./serviceProviderCodes_mapper";
 
 const scheme = z.object({
   id: z.number().optional(),
