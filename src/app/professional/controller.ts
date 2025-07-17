@@ -16,8 +16,7 @@ export class ProfessionalController
     try {
       const filters = this.getFilters(req);
       const bdProfessions = await this.service.getProfessionals(filters);
-      const professions =
-        ProfessionalMapper.professionalResponse(bdProfessions);
+      const professions = ProfessionalMapper.response(bdProfessions);
 
       return res.json(professions);
     } catch (error) {
@@ -31,8 +30,7 @@ export class ProfessionalController
       const filters = this.getFilters(req);
       const bdProfessions =
         await this.service.getProfessionalsToFilter(filters);
-      const professions =
-        ProfessionalToFilterMapper.serverResponse(bdProfessions);
+      const professions = ProfessionalToFilterMapper.response(bdProfessions);
 
       return res.json(professions);
     } catch (error) {

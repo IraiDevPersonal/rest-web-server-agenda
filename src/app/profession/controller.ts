@@ -14,7 +14,7 @@ export class ProfessionController implements Controllers<ProfessionFilters> {
     try {
       const filters = this.getFilters(req);
       const bdProfessions = await this.service.getProfessions(filters);
-      const professions = ProfessionMapper.serverResponse(bdProfessions);
+      const professions = ProfessionMapper.response(bdProfessions);
 
       return res.json(professions);
     } catch (error) {
@@ -27,8 +27,7 @@ export class ProfessionController implements Controllers<ProfessionFilters> {
     try {
       const filters = this.getFilters(req);
       const bdProfessions = await this.service.getProfessions(filters);
-      const professions =
-        ProfessionToFilterMapper.serverResponse(bdProfessions);
+      const professions = ProfessionToFilterMapper.response(bdProfessions);
 
       return res.json(professions);
     } catch (error) {

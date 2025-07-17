@@ -1,34 +1,16 @@
-import { z } from "zod";
+import {
+  type ProfessionalOptionModel,
+  ProfessionalOptionSchema
+} from "../models/professional-to-filter";
 
 import { CustomError } from "@/lib/custom-error";
 import { safeArray } from "@/lib/utils";
-import { OptionSchema } from "@/lib/schemas/global";
-
-const ProfessionalOptionSchema = OptionSchema.extend({
-  professions: z.array(z.string())
-});
-
-type ProfessionalOptionModel = z.infer<typeof ProfessionalOptionSchema>;
 
 export class ProfessionalToFilterMapper {
-  public value: ProfessionalOptionModel["value"];
-  public label: ProfessionalOptionModel["label"];
-  public professions: ProfessionalOptionModel["professions"];
-
-  private constructor(init: ProfessionalOptionModel) {
-    this.value = init.value;
-    this.label = init.label;
-    this.professions = init.professions;
-  }
-
-  static getSchema() {
-    return ProfessionalOptionSchema;
-  }
-
   static validate(item: any): ProfessionalOptionModel {
     try {
       const data = ProfessionalToFilterMapper.mapper(item);
-      return ProfessionalToFilterMapper.getSchema().parse(data);
+      return ProfessionalOptionSchema.parse(data);
     } catch (error) {
       throw new Error(
         CustomError.getErrorMessage(
@@ -39,7 +21,7 @@ export class ProfessionalToFilterMapper {
     }
   }
 
-  static serverResponse(data: any): ProfessionalOptionModel[] {
+  static response(data: any): ProfessionalOptionModel[] {
     try {
       return safeArray<ProfessionalOptionModel>(data, {
         throwErrors: true,
@@ -48,7 +30,7 @@ export class ProfessionalToFilterMapper {
     } catch (error) {
       const errorMessage = CustomError.getErrorMessage(
         error,
-        "profession-to-filter-mapper.ts: (serverResponse)"
+        "profession-to-filter-mapper.ts: (response)"
       );
       throw new Error(errorMessage);
     }

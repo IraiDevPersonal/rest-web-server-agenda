@@ -6,7 +6,7 @@ import {
 import { CustomError } from "@/lib/custom-error";
 
 export class AlertAppointmentMapper {
-  static validateAlertAppointment(item: any): AlertAppointmentDetailModel {
+  static validate(item: any): AlertAppointmentDetailModel {
     try {
       const data: AlertAppointmentDetailModel = {
         message:
@@ -18,7 +18,7 @@ export class AlertAppointmentMapper {
       throw new Error(
         CustomError.getErrorMessage(
           error,
-          "alert-appointment-mapper.ts: (validateAlertAppointment)"
+          "alert-appointment-mapper.ts: (validate)"
         )
       );
     }

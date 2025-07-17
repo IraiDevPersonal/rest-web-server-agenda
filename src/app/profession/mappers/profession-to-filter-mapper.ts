@@ -19,7 +19,7 @@ export class ProfessionToFilterMapper {
     }
   }
 
-  static serverResponse(data: any): ProfessionOptionModel[] {
+  static response(data: any): ProfessionOptionModel[] {
     try {
       return safeArray<ProfessionOptionModel>(data, {
         throwErrors: true,
@@ -28,7 +28,7 @@ export class ProfessionToFilterMapper {
     } catch (error) {
       const errorMessage = CustomError.getErrorMessage(
         error,
-        "profession-to-filter-mapper.ts: (serverResponse)"
+        "profession-to-filter-mapper.ts: (response)"
       );
       throw new Error(errorMessage);
     }

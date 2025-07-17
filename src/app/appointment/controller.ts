@@ -19,8 +19,7 @@ export class AppointmentController implements Controllers<AppointmentFilters> {
     try {
       const filters = this.getFilters(req);
       const bdAppointments = await this.service.getAppointments(filters);
-      const appointments =
-        AppointmentMapper.appointmentResponse(bdAppointments);
+      const appointments = AppointmentMapper.response(bdAppointments);
 
       return res.status(200).json(appointments);
     } catch (error) {
@@ -29,18 +28,17 @@ export class AppointmentController implements Controllers<AppointmentFilters> {
     }
   };
 
-  public getOneAppointment = async (req: Request, res: Response) => {
+  public getAppointmentDetail = async (req: Request, res: Response) => {
     try {
       const uid = req.params.uid;
-      const bdAppoitnment = await this.service.getOneAppointment(uid);
+      const bdAppoitnment = await this.service.getAppointmentDetail(uid);
 
       if (!bdAppoitnment) {
         throw CustomError.badRequest(`No se encontró cita para el UID: ${uid}`);
       }
 
-      const adaptedAppointments =
-        AppointmentDetailMapper.appointmentDetailResponse(bdAppoitnment);
-      return res.status(200).json(adaptedAppointments);
+      const appointment = AppointmentDetailMapper.response(bdAppoitnment);
+      return res.status(200).json(appointment);
     } catch (error) {
       const err = CustomError.internalServer(`${error}`);
       return CustomError.handleError(err, res);

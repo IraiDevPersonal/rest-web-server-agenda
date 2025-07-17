@@ -8,7 +8,7 @@ export class AppointmentService {
     this.db = new PrismaClient();
   }
 
-  async getOneAppointment(appointment_uid: string) {
+  async getAppointmentDetail(appointment_uid: string) {
     return await this.db.appointment.findFirst({
       select: {
         uid: true,

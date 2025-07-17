@@ -17,7 +17,7 @@ export class ScheduleMapper {
     }
   }
 
-  static serverResponse(object: any): ScheduleModel[] {
+  static response(object: any): ScheduleModel[] {
     try {
       return safeArray<ScheduleModel>(object, {
         throwErrors: true,
@@ -25,10 +25,7 @@ export class ScheduleMapper {
       }).map(ScheduleMapper.validate);
     } catch (error) {
       throw new Error(
-        CustomError.getErrorMessage(
-          error,
-          "schedule-mapper.ts: (serverResponse)"
-        )
+        CustomError.getErrorMessage(error, "schedule-mapper.ts: (response)")
       );
     }
   }
@@ -58,7 +55,7 @@ export class ScheduleMapper {
       time_from: item?.time_from ?? "hh:mm",
       time_to: item?.time_to ?? "hh:mm",
       is_enabled: item?.is_enabled ?? false,
-      professional: ProfessionalMapper.validateProfessional(item?.professional)
+      professional: ProfessionalMapper.validate(item?.professional)
     };
   }
 }

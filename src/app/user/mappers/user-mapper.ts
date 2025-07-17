@@ -10,11 +10,13 @@ export class UserMapper {
       const data = UserMapper.mapper(item);
       return UserSchema.parse(data);
     } catch (error) {
-      throw new Error(CustomError.getErrorMessage(error));
+      throw new Error(
+        CustomError.getErrorMessage(error, "user-mapper.ts (validate)")
+      );
     }
   }
 
-  static serverResponse(data: any): UserModel[] {
+  static response(data: any): UserModel[] {
     try {
       return safeArray<UserModel>(data, {
         throwErrors: true,
@@ -22,7 +24,7 @@ export class UserMapper {
       }).map(UserMapper.validate);
     } catch (error) {
       throw new Error(
-        CustomError.getErrorMessage(error, "user-mapper.ts (serverResponse)")
+        CustomError.getErrorMessage(error, "user-mapper.ts (response)")
       );
     }
   }

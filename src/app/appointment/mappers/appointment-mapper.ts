@@ -24,7 +24,7 @@ export class AppointmentMapper {
     }
   }
 
-  static appointmentResponse(data: any): AppointmentModel[] {
+  static response(data: any): AppointmentModel[] {
     try {
       return safeArray<AppointmentModel>(data, {
         throwErrors: true,
@@ -32,10 +32,7 @@ export class AppointmentMapper {
       }).map(AppointmentMapper.validate);
     } catch (error) {
       throw new Error(
-        CustomError.getErrorMessage(
-          error,
-          "appointment-mapper.ts: (appointmentResponse)"
-        )
+        CustomError.getErrorMessage(error, "appointment-mapper.ts: (response)")
       );
     }
   }

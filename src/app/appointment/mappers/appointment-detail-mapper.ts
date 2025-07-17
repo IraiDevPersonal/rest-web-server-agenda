@@ -13,7 +13,7 @@ import { DateFormatter } from "@/lib/date-formatter";
 import { Uid } from "@/lib/uid";
 
 export class AppointmentDetailMapper {
-  static validateAppointmentDetail(item: any): AppointmentDetailModel {
+  static validate(item: any): AppointmentDetailModel {
     try {
       const schedule = item.schedule;
       const patient = item.patient;
@@ -34,7 +34,7 @@ export class AppointmentDetailMapper {
           patient?.appointments
         ),
         patient: PatientMapper.validatePatientForAppointmentDetail(patient),
-        alert: AlertAppointmentMapper.validateAlertAppointment(item?.alert)
+        alert: AlertAppointmentMapper.validate(item?.alert)
       };
 
       return AppointmentDetailSchema.parse(data);
@@ -42,13 +42,13 @@ export class AppointmentDetailMapper {
       throw new Error(
         CustomError.getErrorMessage(
           error,
-          "one-appointment-mapper.ts: (validateAppointmentDetail)"
+          "one-appointment-mapper.ts: (validate)"
         )
       );
     }
   }
 
-  static appointmentDetailResponse(object: any): AppointmentDetailModel {
-    return AppointmentDetailMapper.validateAppointmentDetail(object);
+  static response(object: any): AppointmentDetailModel {
+    return AppointmentDetailMapper.validate(object);
   }
 }

@@ -15,7 +15,7 @@ export class AppointmentRoutes {
     router.get(
       "/:uid",
       [UidValidatorMiddleware.validate],
-      controller.getOneAppointment
+      controller.getAppointmentDetail
     );
 
     return router;

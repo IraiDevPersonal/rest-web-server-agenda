@@ -15,7 +15,7 @@ export class ProfessionMapper {
     }
   }
 
-  static serverResponse(data: any): ProfessionModel[] {
+  static response(data: any): ProfessionModel[] {
     return ProfessionMapper.toArray(data);
   }
 

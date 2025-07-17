@@ -12,7 +12,7 @@ import { Uid } from "@/lib/uid";
 import { safeArray } from "@/lib/utils";
 
 export class ProfessionalMapper {
-  static validateProfessional(item: any): ProfessionalModel {
+  static validate(item: any): ProfessionalModel {
     try {
       const user = item?.user;
       const data: ProfessionalModel = {
@@ -30,24 +30,21 @@ export class ProfessionalMapper {
       return ProfessionalSchema.parse(data);
     } catch (error) {
       throw new Error(
-        CustomError.getErrorMessage(
-          error,
-          "profession-mapper.ts: (validateProfessional)"
-        )
+        CustomError.getErrorMessage(error, "profession-mapper.ts: (validate)")
       );
     }
   }
 
-  static professionalResponse(data: any): ProfessionalModel[] {
+  static response(data: any): ProfessionalModel[] {
     try {
       return safeArray<ProfessionalModel>(data, {
         throwErrors: true,
         errorMessage: "Se esperaba un arreglo de profesionales"
-      }).map(ProfessionalMapper.validateProfessional);
+      }).map(ProfessionalMapper.validate);
     } catch (error) {
       const errorMessage = CustomError.getErrorMessage(
         error,
-        "profession-mapper.ts: (professionalResponse)"
+        "profession-mapper.ts: (response)"
       );
 
       throw new Error(errorMessage);

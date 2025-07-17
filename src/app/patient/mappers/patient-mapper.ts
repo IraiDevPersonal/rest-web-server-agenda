@@ -15,7 +15,7 @@ import { safeArray } from "@/lib/utils";
 import { Uid } from "@/lib/uid";
 
 export class PatientMapper {
-  static validatePatient(item: any): PatientModel {
+  static validate(item: any): PatientModel {
     try {
       const data: PatientModel = {
         id: item?.id,
@@ -37,18 +37,15 @@ export class PatientMapper {
     }
   }
 
-  static patientResponse(item: any): PatientModel[] {
+  static response(item: any): PatientModel[] {
     try {
       return safeArray<PatientModel>(item, {
         throwErrors: true,
         errorMessage: "se espera un array de pacientes"
-      }).map(PatientMapper.validatePatient);
+      }).map(PatientMapper.validate);
     } catch (error) {
       throw new Error(
-        CustomError.getErrorMessage(
-          error,
-          "patient-mapper.ts: (serverResponse)"
-        )
+        CustomError.getErrorMessage(error, "patient-mapper.ts: (response)")
       );
     }
   }
@@ -71,7 +68,7 @@ export class PatientMapper {
       throw new Error(
         CustomError.getErrorMessage(
           error,
-          "patient--mapper.ts: (validatePatienForAppointmentDetail)"
+          "patient-mapper.ts: (validatePatienForAppointmentDetail)"
         )
       );
     }
@@ -99,7 +96,7 @@ export class PatientMapper {
       throw new Error(
         CustomError.getErrorMessage(
           error,
-          "patient--mapper.ts: (validatePatientHistoryForAppointmentDetail)"
+          "patient-mapper.ts: (validatePatientHistoryForAppointmentDetail)"
         )
       );
     }
