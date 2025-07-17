@@ -31,7 +31,7 @@ export class PatientMapper {
 
       return PatientSchema.parse(data);
     } catch (error) {
-      throw new Error(
+      throw CustomError.internalServer(
         CustomError.getErrorMessage(error, "patient-mapper.ts: (validate)")
       );
     }
@@ -44,7 +44,7 @@ export class PatientMapper {
         errorMessage: "se espera un array de pacientes"
       }).map(PatientMapper.validate);
     } catch (error) {
-      throw new Error(
+      throw CustomError.internalServer(
         CustomError.getErrorMessage(error, "patient-mapper.ts: (response)")
       );
     }
@@ -65,7 +65,7 @@ export class PatientMapper {
 
       return PatientForAppointmentDetailSchema.parse(data);
     } catch (error) {
-      throw new Error(
+      throw CustomError.internalServer(
         CustomError.getErrorMessage(
           error,
           "patient-mapper.ts: (validatePatienForAppointmentDetail)"
@@ -93,7 +93,7 @@ export class PatientMapper {
 
       return PatientHistoryForAppointmentDetailSchema.parse(data);
     } catch (error) {
-      throw new Error(
+      throw CustomError.internalServer(
         CustomError.getErrorMessage(
           error,
           "patient-mapper.ts: (validatePatientHistoryForAppointmentDetail)"

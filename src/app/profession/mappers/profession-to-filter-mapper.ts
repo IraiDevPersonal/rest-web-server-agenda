@@ -10,7 +10,7 @@ export class ProfessionToFilterMapper {
       const data = ProfessionToFilterMapper.mapper(item);
       return OptionSchema.parse(data);
     } catch (error) {
-      throw new Error(
+      throw CustomError.internalServer(
         CustomError.getErrorMessage(
           error,
           "profession-to-filter-mapper.ts: (validate)"
@@ -30,7 +30,7 @@ export class ProfessionToFilterMapper {
         error,
         "profession-to-filter-mapper.ts: (response)"
       );
-      throw new Error(errorMessage);
+      throw CustomError.internalServer(errorMessage);
     }
   }
 

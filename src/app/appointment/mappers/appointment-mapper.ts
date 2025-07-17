@@ -18,7 +18,7 @@ export class AppointmentMapper {
       const data = AppointmentMapper.mapper(item);
       return AppointmentSchema.parse(data);
     } catch (error) {
-      throw new Error(
+      throw CustomError.internalServer(
         CustomError.getErrorMessage(error, "appointment-mapper.ts: (validate)")
       );
     }
@@ -31,7 +31,7 @@ export class AppointmentMapper {
         errorMessage: "se eperaba un arreglo de citas"
       }).map(AppointmentMapper.validate);
     } catch (error) {
-      throw new Error(
+      throw CustomError.internalServer(
         CustomError.getErrorMessage(error, "appointment-mapper.ts: (response)")
       );
     }
@@ -58,7 +58,7 @@ export class AppointmentMapper {
     try {
       return UpsertAppointmentSchema.parse(value);
     } catch (error) {
-      throw new Error(
+      throw CustomError.internalServer(
         CustomError.getErrorMessage(
           error,
           "appointment-mapper.ts: (validateValues)"

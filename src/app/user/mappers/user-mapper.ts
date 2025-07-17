@@ -10,7 +10,7 @@ export class UserMapper {
       const data = UserMapper.mapper(item);
       return UserSchema.parse(data);
     } catch (error) {
-      throw new Error(
+      throw CustomError.internalServer(
         CustomError.getErrorMessage(error, "user-mapper.ts (validate)")
       );
     }
@@ -23,7 +23,7 @@ export class UserMapper {
         errorMessage: "Se esperaba un arreglo de usuarios"
       }).map(UserMapper.validate);
     } catch (error) {
-      throw new Error(
+      throw CustomError.internalServer(
         CustomError.getErrorMessage(error, "user-mapper.ts (response)")
       );
     }

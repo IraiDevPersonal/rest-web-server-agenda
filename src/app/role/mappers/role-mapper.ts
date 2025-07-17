@@ -9,7 +9,7 @@ export class RoleMapper {
       const data = RoleMapper.mapper(object);
       return RoleSchema.parse(data);
     } catch (error) {
-      throw new Error(
+      throw CustomError.internalServer(
         CustomError.getErrorMessage(error, "role-mapper.ts: (validate)")
       );
     }
@@ -22,7 +22,7 @@ export class RoleMapper {
         errorMessage: "Se esperaba un arreglo de roles"
       }).map(RoleMapper.validate);
     } catch (error) {
-      throw new Error(
+      throw CustomError.internalServer(
         CustomError.getErrorMessage(error, "role-mapper.ts: (response)")
       );
     }

@@ -9,7 +9,7 @@ export class ProfessionMapper {
       const data = ProfessionMapper.mapper(item);
       return ProfessionSchema.parse(data);
     } catch (error) {
-      throw new Error(
+      throw CustomError.internalServer(
         CustomError.getErrorMessage(error, "profession-mapper.ts: (validate)")
       );
     }
@@ -30,7 +30,7 @@ export class ProfessionMapper {
         error,
         "profession-mapper.ts: (toArray)"
       );
-      throw new Error(errorMessage);
+      throw CustomError.internalServer(errorMessage);
     }
   }
 

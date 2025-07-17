@@ -29,7 +29,7 @@ export class ProfessionalMapper {
 
       return ProfessionalSchema.parse(data);
     } catch (error) {
-      throw new Error(
+      throw CustomError.internalServer(
         CustomError.getErrorMessage(error, "profession-mapper.ts: (validate)")
       );
     }
@@ -47,7 +47,7 @@ export class ProfessionalMapper {
         "profession-mapper.ts: (response)"
       );
 
-      throw new Error(errorMessage);
+      throw CustomError.internalServer(errorMessage);
     }
   }
 
@@ -68,7 +68,7 @@ export class ProfessionalMapper {
 
       return ProfessionalForAppointmentDetailSchema.parse(data);
     } catch (error) {
-      throw new Error(
+      throw CustomError.internalServer(
         CustomError.getErrorMessage(
           error,
           "profesional-mapper.ts: (validateProfessionalForAppointmentDetail)"

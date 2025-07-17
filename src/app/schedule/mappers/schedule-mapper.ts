@@ -11,7 +11,7 @@ export class ScheduleMapper {
       const data = ScheduleMapper.mapper(item);
       return ScheduleSchema.parse(data);
     } catch (error) {
-      throw new Error(
+      throw CustomError.internalServer(
         CustomError.getErrorMessage(error, "schedule-mapper.ts: (validate)")
       );
     }
@@ -24,7 +24,7 @@ export class ScheduleMapper {
         errorMessage: "Se esperaba un arreglo de schedules"
       }).map(ScheduleMapper.validate);
     } catch (error) {
-      throw new Error(
+      throw CustomError.internalServer(
         CustomError.getErrorMessage(error, "schedule-mapper.ts: (response)")
       );
     }

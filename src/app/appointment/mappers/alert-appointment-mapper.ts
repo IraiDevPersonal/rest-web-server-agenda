@@ -15,7 +15,7 @@ export class AlertAppointmentMapper {
       };
       return AlertAppointmentDetailMapperSchema.parse(data);
     } catch (error) {
-      throw new Error(
+      throw CustomError.internalServer(
         CustomError.getErrorMessage(
           error,
           "alert-appointment-mapper.ts: (validate)"

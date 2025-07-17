@@ -39,7 +39,7 @@ export class AppointmentDetailMapper {
 
       return AppointmentDetailSchema.parse(data);
     } catch (error) {
-      throw new Error(
+      throw CustomError.internalServer(
         CustomError.getErrorMessage(
           error,
           "one-appointment-mapper.ts: (validate)"
