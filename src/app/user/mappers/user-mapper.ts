@@ -1,9 +1,10 @@
 import { type UserModel, UserSchema } from "../models/user";
 
 import { RoleMapper } from "@/app/role/mappers/role-mapper";
+
 import { CustomError } from "@/lib/custom-error";
-import { Uid } from "@/lib/uid";
 import { safeArray } from "@/lib/utils";
+import { Uid } from "@/lib/uid";
 
 export class UserMapper {
   static validate(item: any): UserModel {
@@ -18,16 +19,9 @@ export class UserMapper {
   }
 
   static response(data: any): UserModel[] {
-    try {
-      return safeArray<UserModel>(data, {
-        throwErrors: true,
-        errorMessage: "Se esperaba un arreglo de usuarios"
-      }).map(UserMapper.validate);
-    } catch (error) {
-      throw CustomError.internalServer(
-        CustomError.getErrorMessage(error, "user-mapper.ts (response)")
-      );
-    }
+    return safeArray<UserModel>(data, {
+      errorMessage: "user-mapper (response): Se esperaba un arreglo de usuarios"
+    }).map(UserMapper.validate);
   }
 
   private static mapper(item: any): UserModel {

@@ -18,32 +18,10 @@ export class ScheduleMapper {
   }
 
   static response(object: any): ScheduleModel[] {
-    try {
-      return safeArray<ScheduleModel>(object, {
-        throwErrors: true,
-        errorMessage: "Se esperaba un arreglo de schedules"
-      }).map(ScheduleMapper.validate);
-    } catch (error) {
-      throw CustomError.internalServer(
-        CustomError.getErrorMessage(error, "schedule-mapper.ts: (response)")
-      );
-    }
-  }
-
-  static upsertDTO(object: any, action: "insert" | "update") {
-    const schedule = ScheduleMapper.validate(object);
-    delete schedule.professional;
-
-    if (action === "insert") {
-      delete schedule.id;
-      delete schedule.uid;
-    }
-
-    if (action === "update" && !schedule.id) {
-      throw CustomError.badRequest("Id es requerida para actualizar");
-    }
-
-    return schedule;
+    return safeArray<ScheduleModel>(object, {
+      errorMessage:
+        "schedule-mapper (response): Se esperaba un arreglo de schedules"
+    }).map(ScheduleMapper.validate);
   }
 
   private static mapper(item: any): ScheduleModel {
@@ -55,9 +33,23 @@ export class ScheduleMapper {
       time_from: item?.time_from ?? "hh:mm",
       time_to: item?.time_to ?? "hh:mm",
       is_enabled: item?.is_enabled ?? false,
-      professional: item?.professional
-        ? ProfessionalMapper.validate(item?.professional)
-        : undefined
+      professional: ProfessionalMapper.validate(item?.professional)
     };
   }
+
+  // static upsertDTO(object: any, action: "insert" | "update") {
+  //   const schedule = ScheduleMapper.validate(object);
+  //   delete schedule.professional;
+
+  //   if (action === "insert") {
+  //     delete schedule.id;
+  //     delete schedule.uid;
+  //   }
+
+  //   if (action === "update" && !schedule.id) {
+  //     throw CustomError.badRequest("Id es requerida para actualizar");
+  //   }
+
+  //   return schedule;
+  // }
 }

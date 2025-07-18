@@ -16,16 +16,9 @@ export class RoleMapper {
   }
 
   static response(data: any): RoleModel[] {
-    try {
-      return safeArray<RoleModel>(data, {
-        throwErrors: true,
-        errorMessage: "Se esperaba un arreglo de roles"
-      }).map(RoleMapper.validate);
-    } catch (error) {
-      throw CustomError.internalServer(
-        CustomError.getErrorMessage(error, "role-mapper.ts: (response)")
-      );
-    }
+    return safeArray<RoleModel>(data, {
+      errorMessage: "role-mapper.ts (response): Se esperaba un array"
+    }).map(RoleMapper.validate);
   }
 
   private static mapper(item: any): RoleModel {

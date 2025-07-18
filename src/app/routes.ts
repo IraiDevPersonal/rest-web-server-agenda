@@ -4,7 +4,7 @@ import { AppointmentRoutes } from "./appointment/routes";
 import { ProfessionRoutes } from "./profession/routes";
 import { ProfessionalRoutes } from "./professional/routes";
 import { PatientRoutes } from "./patient/routes";
-import { SeedRoutes } from "./seed/routes";
+import { SeedRoutes } from "./__seed/routes";
 
 export class Routes {
   static get routes(): Router {

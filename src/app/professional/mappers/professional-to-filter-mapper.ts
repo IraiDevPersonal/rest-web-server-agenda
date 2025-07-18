@@ -22,18 +22,10 @@ export class ProfessionalToFilterMapper {
   }
 
   static response(data: any): ProfessionalOptionModel[] {
-    try {
-      return safeArray<ProfessionalOptionModel>(data, {
-        throwErrors: true,
-        errorMessage: "Se esperaba un arreglo de profesionales para filtrar"
-      }).map(ProfessionalToFilterMapper.validate);
-    } catch (error) {
-      const errorMessage = CustomError.getErrorMessage(
-        error,
-        "profession-to-filter-mapper.ts: (response)"
-      );
-      throw CustomError.internalServer(errorMessage);
-    }
+    return safeArray<ProfessionalOptionModel>(data, {
+      errorMessage:
+        "professional-to-filter-mapper.ts (response): se esperaba un array"
+    }).map(ProfessionalToFilterMapper.validate);
   }
 
   private static mapper(item: any): ProfessionalOptionModel {

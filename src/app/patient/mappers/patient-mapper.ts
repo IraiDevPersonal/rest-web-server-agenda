@@ -17,18 +17,7 @@ import { Uid } from "@/lib/uid";
 export class PatientMapper {
   static validate(item: any): PatientModel {
     try {
-      const data: PatientModel = {
-        id: item?.id,
-        uid: item?.uid ?? Uid.createV4(),
-        rut: item?.rut ?? "sin rut",
-        names: item?.names ?? "sin nombres",
-        last_names: item?.last_names ?? "sin apellidos",
-        email: item?.email ?? "sin correo",
-        phone: item?.phone ?? "sin teléfono",
-        address: item?.address ?? "sin dirección",
-        is_deleted: item?.is_deleted ?? false
-      };
-
+      const data = PatientMapper.mapper(item);
       return PatientSchema.parse(data);
     } catch (error) {
       throw CustomError.internalServer(
@@ -38,16 +27,9 @@ export class PatientMapper {
   }
 
   static response(item: any): PatientModel[] {
-    try {
-      return safeArray<PatientModel>(item, {
-        throwErrors: true,
-        errorMessage: "se espera un array de pacientes"
-      }).map(PatientMapper.validate);
-    } catch (error) {
-      throw CustomError.internalServer(
-        CustomError.getErrorMessage(error, "patient-mapper.ts: (response)")
-      );
-    }
+    return safeArray<PatientModel>(item, {
+      errorMessage: "patient-mapper.ts (response): se espera un array"
+    }).map(PatientMapper.validate);
   }
 
   static validatePatientForAppointmentDetail(
@@ -108,5 +90,19 @@ export class PatientMapper {
     return safeArray<PatientHistoryForAppointmentDetailModel>(data).map(
       PatientMapper.validatePatientHistoryForAppointmentDetail
     );
+  }
+
+  private static mapper(item: any): PatientModel {
+    return {
+      id: item?.id,
+      uid: item?.uid ?? Uid.createV4(),
+      rut: item?.rut ?? "sin rut",
+      names: item?.names ?? "sin nombres",
+      last_names: item?.last_names ?? "sin apellidos",
+      email: item?.email ?? "sin correo",
+      phone: item?.phone ?? "sin teléfono",
+      address: item?.address ?? "sin dirección",
+      is_deleted: item?.is_deleted ?? false
+    };
   }
 }

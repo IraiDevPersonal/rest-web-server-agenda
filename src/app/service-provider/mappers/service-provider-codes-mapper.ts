@@ -21,19 +21,10 @@ export class ServiceProviderCodesMapper {
   }
 
   static toArray(data: any): ServiceProviderCodesModel[] {
-    try {
-      return safeArray<ServiceProviderCodesModel>(data, {
-        throwErrors: true,
-        errorMessage: "se esperaba un arreglo de service provider codes"
-      }).map(ServiceProviderCodesMapper.validate);
-    } catch (error) {
-      throw CustomError.internalServer(
-        CustomError.getErrorMessage(
-          error,
-          "service-provider-codes-mapper.ts (toArray)"
-        )
-      );
-    }
+    return safeArray<ServiceProviderCodesModel>(data, {
+      errorMessage:
+        "service-provider-codes-mapper.ts (toArray): se esperaba un array"
+    }).map(ServiceProviderCodesMapper.validate);
   }
 
   static mapper(item: any): ServiceProviderCodesModel {

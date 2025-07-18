@@ -2,9 +2,7 @@ import { AppointmentStatus } from "@prisma/client";
 
 import {
   type AppointmentModel,
-  type UpsertAppointmentValues,
-  AppointmentSchema,
-  UpsertAppointmentSchema
+  AppointmentSchema
 } from "../models/appointment";
 
 import { CustomError } from "@/lib/custom-error";
@@ -25,46 +23,9 @@ export class AppointmentMapper {
   }
 
   static response(data: any): AppointmentModel[] {
-    try {
-      return safeArray<AppointmentModel>(data, {
-        throwErrors: true,
-        errorMessage: "se eperaba un arreglo de citas"
-      }).map(AppointmentMapper.validate);
-    } catch (error) {
-      throw CustomError.internalServer(
-        CustomError.getErrorMessage(error, "appointment-mapper.ts: (response)")
-      );
-    }
-  }
-
-  static upsertDTO(
-    object: UpsertAppointmentValues,
-    action: "create" | "update"
-  ) {
-    const appointment = AppointmentMapper.validateUpsertValues(object);
-
-    if (action === "create") {
-      delete appointment.id;
-    }
-
-    if (action === "update" && !appointment.id) {
-      throw CustomError.badRequest("Id es requerida para actualizar");
-    }
-
-    return appointment;
-  }
-
-  private static validateUpsertValues(value: any) {
-    try {
-      return UpsertAppointmentSchema.parse(value);
-    } catch (error) {
-      throw CustomError.internalServer(
-        CustomError.getErrorMessage(
-          error,
-          "appointment-mapper.ts: (validateValues)"
-        )
-      );
-    }
+    return safeArray<AppointmentModel>(data, {
+      errorMessage: "appointment-mapper.ts (response): se eperaba un array"
+    }).map(AppointmentMapper.validate);
   }
 
   private static mapper(item: any): AppointmentModel {
@@ -91,4 +52,34 @@ export class AppointmentMapper {
       )
     };
   }
+
+  // static upsertDTO(
+  //   object: UpsertAppointmentValues,
+  //   action: "create" | "update"
+  // ) {
+  //   const appointment = AppointmentMapper.validateUpsertValues(object);
+
+  //   if (action === "create") {
+  //     delete appointment.id;
+  //   }
+
+  //   if (action === "update" && !appointment.id) {
+  //     throw CustomError.badRequest("Id es requerida para actualizar");
+  //   }
+
+  //   return appointment;
+  // }
+
+  // private static validateUpsertValues(value: any) {
+  //   try {
+  //     return UpsertAppointmentSchema.parse(value);
+  //   } catch (error) {
+  //     throw CustomError.internalServer(
+  //       CustomError.getErrorMessage(
+  //         error,
+  //         "appointment-mapper.ts: (validateValues)"
+  //       )
+  //     );
+  //   }
+  // }
 }

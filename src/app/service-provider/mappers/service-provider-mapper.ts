@@ -26,7 +26,7 @@ export class ServiceProviderMapper {
       rut: item?.rut ?? "sin rut",
       name: item?.name ?? "sin nombre",
       service_provider_codes: ServiceProviderCodesMapper.toArray(
-        item?.service_provider_codes ?? []
+        item?.service_provider_codes
       )
     };
   }

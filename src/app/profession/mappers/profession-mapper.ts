@@ -19,19 +19,10 @@ export class ProfessionMapper {
     return ProfessionMapper.toArray(data);
   }
 
-  static toArray(data: any[]): ProfessionModel[] {
-    try {
-      return safeArray<ProfessionModel>(data, {
-        throwErrors: true,
-        errorMessage: "Se esperaba un arreglo de profesiones"
-      }).map(ProfessionMapper.mapper);
-    } catch (error) {
-      const errorMessage = CustomError.getErrorMessage(
-        error,
-        "profession-mapper.ts: (toArray)"
-      );
-      throw CustomError.internalServer(errorMessage);
-    }
+  static toArray(data: any): ProfessionModel[] {
+    return safeArray<ProfessionModel>(data, {
+      errorMessage: "profession-mapper.ts (toArray): Se esperaba un array"
+    }).map(ProfessionMapper.mapper);
   }
 
   private static mapper(item: any): ProfessionModel {

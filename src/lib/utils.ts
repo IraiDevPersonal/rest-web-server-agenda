@@ -22,13 +22,16 @@ export function safeArray<T>(
   data: unknown,
   options?: { throwErrors?: boolean; errorMessage?: string }
 ): T[] {
+  const errorMessage = options?.errorMessage || "Se esperaba un array";
+
   if (Array.isArray(data)) {
     return data as T[];
   }
 
   if (options?.throwErrors) {
-    throw new Error(options.errorMessage || "Se esperaba un array");
+    throw new Error(errorMessage);
   }
 
+  console.error(errorMessage);
   return [];
 }
