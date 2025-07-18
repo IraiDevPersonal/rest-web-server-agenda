@@ -20,14 +20,16 @@ export const PatientSchema = z.object({
   is_deleted: z.optional(z.boolean().default(false))
 });
 
-export const PatientForAppointmentDetailSchema = z.object({
-  names: z.string(),
-  last_names: z.string(),
-  rut: z.string(),
-  phone: z.string(),
-  email: z.string(),
-  address: z.string()
-});
+export const PatientForAppointmentDetailSchema = z
+  .object({
+    names: z.string(),
+    last_names: z.string(),
+    rut: z.string(),
+    phone: z.string(),
+    email: z.string(),
+    address: z.string()
+  })
+  .nullable();
 
 export const PatientHistoryForAppointmentDetailSchema = z.object({
   uid: z.string().uuid("El UID debe ser un UUID válido"),

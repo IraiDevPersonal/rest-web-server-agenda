@@ -4,9 +4,10 @@ import {
   ServiceProviderCodesScheme
 } from "../models/service-provider-codes";
 import { safeArray } from "@/lib/utils";
+import { BdServiceProviderCodes } from "@/types/bd-model";
 
 export class ServiceProviderCodesMapper {
-  static validate(item: Record<string, any>): ServiceProviderCodesModel {
+  static validate(item: BdServiceProviderCodes): ServiceProviderCodesModel {
     try {
       const data = ServiceProviderCodesMapper.mapper(item);
       return ServiceProviderCodesScheme.parse(data);
@@ -20,19 +21,19 @@ export class ServiceProviderCodesMapper {
     }
   }
 
-  static toArray(data: any): ServiceProviderCodesModel[] {
-    return safeArray<ServiceProviderCodesModel>(data, {
+  static toArray(data: BdServiceProviderCodes[]): ServiceProviderCodesModel[] {
+    return safeArray(data, {
       errorMessage:
         "service-provider-codes-mapper.ts (toArray): se esperaba un array"
     }).map(ServiceProviderCodesMapper.validate);
   }
 
-  static mapper(item: any): ServiceProviderCodesModel {
+  static mapper(item: BdServiceProviderCodes): ServiceProviderCodesModel {
     return {
-      id: item?.id,
-      code: item?.code,
-      title: item?.title,
-      service_provider_id: item?.service_provider_id
+      id: item.id,
+      code: item.code,
+      title: item.title,
+      service_provider_id: item.service_provider_id
     };
   }
 }

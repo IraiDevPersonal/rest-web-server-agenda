@@ -1,18 +1,30 @@
-import { AppointmentStatus } from "@prisma/client";
-
 import {
   PatientForAppointmentDetailSchema,
   PatientHistoryForAppointmentDetailSchema,
   PatientSchema,
-  type PatientHistoryForAppointmentDetailModel,
   type PatientForAppointmentDetailModel,
+  type PatientHistoryForAppointmentDetailModel,
   type PatientModel
 } from "../models/patient";
 
-import { DateFormatter } from "@/lib/date-formatter";
 import { CustomError } from "@/lib/custom-error";
+import { DateFormatter } from "@/lib/date-formatter";
 import { safeArray } from "@/lib/utils";
-import { Uid } from "@/lib/uid";
+import { BdAppointment, BdPatient } from "@/types/bd-model";
+
+type BdAppointmentWithSchedule = BdAppointment<{
+  select: {
+    uid: true;
+    appointment_status: true;
+    schedule: {
+      select: {
+        date: true;
+        time_from: true;
+        time_to: true;
+      };
+    };
+  };
+}>;
 
 export class PatientMapper {
   static validate(item: any): PatientModel {
@@ -27,23 +39,27 @@ export class PatientMapper {
   }
 
   static response(item: any): PatientModel[] {
-    return safeArray<PatientModel>(item, {
+    return safeArray(item, {
       errorMessage: "patient-mapper.ts (response): se espera un array"
     }).map(PatientMapper.validate);
   }
 
   static validatePatientForAppointmentDetail(
-    item: any
+    item: BdPatient | null
   ): PatientForAppointmentDetailModel {
     try {
-      const data: PatientForAppointmentDetailModel = {
-        names: item.names ?? "sin nombres",
-        last_names: item.names ?? "sin apellidos",
-        rut: item.names ?? "sin rut",
-        phone: item.names ?? "sin teléfono",
-        email: item.names ?? "sin correo",
-        address: item.names ?? "sin dirección"
-      };
+      let data: PatientForAppointmentDetailModel = null;
+
+      if (item) {
+        data = {
+          names: item.names,
+          last_names: item.last_names,
+          rut: item.rut,
+          phone: item.phone,
+          email: item.email,
+          address: item.address
+        };
+      }
 
       return PatientForAppointmentDetailSchema.parse(data);
     } catch (error) {
@@ -57,20 +73,18 @@ export class PatientMapper {
   }
 
   static validatePatientHistoryForAppointmentDetail(
-    item: any
+    bdAppointment: BdAppointmentWithSchedule
   ): PatientHistoryForAppointmentDetailModel {
     try {
-      const schedule = item.schedule;
-      const date = schedule?.date
-        ? DateFormatter.formatDate(schedule?.date, "dmy")
-        : "dd-mm-aaaa";
-      const timeFrom = schedule?.time_from ?? "hh:mm";
-      const timeTo = schedule?.time_to ?? "hh:mm";
+      const schedule = bdAppointment.schedule;
+      const date = DateFormatter.formatDate(schedule.date, "dmy");
+      const timeFrom = schedule.time_from;
+      const timeTo = schedule.time_to;
 
       const data: PatientHistoryForAppointmentDetailModel = {
-        uid: item.uid,
+        uid: bdAppointment.uid,
         date_time: `${date} ${timeFrom}-${timeTo}`,
-        status: item?.appointment_status ?? AppointmentStatus.INDETERMINATE
+        status: bdAppointment.appointment_status
       };
 
       return PatientHistoryForAppointmentDetailSchema.parse(data);
@@ -84,25 +98,25 @@ export class PatientMapper {
     }
   }
 
-  static patientHistoryArray(
-    data: any
+  static patientHistoryToArray(
+    data: BdAppointmentWithSchedule[]
   ): PatientHistoryForAppointmentDetailModel[] {
-    return safeArray<PatientHistoryForAppointmentDetailModel>(data).map(
+    return safeArray(data).map(
       PatientMapper.validatePatientHistoryForAppointmentDetail
     );
   }
 
-  private static mapper(item: any): PatientModel {
+  private static mapper(bdPatient: BdPatient): PatientModel {
     return {
-      id: item?.id,
-      uid: item?.uid ?? Uid.createV4(),
-      rut: item?.rut ?? "sin rut",
-      names: item?.names ?? "sin nombres",
-      last_names: item?.last_names ?? "sin apellidos",
-      email: item?.email ?? "sin correo",
-      phone: item?.phone ?? "sin teléfono",
-      address: item?.address ?? "sin dirección",
-      is_deleted: item?.is_deleted ?? false
+      id: bdPatient.id,
+      uid: bdPatient.uid,
+      rut: bdPatient.rut,
+      names: bdPatient.names,
+      last_names: bdPatient.last_names,
+      email: bdPatient.email,
+      phone: bdPatient.phone,
+      address: bdPatient.address,
+      is_deleted: bdPatient.is_deleted
     };
   }
 }

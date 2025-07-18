@@ -2,9 +2,10 @@ import { RoleSchema, type RoleModel } from "../models/role";
 
 import { CustomError } from "@/lib/custom-error";
 import { safeArray } from "@/lib/utils";
+import { BdRole } from "@/types/bd-model";
 
 export class RoleMapper {
-  static validate(object: any): RoleModel {
+  static validate(object: BdRole): RoleModel {
     try {
       const data = RoleMapper.mapper(object);
       return RoleSchema.parse(data);
@@ -15,16 +16,16 @@ export class RoleMapper {
     }
   }
 
-  static response(data: any): RoleModel[] {
-    return safeArray<RoleModel>(data, {
+  static response(data: BdRole[]): RoleModel[] {
+    return safeArray(data, {
       errorMessage: "role-mapper.ts (response): Se esperaba un array"
     }).map(RoleMapper.validate);
   }
 
-  private static mapper(item: any): RoleModel {
+  private static mapper(item: BdRole): RoleModel {
     return {
-      id: item?.id,
-      name: item?.name ?? "Rol indeterminado"
+      id: item.id,
+      name: item.name
     };
   }
 }

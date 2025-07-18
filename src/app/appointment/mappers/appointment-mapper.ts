@@ -1,5 +1,3 @@
-import { AppointmentStatus } from "@prisma/client";
-
 import {
   type AppointmentModel,
   AppointmentSchema
@@ -7,11 +5,37 @@ import {
 
 import { CustomError } from "@/lib/custom-error";
 import { DateFormatter } from "@/lib/date-formatter";
-import { Uid } from "@/lib/uid";
 import { safeArray } from "@/lib/utils";
+import { BdAppointment } from "@/types/bd-model";
+
+type BdAppointmentScheduleAndProfessions = BdAppointment<{
+  include: {
+    schedule: {
+      include: {
+        professional: {
+          select: {
+            user: true;
+          };
+          include: {
+            professional_profession: {
+              include: {
+                professions: {
+                  select: {
+                    name: true;
+                  };
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+    patient: true;
+  };
+}>;
 
 export class AppointmentMapper {
-  static validate(item: any): AppointmentModel {
+  static validate(item: BdAppointmentScheduleAndProfessions): AppointmentModel {
     try {
       const data = AppointmentMapper.mapper(item);
       return AppointmentSchema.parse(data);
@@ -23,33 +47,32 @@ export class AppointmentMapper {
   }
 
   static response(data: any): AppointmentModel[] {
-    return safeArray<AppointmentModel>(data, {
+    return safeArray(data, {
       errorMessage: "appointment-mapper.ts (response): se eperaba un array"
     }).map(AppointmentMapper.validate);
   }
 
-  private static mapper(item: any): AppointmentModel {
-    const schedule = item?.schedule;
-    const patient = item?.patient;
-    const professional = schedule?.professional;
-    const professions = safeArray<any>(professional?.professional_profession);
+  private static mapper(
+    item: BdAppointmentScheduleAndProfessions
+  ): AppointmentModel {
+    const schedule = item.schedule;
+    const patient = item.patient;
+    const professional = schedule.professional;
+    const professions = professional.professional_profession.map(
+      (p) => p.professions.name
+    );
 
     return {
-      uid: item?.uid ?? Uid.createV4(),
-      time_from: schedule?.time_from ?? "hh:mm",
-      time_to: schedule?.time_to ?? "hh:mm",
-      patient_rut: patient?.rut ?? "sin rut",
-      patient_phone: patient?.phone ?? "sin teléfono",
-      patient_name: `${patient?.names ?? "sin nombres"} ${patient?.last_names ?? "sin apellidos"}`,
-      professional_name: `${professional?.user?.names ?? "sin nombres"} ${professional?.user?.last_names ?? "sin apellidos"}`,
-      date: schedule?.date
-        ? DateFormatter.formatDate(schedule.date, "ymd")
-        : "aaaa-mm-dd",
-      appointment_status:
-        item?.appointment_status ?? AppointmentStatus.INDETERMINATE,
-      professions: professions.map(
-        (p, idx) => p?.professions?.name ?? `Profesión indeterminada ${idx + 1}`
-      )
+      uid: item.uid,
+      time_from: schedule.time_from,
+      time_to: schedule.time_to,
+      patient_rut: patient?.rut ?? null,
+      patient_phone: patient?.phone ?? null,
+      patient_name: patient ? `${patient.names} ${patient.last_names}` : null,
+      professional_name: `${professional.user.names} ${professional.user.last_names}`,
+      date: DateFormatter.formatDate(schedule.date, "ymd"),
+      appointment_status: item.appointment_status,
+      professions
     };
   }
 

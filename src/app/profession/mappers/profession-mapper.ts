@@ -2,9 +2,10 @@ import { type ProfessionModel, ProfessionSchema } from "../models/profession";
 
 import { CustomError } from "@/lib/custom-error";
 import { safeArray } from "@/lib/utils";
+import { BdProfession } from "@/types/bd-model";
 
 export class ProfessionMapper {
-  static validate(item: any): ProfessionModel {
+  static validate(item: BdProfession): ProfessionModel {
     try {
       const data = ProfessionMapper.mapper(item);
       return ProfessionSchema.parse(data);
@@ -15,20 +16,20 @@ export class ProfessionMapper {
     }
   }
 
-  static response(data: any): ProfessionModel[] {
+  static response(data: BdProfession[]): ProfessionModel[] {
     return ProfessionMapper.toArray(data);
   }
 
-  static toArray(data: any): ProfessionModel[] {
-    return safeArray<ProfessionModel>(data, {
+  static toArray(data: BdProfession[]): ProfessionModel[] {
+    return safeArray(data, {
       errorMessage: "profession-mapper.ts (toArray): Se esperaba un array"
-    }).map(ProfessionMapper.mapper);
+    }).map(ProfessionMapper.validate);
   }
 
-  private static mapper(item: any): ProfessionModel {
+  private static mapper(item: BdProfession): ProfessionModel {
     return {
-      id: item?.id,
-      name: item.name ?? "profesión indeterminada"
+      id: item.id,
+      name: item.name
     };
   }
 }

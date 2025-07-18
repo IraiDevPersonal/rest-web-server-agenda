@@ -4,9 +4,18 @@ import {
   ServiceProviderScheme
 } from "../models/service-provider";
 import { ServiceProviderCodesMapper } from "./service-provider-codes-mapper";
+import { BdServiceProviders } from "@/types/bd-model";
+
+type BdServiceProviderWithServiceCodes = BdServiceProviders<{
+  include: {
+    service_provider_codes: true;
+  };
+}>;
 
 export class ServiceProviderMapper {
-  static validate(item: any): ServiceProviderModel {
+  static validate(
+    item: BdServiceProviderWithServiceCodes
+  ): ServiceProviderModel {
     try {
       const data = ServiceProviderMapper.mapper(item);
       return ServiceProviderScheme.parse(data);
@@ -20,13 +29,13 @@ export class ServiceProviderMapper {
     }
   }
 
-  static mapper(item: any): ServiceProviderModel {
+  static mapper(item: BdServiceProviderWithServiceCodes): ServiceProviderModel {
     return {
-      id: item?.id,
-      rut: item?.rut ?? "sin rut",
-      name: item?.name ?? "sin nombre",
+      id: item.id,
+      rut: item.rut,
+      name: item.name,
       service_provider_codes: ServiceProviderCodesMapper.toArray(
-        item?.service_provider_codes
+        item.service_provider_codes
       )
     };
   }

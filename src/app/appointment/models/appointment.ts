@@ -6,9 +6,9 @@ export const AppointmentSchema = z.object({
   date: z.string(),
   time_from: z.string(),
   time_to: z.string(),
-  patient_name: z.string(),
-  patient_rut: z.string(),
-  patient_phone: z.string(),
+  patient_name: z.string().nullable(),
+  patient_rut: z.string().nullable(),
+  patient_phone: z.string().nullable(),
   professional_name: z.string(),
   appointment_status: z.nativeEnum(AppointmentStatus),
   professions: z.array(z.string())

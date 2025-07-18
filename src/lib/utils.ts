@@ -18,8 +18,8 @@ export function isYearMonth(value: string | undefined): value is YearMonth {
   return /^\d{4}-(0[1-9]|1[0-2])$/.test(value);
 }
 
-export function safeArray<T>(
-  data: unknown,
+export function safeArray<T = any>(
+  data: any,
   options?: { throwErrors?: boolean; errorMessage?: string }
 ): T[] {
   const errorMessage = options?.errorMessage || "Se esperaba un array";
@@ -33,5 +33,5 @@ export function safeArray<T>(
   }
 
   console.error(errorMessage);
-  return [];
+  return [] as T[];
 }

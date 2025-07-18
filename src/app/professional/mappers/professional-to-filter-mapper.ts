@@ -5,9 +5,28 @@ import {
 
 import { CustomError } from "@/lib/custom-error";
 import { safeArray } from "@/lib/utils";
+import { BdProfessional } from "@/types/bd-model";
+
+type BdProfessionalWithProfessions = BdProfessional<{
+  include: {
+    user: {
+      select: {
+        names: true;
+        last_names: true;
+      };
+    };
+    professional_profession: {
+      select: {
+        profession_id: true;
+      };
+    };
+  };
+}>;
 
 export class ProfessionalToFilterMapper {
-  static validate(item: any): ProfessionalOptionModel {
+  static validate(
+    item: BdProfessionalWithProfessions
+  ): ProfessionalOptionModel {
     try {
       const data = ProfessionalToFilterMapper.mapper(item);
       return ProfessionalOptionSchema.parse(data);
@@ -21,22 +40,26 @@ export class ProfessionalToFilterMapper {
     }
   }
 
-  static response(data: any): ProfessionalOptionModel[] {
-    return safeArray<ProfessionalOptionModel>(data, {
+  static response(
+    data: BdProfessionalWithProfessions[]
+  ): ProfessionalOptionModel[] {
+    return safeArray(data, {
       errorMessage:
         "professional-to-filter-mapper.ts (response): se esperaba un array"
     }).map(ProfessionalToFilterMapper.validate);
   }
 
-  private static mapper(item: any): ProfessionalOptionModel {
-    const user = item?.user;
-    const professions = safeArray<any>(item?.professional_profession);
+  private static mapper(
+    item: BdProfessionalWithProfessions
+  ): ProfessionalOptionModel {
+    const user = item.user;
+    const professions = item.professional_profession;
 
     return {
-      value: `${item?.id}`,
-      label: `${user?.names ?? "sin nombre"} ${user?.last_names ?? "sin nombre"}`,
+      value: `${item.id}`,
+      label: `${user.names} ${user.last_names}`,
       professions: professions
-        .map((i) => (i?.profession_id ? `${i?.profession_id}` : ""))
+        .map((i) => (i.profession_id ? `${i.profession_id}` : ""))
         .filter(Boolean)
     };
   }

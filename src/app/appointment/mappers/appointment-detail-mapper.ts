@@ -1,16 +1,59 @@
-import { AppointmentStatus } from "@prisma/client";
-
 import { PatientMapper } from "@/app/patient/mappers/patient-mapper";
+import { ProfessionalMapper } from "@/app/professional/mappers/professional-mapper";
 import {
   type AppointmentDetailModel,
   AppointmentDetailSchema
 } from "../models/appointment-detail";
 import { AlertAppointmentMapper } from "./alert-appointment-mapper";
-import { ProfessionalMapper } from "@/app/professional/mappers/professional-mapper";
 
 import { CustomError } from "@/lib/custom-error";
 import { DateFormatter } from "@/lib/date-formatter";
-import { Uid } from "@/lib/uid";
+import { BdAppointment } from "@/types/bd-model";
+
+type BdAppointmentDetail = BdAppointment<{
+  include: {
+    patient: {
+      include: {
+        appointments: {
+          include: {
+            uid: true;
+            appointment_status: true;
+            schedule: {
+              select: {
+                date: true;
+                time_from: true;
+                time_to: true;
+              };
+            };
+          };
+        };
+      };
+    };
+    schedule: {
+      include: {
+        professional: {
+          include: {
+            user: {
+              include: {
+                role: true;
+              };
+            };
+            professional_profession: {
+              select: {
+                professions: {
+                  select: {
+                    id: true;
+                    name: true;
+                  };
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+  };
+}>;
 
 export class AppointmentDetailMapper {
   static validate(item: any): AppointmentDetailModel {
@@ -31,25 +74,25 @@ export class AppointmentDetailMapper {
     return AppointmentDetailMapper.validate(object);
   }
 
-  private static mapper(item: any): AppointmentDetailModel {
+  private static mapper(item: BdAppointmentDetail): AppointmentDetailModel {
     const schedule = item.schedule;
     const patient = item.patient;
 
     return {
-      uid: item.uid ?? Uid.createV4(),
-      date: schedule?.date
-        ? DateFormatter.formatDate(schedule.date, "ymd")
-        : "aaaa-mm-dd",
-      time_from: schedule?.time_from ?? "hh:mm",
-      time_to: schedule?.time_to ?? "hh:mm",
-      is_enabled: schedule?.is_enabled ?? false,
-      status: item.appointment_status ?? AppointmentStatus.INDETERMINATE,
+      uid: item.uid,
+      date: DateFormatter.formatDate(schedule.date, "ymd"),
+      time_from: schedule.time_from,
+      time_to: schedule.time_to,
+      is_enabled: schedule.is_enabled,
+      status: item.appointment_status,
       professional: ProfessionalMapper.validateProfessionalForAppointmentDetail(
-        schedule?.professional
+        schedule.professional
       ),
-      patient_history: PatientMapper.patientHistoryArray(patient?.appointments),
+      patient_history: PatientMapper.patientHistoryToArray(
+        patient?.appointments ?? []
+      ),
       patient: PatientMapper.validatePatientForAppointmentDetail(patient),
-      alert: AlertAppointmentMapper.validate(item?.alert)
+      alert: AlertAppointmentMapper.validate(undefined)
     };
   }
 }

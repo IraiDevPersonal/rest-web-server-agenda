@@ -46,12 +46,8 @@ export const serviceProvider: MakeServiceProvider[] = [
 ];
 
 export const professions: MakeRequired<BdProfession, "name">[] = [
-  {
-    name: "Psicologia"
-  },
-  {
-    name: "Dentista"
-  }
+  { name: "Psicologia" },
+  { name: "Dentista" }
 ];
 
 export const professionalProfession: BdProfessionalProfession[] = [

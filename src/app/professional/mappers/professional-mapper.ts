@@ -1,18 +1,40 @@
 import { ProfessionMapper } from "@/app/profession/mappers/profession-mapper";
 import { RoleMapper } from "@/app/role/mappers/role-mapper";
 import {
-  ProfessionalForAppointmentDetailModel,
-  ProfessionalForAppointmentDetailSchema,
   type ProfessionalModel,
+  type ProfessionalForAppointmentDetailModel,
+  ProfessionalForAppointmentDetailSchema,
   ProfessionalSchema
 } from "../models/professional";
 
 import { CustomError } from "@/lib/custom-error";
-import { Uid } from "@/lib/uid";
 import { safeArray } from "@/lib/utils";
+import { BdProfessional } from "@/types/bd-model";
+
+type BdProfessionalWithRoleAndProfessions = BdProfessional<{
+  include: {
+    user: {
+      include: {
+        role: true;
+      };
+    };
+    professional_profession: {
+      select: {
+        professions: {
+          select: {
+            id: true;
+            name: true;
+          };
+        };
+      };
+    };
+  };
+}>;
 
 export class ProfessionalMapper {
-  static validate(item: any): ProfessionalModel {
+  static validate(
+    item: BdProfessionalWithRoleAndProfessions
+  ): ProfessionalModel {
     try {
       const data = ProfessionalMapper.mapper(item);
       return ProfessionalSchema.parse(data);
@@ -23,22 +45,24 @@ export class ProfessionalMapper {
     }
   }
 
-  static response(data: any): ProfessionalModel[] {
-    return safeArray<ProfessionalModel>(data, {
+  static response(
+    data: BdProfessionalWithRoleAndProfessions[]
+  ): ProfessionalModel[] {
+    return safeArray(data, {
       errorMessage: "professional-mapper.ts (response): se esperaba un array"
     }).map(ProfessionalMapper.validate);
   }
 
   static validateProfessionalForAppointmentDetail(
-    item: any
+    item: BdProfessionalWithRoleAndProfessions
   ): ProfessionalForAppointmentDetailModel {
     try {
-      const user = item?.user;
-      const professions = safeArray<any>(item?.professional_profession).map(
-        (p, idx) => p?.professions?.name ?? `profession desconocida ${idx + 1}`
+      const user = item.user;
+      const professions = item.professional_profession.map(
+        (p) => p.professions.name
       );
       const data: ProfessionalForAppointmentDetailModel = {
-        full_name: `${user?.names ?? "sin nombres"} ${user?.last_names ?? "sin apellidos"}`,
+        full_name: `${user.names} ${user.last_names}`,
         professions: professions,
         pay_methods: ["fonasa", "particular (Efectivo, Transferencia)"],
         confirm_methods: ["whatsapp", "teléfono", "correo", "presencial"]
@@ -55,19 +79,27 @@ export class ProfessionalMapper {
     }
   }
 
-  private static mapper(item: any): ProfessionalModel {
+  private static mapper(
+    item: BdProfessionalWithRoleAndProfessions
+  ): ProfessionalModel {
     const user = item?.user;
+
     return {
-      id: item?.id,
-      user_id: user?.id,
-      names: user?.names ?? "sin nombres",
-      uid: user?.uid ?? Uid.createV4(),
-      rut: user?.rut ?? "sin rut",
-      last_names: user?.last_names ?? "sin apellidos",
-      phone: user?.phone ?? "sin teléfono",
-      email: user?.email,
-      role: RoleMapper.validate(user?.role),
-      professions: ProfessionMapper.toArray(item?.professional_profession)
+      id: item.id,
+      user_id: user.id,
+      names: user.names,
+      uid: user.uid,
+      rut: user.rut,
+      last_names: user.last_names,
+      phone: user.phone,
+      email: user.email,
+      role: RoleMapper.validate(user.role),
+      professions: ProfessionMapper.toArray(
+        item.professional_profession.map((i) => ({
+          id: i.professions.id,
+          name: i.professions.name
+        }))
+      )
     };
   }
 }

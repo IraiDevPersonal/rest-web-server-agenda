@@ -30,6 +30,10 @@ export type BdServiceProviders<
   T extends Prisma.service_providersDefaultArgs<DefaultArgs> = {}
 > = Prisma.service_providersGetPayload<T>;
 
+export type BdServiceProviderCodes<
+  T extends Prisma.service_provider_codesDefaultArgs<DefaultArgs> = {}
+> = Prisma.service_provider_codesGetPayload<T>;
+
 export type BdProfessionalProfession<
   T extends Prisma.professional_professionsDefaultArgs<DefaultArgs> = {}
 > = Prisma.professional_professionsGetPayload<T>;

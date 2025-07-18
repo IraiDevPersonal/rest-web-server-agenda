@@ -4,7 +4,7 @@ import { ProfessionSchema } from "@/app/profession/models/profession";
 import { RoleSchema } from "@/app/role/models/role";
 
 export const ProfessionalSchema = z.object({
-  id: z.number().positive().optional(),
+  id: z.bigint().positive().optional(),
   user_id: z.bigint().positive(),
   uid: z.string().uuid(),
   rut: z.string(),
