@@ -14,7 +14,6 @@ export class Routes {
     router.use("/api/professions", ProfessionRoutes.routes);
     router.use("/api/professionals", ProfessionalRoutes.routes);
     router.use("/api/patients", PatientRoutes.routes);
-    // router.use("/api/calendar", CalendarRoutes.routes);
     router.use("/api/seed", SeedRoutes.routes);
 
     return router;

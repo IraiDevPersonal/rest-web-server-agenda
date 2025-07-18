@@ -200,3 +200,8 @@ OJO: no se valida el uid, por ende si no envias uno en un formato valido manda e
 - falta validar campos de mejor manera,
 - zod devuelve mensaje en ingles
 - devolver algo al crear usuario
+
+- se actualizo la estructura de directorios y se ordeno el codigo, ademas todas las validaciones estan pasando por zod y los modelos se infieren de los equemas de zod, en los mappers se encuentran las validaciones para las respuestas de cada endpoint
+- se agregaron las colecciones de bruno para probar los endpoints
+- los nombres de los endpoints sufrieron algunos cambios
+- aun se conservan los erroes de zod en ingles, pero aun no lo veo necesario ya que esas validaciones son de servidor, no deberian llegar al cliente (almenos en los mappers que devuelven estructuras de datos, para insersiones y actualizaciones ahi es otra cosa, ya que esos si llegarian al cliente)
