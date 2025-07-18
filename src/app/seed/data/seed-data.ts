@@ -1,17 +1,34 @@
 import { AppointmentStatus } from "@prisma/client";
 
 import { Uid } from "@/lib/uid";
+import {
+  BdAppointment,
+  BdPatient,
+  BdProfession,
+  BdProfessional,
+  BdProfessionalProfession,
+  BdRole,
+  BdSchedule,
+  BdServiceProviders,
+  BdUser
+} from "@/types/bd-model";
+import { MakeOptional, MakeRequired } from "@/types/global";
 
-export const professions = [
-  {
-    name: "Psicologia"
-  },
-  {
-    name: "Dentista"
-  }
-];
+type MakeServiceProvider = MakeRequired<
+  BdServiceProviders<{
+    include: {
+      service_provider_codes: {
+        omit: {
+          service_provider_id: true;
+          id: true;
+        };
+      };
+    };
+  }>,
+  "name" | "rut"
+>;
 
-export const serviceProvider = [
+export const serviceProvider: MakeServiceProvider[] = [
   {
     name: "Primero llamado",
     rut: "12.109.544-0",
@@ -28,14 +45,26 @@ export const serviceProvider = [
   }
 ];
 
-export const professionalProfession = [
-  { professional_id: 1, profession_id: 1 },
-  { professional_id: 2, profession_id: 2 }
+export const professions: MakeRequired<BdProfession, "name">[] = [
+  {
+    name: "Psicologia"
+  },
+  {
+    name: "Dentista"
+  }
 ];
 
-export const roles = [{ name: "admin" }, { name: "professional" }];
+export const professionalProfession: BdProfessionalProfession[] = [
+  { professional_id: BigInt(1), profession_id: 1 },
+  { professional_id: BigInt(2), profession_id: 2 }
+];
 
-export const patients = [
+export const roles: MakeRequired<BdRole, "name">[] = [
+  { name: "admin" },
+  { name: "professional" }
+];
+
+export const patients: MakeOptional<BdPatient, "id">[] = [
   {
     email: "cosme_fulano_1@gmail.com",
     last_names: "fulano 1",
@@ -88,7 +117,7 @@ export const patients = [
   }
 ];
 
-export const users = [
+export const users: MakeOptional<BdUser, "id">[] = [
   {
     email: "pinilla.sebastianm@gmail.com",
     password: "123456",
@@ -124,12 +153,19 @@ export const users = [
   }
 ];
 
-export const professionals = [{ user: { id: 1 } }, { user: { id: 2 } }];
+export const professionals: MakeRequired<BdProfessional, "user_id">[] = [
+  {
+    user_id: BigInt(1)
+  },
+  {
+    user_id: BigInt(2)
+  }
+];
 
-export const schedules = [
+export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
   {
     date: new Date(),
-    professional_id: 1,
+    professional_id: BigInt(1),
     time_from: "08:00",
     time_to: "08:45",
     is_enabled: true
@@ -137,7 +173,7 @@ export const schedules = [
 
   {
     date: new Date(),
-    professional_id: 1,
+    professional_id: BigInt(1),
     time_from: "15:00",
     time_to: "15:45",
     is_enabled: true
@@ -145,7 +181,7 @@ export const schedules = [
 
   {
     date: new Date(),
-    professional_id: 1,
+    professional_id: BigInt(1),
     time_from: "16:00",
     time_to: "16:45",
     is_enabled: false
@@ -153,7 +189,7 @@ export const schedules = [
 
   {
     date: new Date(),
-    professional_id: 1,
+    professional_id: BigInt(1),
     time_from: "08:00",
     time_to: "08:45",
     is_enabled: true
@@ -161,7 +197,7 @@ export const schedules = [
 
   {
     date: new Date(),
-    professional_id: 1,
+    professional_id: BigInt(1),
     time_from: "15:00",
     time_to: "15:45",
     is_enabled: true
@@ -169,7 +205,7 @@ export const schedules = [
 
   {
     date: new Date(),
-    professional_id: 1,
+    professional_id: BigInt(1),
     time_from: "16:00",
     time_to: "16:45",
     is_enabled: false
@@ -177,7 +213,7 @@ export const schedules = [
 
   {
     date: new Date(),
-    professional_id: 1,
+    professional_id: BigInt(1),
     time_from: "08:00",
     time_to: "08:45",
     is_enabled: true
@@ -185,7 +221,7 @@ export const schedules = [
 
   {
     date: new Date(),
-    professional_id: 1,
+    professional_id: BigInt(1),
     time_from: "15:00",
     time_to: "15:45",
     is_enabled: true
@@ -193,7 +229,7 @@ export const schedules = [
 
   {
     date: new Date(),
-    professional_id: 1,
+    professional_id: BigInt(1),
     time_from: "16:00",
     time_to: "16:45",
     is_enabled: false
@@ -201,7 +237,7 @@ export const schedules = [
 
   {
     date: new Date(),
-    professional_id: 2,
+    professional_id: BigInt(2),
     time_from: "08:00",
     time_to: "08:45",
     is_enabled: true
@@ -209,7 +245,7 @@ export const schedules = [
 
   {
     date: new Date(),
-    professional_id: 2,
+    professional_id: BigInt(2),
     time_from: "15:00",
     time_to: "15:45",
     is_enabled: true
@@ -217,7 +253,7 @@ export const schedules = [
 
   {
     date: new Date(),
-    professional_id: 2,
+    professional_id: BigInt(2),
     time_from: "16:00",
     time_to: "16:45",
     is_enabled: false
@@ -225,7 +261,7 @@ export const schedules = [
 
   {
     date: new Date(),
-    professional_id: 2,
+    professional_id: BigInt(2),
     time_from: "08:00",
     time_to: "08:45",
     is_enabled: true
@@ -233,7 +269,7 @@ export const schedules = [
 
   {
     date: new Date(),
-    professional_id: 2,
+    professional_id: BigInt(2),
     time_from: "15:00",
     time_to: "15:45",
     is_enabled: true
@@ -241,7 +277,7 @@ export const schedules = [
 
   {
     date: new Date(),
-    professional_id: 2,
+    professional_id: BigInt(2),
     time_from: "16:00",
     time_to: "16:45",
     is_enabled: false
@@ -249,7 +285,7 @@ export const schedules = [
 
   {
     date: new Date(),
-    professional_id: 2,
+    professional_id: BigInt(2),
     time_from: "08:00",
     time_to: "08:45",
     is_enabled: true
@@ -257,7 +293,7 @@ export const schedules = [
 
   {
     date: new Date(),
-    professional_id: 2,
+    professional_id: BigInt(2),
     time_from: "15:00",
     time_to: "15:45",
     is_enabled: true
@@ -265,7 +301,7 @@ export const schedules = [
 
   {
     date: new Date(),
-    professional_id: 2,
+    professional_id: BigInt(2),
     time_from: "16:00",
     time_to: "16:45",
     is_enabled: false
@@ -273,7 +309,7 @@ export const schedules = [
 
   {
     date: new Date(),
-    professional_id: 2,
+    professional_id: BigInt(2),
     time_from: "10:00",
     time_to: "10:45",
     is_enabled: true
@@ -281,7 +317,7 @@ export const schedules = [
 
   {
     date: new Date(),
-    professional_id: 2,
+    professional_id: BigInt(2),
     time_from: "12:00",
     time_to: "12:45",
     is_enabled: true
@@ -289,7 +325,7 @@ export const schedules = [
 
   {
     date: new Date(),
-    professional_id: 2,
+    professional_id: BigInt(2),
     time_from: "14:00",
     time_to: "14:45",
     is_enabled: false
@@ -297,7 +333,7 @@ export const schedules = [
 
   {
     date: new Date(),
-    professional_id: 2,
+    professional_id: BigInt(2),
     time_from: "09:00",
     time_to: "09:15",
     is_enabled: true
@@ -305,7 +341,7 @@ export const schedules = [
 
   {
     date: new Date(),
-    professional_id: 2,
+    professional_id: BigInt(2),
     time_from: "09:30",
     time_to: "09:45",
     is_enabled: true
@@ -313,7 +349,7 @@ export const schedules = [
 
   {
     date: new Date(),
-    professional_id: 2,
+    professional_id: BigInt(2),
     time_from: "12:00",
     time_to: "12:15",
     is_enabled: false
@@ -321,7 +357,7 @@ export const schedules = [
 
   {
     date: new Date(),
-    professional_id: 2,
+    professional_id: BigInt(2),
     time_from: "08:00",
     time_to: "08:45",
     is_enabled: true
@@ -329,7 +365,7 @@ export const schedules = [
 
   {
     date: new Date(),
-    professional_id: 2,
+    professional_id: BigInt(2),
     time_from: "15:00",
     time_to: "15:45",
     is_enabled: true
@@ -337,101 +373,101 @@ export const schedules = [
 
   {
     date: new Date(),
-    professional_id: 2,
+    professional_id: BigInt(2),
     time_from: "16:00",
     time_to: "16:45",
     is_enabled: false
   }
 ];
 
-export const appointments = [
+export const appointments: MakeOptional<BdAppointment, "id" | "uid">[] = [
   {
-    patient_id: 1,
-    schedule_id: 1,
+    patient_id: BigInt(1),
+    schedule_id: BigInt(1),
     appointment_status: AppointmentStatus.AVAILABLE
   },
 
   {
-    patient_id: 1,
-    schedule_id: 5,
+    patient_id: BigInt(1),
+    schedule_id: BigInt(5),
     appointment_status: AppointmentStatus.CONFIRMED
   },
 
   {
-    patient_id: 1,
-    schedule_id: 6,
+    patient_id: BigInt(1),
+    schedule_id: BigInt(6),
     appointment_status: AppointmentStatus.TO_CONFIRM
   },
 
   {
-    patient_id: 2,
-    schedule_id: 8,
+    patient_id: BigInt(2),
+    schedule_id: BigInt(8),
     appointment_status: AppointmentStatus.TO_CONFIRM
   },
 
   {
-    patient_id: 2,
-    schedule_id: 2,
+    patient_id: BigInt(2),
+    schedule_id: BigInt(2),
     appointment_status: AppointmentStatus.CONFIRMED
   },
 
   {
-    patient_id: 2,
-    schedule_id: 14,
+    patient_id: BigInt(2),
+    schedule_id: BigInt(14),
     appointment_status: AppointmentStatus.TO_CONFIRM
   },
 
   {
-    patient_id: 3,
-    schedule_id: 9,
+    patient_id: BigInt(3),
+    schedule_id: BigInt(9),
     appointment_status: AppointmentStatus.CANCELLED
   },
 
   {
-    patient_id: 3,
-    schedule_id: 10,
+    patient_id: BigInt(3),
+    schedule_id: BigInt(10),
     appointment_status: AppointmentStatus.TO_CONFIRM
   },
 
   {
-    patient_id: 3,
-    schedule_id: 11,
+    patient_id: BigInt(3),
+    schedule_id: BigInt(11),
     appointment_status: AppointmentStatus.CONFIRMED
   },
 
   {
-    patient_id: 4,
-    schedule_id: 12,
+    patient_id: BigInt(4),
+    schedule_id: BigInt(12),
     appointment_status: AppointmentStatus.CONFIRMED
   },
 
   {
-    patient_id: 4,
-    schedule_id: 13,
+    patient_id: BigInt(4),
+    schedule_id: BigInt(13),
     appointment_status: AppointmentStatus.TO_CONFIRM
   },
 
   {
-    patient_id: 4,
-    schedule_id: 15,
+    patient_id: BigInt(4),
+    schedule_id: BigInt(15),
     appointment_status: AppointmentStatus.TO_CONFIRM
   },
 
   {
-    patient_id: 5,
-    schedule_id: 16,
+    patient_id: BigInt(5),
+    schedule_id: BigInt(16),
     appointment_status: AppointmentStatus.CANCELLED
   },
 
   {
-    patient_id: 5,
-    schedule_id: 17,
+    patient_id: BigInt(5),
+    schedule_id: BigInt(17),
     appointment_status: AppointmentStatus.TO_CONFIRM
   },
 
   {
-    patient_id: 5,
-    schedule_id: 18,
+    patient_id: BigInt(5),
+    schedule_id: BigInt(18),
     appointment_status: AppointmentStatus.CANCELLED
   }
 ];
