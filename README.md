@@ -205,3 +205,4 @@ OJO: no se valida el uid, por ende si no envias uno en un formato valido manda e
 - se agregaron las colecciones de bruno para probar los endpoints
 - los nombres de los endpoints sufrieron algunos cambios
 - aun se conservan los erroes de zod en ingles, pero aun no lo veo necesario ya que esas validaciones son de servidor, no deberian llegar al cliente (almenos en los mappers que devuelven estructuras de datos, para insersiones y actualizaciones ahi es otra cosa, ya que esos si llegarian al cliente)
+- para que es seed funcione de debe tener la variable de entorno IS_PRODUCTION=false, por defecto en config/envs este valor esta en true, asi que si no esta en el .env el seed sera detenido
