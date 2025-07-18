@@ -72,7 +72,6 @@ export class AppointmentMapper {
     const patient = item?.patient;
     const professional = schedule?.professional;
     const professions = safeArray<any>(professional?.professional_profession);
-    console.log({ item });
 
     return {
       uid: item?.uid ?? Uid.createV4(),
