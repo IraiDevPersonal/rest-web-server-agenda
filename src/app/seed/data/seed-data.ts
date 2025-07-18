@@ -1,36 +1,18 @@
 import { AppointmentStatus } from "@prisma/client";
 
-import { PatientMapper } from "@/app/patient/mappers/patient-mapper";
-import { PatientModel } from "@/app/patient/models/patient";
-import { ProfessionMapper } from "@/app/profession/mappers/profession-mapper";
-import { ProfessionalMapper } from "@/app/professional/mappers/professional-mapper";
-import { ProfessionalProfessionModel } from "@/app/professional/models/professional-profession";
-import { RoleMapper } from "@/app/role/mappers/role-mapper";
-import { ScheduleMapper } from "@/app/schedule/mappers/schedule-mapper";
-import { ServiceProviderMapper } from "@/app/service-provider/mappers/service-provider-mapper";
-import { UserMapper } from "@/app/user/mappers/user-mapper";
-import { AppointmentMapper } from "@/app/appointment/mappers/appointment-mapper";
-
-import type { ProfessionModel } from "@/app/profession/models/profession";
-import type { ProfessionalModel } from "@/app/professional/models/professional";
-import type { RoleModel } from "@/app/role/models/role";
-import type { ScheduleModel } from "@/app/schedule/models/schedule";
-import type { ServiceProviderModel } from "@/app/service-provider/models/service-provider";
-import type { UserModel } from "@/app/user/models/user";
-
 import { Uid } from "@/lib/uid";
 
-export const professions: ProfessionModel[] = [
-  ProfessionMapper.validate({
+export const professions = [
+  {
     name: "Psicologia"
-  }),
-  ProfessionMapper.validate({
+  },
+  {
     name: "Dentista"
-  })
+  }
 ];
 
-export const serviceProvider: ServiceProviderModel[] = [
-  ServiceProviderMapper.validate({
+export const serviceProvider = [
+  {
     name: "Primero llamado",
     rut: "12.109.544-0",
     service_provider_codes: [
@@ -43,21 +25,18 @@ export const serviceProvider: ServiceProviderModel[] = [
         code: "123124123112312"
       }
     ]
-  })
+  }
 ];
 
-export const professionalProfession: ProfessionalProfessionModel[] = [
+export const professionalProfession = [
   { professional_id: 1, profession_id: 1 },
   { professional_id: 2, profession_id: 2 }
 ];
 
-export const roles: RoleModel[] = [
-  RoleMapper.validate({ name: "admin" }),
-  RoleMapper.validate({ name: "professional" })
-];
+export const roles = [{ name: "admin" }, { name: "professional" }];
 
-export const patients: PatientModel[] = [
-  PatientMapper.validate({
+export const patients = [
+  {
     email: "cosme_fulano_1@gmail.com",
     last_names: "fulano 1",
     names: "cosme 1",
@@ -66,8 +45,8 @@ export const patients: PatientModel[] = [
     address: "calle falsa 123",
     is_deleted: false,
     uid: Uid.createV4()
-  }),
-  PatientMapper.validate({
+  },
+  {
     email: "cosme_fulano_2@gmail.com",
     last_names: "fulano 2",
     names: "cosme 2",
@@ -76,8 +55,8 @@ export const patients: PatientModel[] = [
     address: "calle falsa 123",
     is_deleted: false,
     uid: Uid.createV4()
-  }),
-  PatientMapper.validate({
+  },
+  {
     email: "cosme_fulano_3@gmail.com",
     last_names: "fulano 3",
     names: "cosme 3",
@@ -86,8 +65,8 @@ export const patients: PatientModel[] = [
     address: "calle falsa 123",
     is_deleted: false,
     uid: Uid.createV4()
-  }),
-  PatientMapper.validate({
+  },
+  {
     email: "cosme_fulano_4@gmail.com",
     last_names: "fulano 4",
     names: "cosme 4",
@@ -96,8 +75,8 @@ export const patients: PatientModel[] = [
     address: "calle falsa 123",
     is_deleted: false,
     uid: Uid.createV4()
-  }),
-  PatientMapper.validate({
+  },
+  {
     email: "cosme_fulano_5@gmail.com",
     last_names: "fulano 5",
     names: "cosme 5",
@@ -106,11 +85,11 @@ export const patients: PatientModel[] = [
     address: "calle falsa 123",
     is_deleted: false,
     uid: Uid.createV4()
-  })
+  }
 ];
 
-export const users: UserModel[] = [
-  UserMapper.validate({
+export const users = [
+  {
     email: "pinilla.sebastianm@gmail.com",
     password: "123456",
     role_id: 1,
@@ -120,8 +99,8 @@ export const users: UserModel[] = [
     phone: "+56948426521",
     rut: "18.804.066-7",
     uid: Uid.createV4()
-  }),
-  UserMapper.validate({
+  },
+  {
     email: "raul.espmol@gmail.com",
     password: "123456",
     role_id: 2,
@@ -131,8 +110,8 @@ export const users: UserModel[] = [
     phone: "+56948426521",
     rut: "19.051.146-7",
     uid: Uid.createV4()
-  }),
-  UserMapper.validate({
+  },
+  {
     email: "iraidev@gmail.com",
     password: "123456",
     role_id: 1,
@@ -142,411 +121,317 @@ export const users: UserModel[] = [
     phone: "+56948426521",
     rut: "19.050.844-7",
     uid: Uid.createV4()
-  })
+  }
 ];
 
-export const professionals: ProfessionalModel[] = [
-  ProfessionalMapper.validate({
-    user: { id: 1 }
-  }),
-  ProfessionalMapper.validate({
-    user: { id: 2 }
-  })
-];
+export const professionals = [{ user: { id: 1 } }, { user: { id: 2 } }];
 
-export const schedules: ScheduleModel[] = [
-  ScheduleMapper.upsertDTO(
-    {
-      date: new Date(),
-      professional_id: 1,
-      time_from: "08:00",
-      time_to: "08:45",
-      is_enabled: true
-    },
-    "insert"
-  ),
-  ScheduleMapper.upsertDTO(
-    {
-      date: new Date(),
-      professional_id: 1,
-      time_from: "15:00",
-      time_to: "15:45",
-      is_enabled: true
-    },
-    "insert"
-  ),
-  ScheduleMapper.upsertDTO(
-    {
-      date: new Date(),
-      professional_id: 1,
-      time_from: "16:00",
-      time_to: "16:45",
-      is_enabled: false
-    },
-    "insert"
-  ),
-  ScheduleMapper.upsertDTO(
-    {
-      date: new Date(),
-      professional_id: 1,
-      time_from: "08:00",
-      time_to: "08:45",
-      is_enabled: true
-    },
-    "insert"
-  ),
-  ScheduleMapper.upsertDTO(
-    {
-      date: new Date(),
-      professional_id: 1,
-      time_from: "15:00",
-      time_to: "15:45",
-      is_enabled: true
-    },
-    "insert"
-  ),
-  ScheduleMapper.upsertDTO(
-    {
-      date: new Date(),
-      professional_id: 1,
-      time_from: "16:00",
-      time_to: "16:45",
-      is_enabled: false
-    },
-    "insert"
-  ),
-  ScheduleMapper.upsertDTO(
-    {
-      date: new Date(),
-      professional_id: 1,
-      time_from: "08:00",
-      time_to: "08:45",
-      is_enabled: true
-    },
-    "insert"
-  ),
-  ScheduleMapper.upsertDTO(
-    {
-      date: new Date(),
-      professional_id: 1,
-      time_from: "15:00",
-      time_to: "15:45",
-      is_enabled: true
-    },
-    "insert"
-  ),
-  ScheduleMapper.upsertDTO(
-    {
-      date: new Date(),
-      professional_id: 1,
-      time_from: "16:00",
-      time_to: "16:45",
-      is_enabled: false
-    },
-    "insert"
-  ),
+export const schedules = [
+  {
+    date: new Date(),
+    professional_id: 1,
+    time_from: "08:00",
+    time_to: "08:45",
+    is_enabled: true
+  },
 
-  ScheduleMapper.upsertDTO(
-    {
-      date: new Date(),
-      professional_id: 2,
-      time_from: "08:00",
-      time_to: "08:45",
-      is_enabled: true
-    },
-    "insert"
-  ),
-  ScheduleMapper.upsertDTO(
-    {
-      date: new Date(),
-      professional_id: 2,
-      time_from: "15:00",
-      time_to: "15:45",
-      is_enabled: true
-    },
-    "insert"
-  ),
-  ScheduleMapper.upsertDTO(
-    {
-      date: new Date(),
-      professional_id: 2,
-      time_from: "16:00",
-      time_to: "16:45",
-      is_enabled: false
-    },
-    "insert"
-  ),
-  ScheduleMapper.upsertDTO(
-    {
-      date: new Date(),
-      professional_id: 2,
-      time_from: "08:00",
-      time_to: "08:45",
-      is_enabled: true
-    },
-    "insert"
-  ),
-  ScheduleMapper.upsertDTO(
-    {
-      date: new Date(),
-      professional_id: 2,
-      time_from: "15:00",
-      time_to: "15:45",
-      is_enabled: true
-    },
-    "insert"
-  ),
-  ScheduleMapper.upsertDTO(
-    {
-      date: new Date(),
-      professional_id: 2,
-      time_from: "16:00",
-      time_to: "16:45",
-      is_enabled: false
-    },
-    "insert"
-  ),
-  ScheduleMapper.upsertDTO(
-    {
-      date: new Date(),
-      professional_id: 2,
-      time_from: "08:00",
-      time_to: "08:45",
-      is_enabled: true
-    },
-    "insert"
-  ),
-  ScheduleMapper.upsertDTO(
-    {
-      date: new Date(),
-      professional_id: 2,
-      time_from: "15:00",
-      time_to: "15:45",
-      is_enabled: true
-    },
-    "insert"
-  ),
-  ScheduleMapper.upsertDTO(
-    {
-      date: new Date(),
-      professional_id: 2,
-      time_from: "16:00",
-      time_to: "16:45",
-      is_enabled: false
-    },
-    "insert"
-  ),
-  ScheduleMapper.upsertDTO(
-    {
-      date: new Date(),
-      professional_id: 2,
-      time_from: "10:00",
-      time_to: "10:45",
-      is_enabled: true
-    },
-    "insert"
-  ),
-  ScheduleMapper.upsertDTO(
-    {
-      date: new Date(),
-      professional_id: 2,
-      time_from: "12:00",
-      time_to: "12:45",
-      is_enabled: true
-    },
-    "insert"
-  ),
-  ScheduleMapper.upsertDTO(
-    {
-      date: new Date(),
-      professional_id: 2,
-      time_from: "14:00",
-      time_to: "14:45",
-      is_enabled: false
-    },
-    "insert"
-  ),
-  ScheduleMapper.upsertDTO(
-    {
-      date: new Date(),
-      professional_id: 2,
-      time_from: "09:00",
-      time_to: "09:15",
-      is_enabled: true
-    },
-    "insert"
-  ),
-  ScheduleMapper.upsertDTO(
-    {
-      date: new Date(),
-      professional_id: 2,
-      time_from: "09:30",
-      time_to: "09:45",
-      is_enabled: true
-    },
-    "insert"
-  ),
-  ScheduleMapper.upsertDTO(
-    {
-      date: new Date(),
-      professional_id: 2,
-      time_from: "12:00",
-      time_to: "12:15",
-      is_enabled: false
-    },
-    "insert"
-  ),
-  ScheduleMapper.upsertDTO(
-    {
-      date: new Date(),
-      professional_id: 2,
-      time_from: "08:00",
-      time_to: "08:45",
-      is_enabled: true
-    },
-    "insert"
-  ),
-  ScheduleMapper.upsertDTO(
-    {
-      date: new Date(),
-      professional_id: 2,
-      time_from: "15:00",
-      time_to: "15:45",
-      is_enabled: true
-    },
-    "insert"
-  ),
-  ScheduleMapper.upsertDTO(
-    {
-      date: new Date(),
-      professional_id: 2,
-      time_from: "16:00",
-      time_to: "16:45",
-      is_enabled: false
-    },
-    "insert"
-  )
+  {
+    date: new Date(),
+    professional_id: 1,
+    time_from: "15:00",
+    time_to: "15:45",
+    is_enabled: true
+  },
+
+  {
+    date: new Date(),
+    professional_id: 1,
+    time_from: "16:00",
+    time_to: "16:45",
+    is_enabled: false
+  },
+
+  {
+    date: new Date(),
+    professional_id: 1,
+    time_from: "08:00",
+    time_to: "08:45",
+    is_enabled: true
+  },
+
+  {
+    date: new Date(),
+    professional_id: 1,
+    time_from: "15:00",
+    time_to: "15:45",
+    is_enabled: true
+  },
+
+  {
+    date: new Date(),
+    professional_id: 1,
+    time_from: "16:00",
+    time_to: "16:45",
+    is_enabled: false
+  },
+
+  {
+    date: new Date(),
+    professional_id: 1,
+    time_from: "08:00",
+    time_to: "08:45",
+    is_enabled: true
+  },
+
+  {
+    date: new Date(),
+    professional_id: 1,
+    time_from: "15:00",
+    time_to: "15:45",
+    is_enabled: true
+  },
+
+  {
+    date: new Date(),
+    professional_id: 1,
+    time_from: "16:00",
+    time_to: "16:45",
+    is_enabled: false
+  },
+
+  {
+    date: new Date(),
+    professional_id: 2,
+    time_from: "08:00",
+    time_to: "08:45",
+    is_enabled: true
+  },
+
+  {
+    date: new Date(),
+    professional_id: 2,
+    time_from: "15:00",
+    time_to: "15:45",
+    is_enabled: true
+  },
+
+  {
+    date: new Date(),
+    professional_id: 2,
+    time_from: "16:00",
+    time_to: "16:45",
+    is_enabled: false
+  },
+
+  {
+    date: new Date(),
+    professional_id: 2,
+    time_from: "08:00",
+    time_to: "08:45",
+    is_enabled: true
+  },
+
+  {
+    date: new Date(),
+    professional_id: 2,
+    time_from: "15:00",
+    time_to: "15:45",
+    is_enabled: true
+  },
+
+  {
+    date: new Date(),
+    professional_id: 2,
+    time_from: "16:00",
+    time_to: "16:45",
+    is_enabled: false
+  },
+
+  {
+    date: new Date(),
+    professional_id: 2,
+    time_from: "08:00",
+    time_to: "08:45",
+    is_enabled: true
+  },
+
+  {
+    date: new Date(),
+    professional_id: 2,
+    time_from: "15:00",
+    time_to: "15:45",
+    is_enabled: true
+  },
+
+  {
+    date: new Date(),
+    professional_id: 2,
+    time_from: "16:00",
+    time_to: "16:45",
+    is_enabled: false
+  },
+
+  {
+    date: new Date(),
+    professional_id: 2,
+    time_from: "10:00",
+    time_to: "10:45",
+    is_enabled: true
+  },
+
+  {
+    date: new Date(),
+    professional_id: 2,
+    time_from: "12:00",
+    time_to: "12:45",
+    is_enabled: true
+  },
+
+  {
+    date: new Date(),
+    professional_id: 2,
+    time_from: "14:00",
+    time_to: "14:45",
+    is_enabled: false
+  },
+
+  {
+    date: new Date(),
+    professional_id: 2,
+    time_from: "09:00",
+    time_to: "09:15",
+    is_enabled: true
+  },
+
+  {
+    date: new Date(),
+    professional_id: 2,
+    time_from: "09:30",
+    time_to: "09:45",
+    is_enabled: true
+  },
+
+  {
+    date: new Date(),
+    professional_id: 2,
+    time_from: "12:00",
+    time_to: "12:15",
+    is_enabled: false
+  },
+
+  {
+    date: new Date(),
+    professional_id: 2,
+    time_from: "08:00",
+    time_to: "08:45",
+    is_enabled: true
+  },
+
+  {
+    date: new Date(),
+    professional_id: 2,
+    time_from: "15:00",
+    time_to: "15:45",
+    is_enabled: true
+  },
+
+  {
+    date: new Date(),
+    professional_id: 2,
+    time_from: "16:00",
+    time_to: "16:45",
+    is_enabled: false
+  }
 ];
 
 export const appointments = [
-  AppointmentMapper.upsertDTO(
-    {
-      patient_id: 1,
-      schedule_id: 1,
-      appointment_status: AppointmentStatus.AVAILABLE
-    },
-    "create"
-  ),
-  AppointmentMapper.upsertDTO(
-    {
-      patient_id: 1,
-      schedule_id: 5,
-      appointment_status: AppointmentStatus.CONFIRMED
-    },
-    "create"
-  ),
-  AppointmentMapper.upsertDTO(
-    {
-      patient_id: 1,
-      schedule_id: 6,
-      appointment_status: AppointmentStatus.TO_CONFIRM
-    },
-    "create"
-  ),
-  AppointmentMapper.upsertDTO(
-    {
-      patient_id: 2,
-      schedule_id: 8,
-      appointment_status: AppointmentStatus.TO_CONFIRM
-    },
-    "create"
-  ),
-  AppointmentMapper.upsertDTO(
-    {
-      patient_id: 2,
-      schedule_id: 2,
-      appointment_status: AppointmentStatus.CONFIRMED
-    },
-    "create"
-  ),
-  AppointmentMapper.upsertDTO(
-    {
-      patient_id: 2,
-      schedule_id: 14,
-      appointment_status: AppointmentStatus.TO_CONFIRM
-    },
-    "create"
-  ),
-  AppointmentMapper.upsertDTO(
-    {
-      patient_id: 3,
-      schedule_id: 9,
-      appointment_status: AppointmentStatus.CANCELLED
-    },
-    "create"
-  ),
-  AppointmentMapper.upsertDTO(
-    {
-      patient_id: 3,
-      schedule_id: 10,
-      appointment_status: AppointmentStatus.TO_CONFIRM
-    },
-    "create"
-  ),
-  AppointmentMapper.upsertDTO(
-    {
-      patient_id: 3,
-      schedule_id: 11,
-      appointment_status: AppointmentStatus.CONFIRMED
-    },
-    "create"
-  ),
-  AppointmentMapper.upsertDTO(
-    {
-      patient_id: 4,
-      schedule_id: 12,
-      appointment_status: AppointmentStatus.CONFIRMED
-    },
-    "create"
-  ),
-  AppointmentMapper.upsertDTO(
-    {
-      patient_id: 4,
-      schedule_id: 13,
-      appointment_status: AppointmentStatus.TO_CONFIRM
-    },
-    "create"
-  ),
-  AppointmentMapper.upsertDTO(
-    {
-      patient_id: 4,
-      schedule_id: 15,
-      appointment_status: AppointmentStatus.TO_CONFIRM
-    },
-    "create"
-  ),
-  AppointmentMapper.upsertDTO(
-    {
-      patient_id: 5,
-      schedule_id: 16,
-      appointment_status: AppointmentStatus.CANCELLED
-    },
-    "create"
-  ),
-  AppointmentMapper.upsertDTO(
-    {
-      patient_id: 5,
-      schedule_id: 17,
-      appointment_status: AppointmentStatus.TO_CONFIRM
-    },
-    "create"
-  ),
-  AppointmentMapper.upsertDTO(
-    {
-      patient_id: 5,
-      schedule_id: 18,
-      appointment_status: AppointmentStatus.CANCELLED
-    },
-    "create"
-  )
+  {
+    patient_id: 1,
+    schedule_id: 1,
+    appointment_status: AppointmentStatus.AVAILABLE
+  },
+
+  {
+    patient_id: 1,
+    schedule_id: 5,
+    appointment_status: AppointmentStatus.CONFIRMED
+  },
+
+  {
+    patient_id: 1,
+    schedule_id: 6,
+    appointment_status: AppointmentStatus.TO_CONFIRM
+  },
+
+  {
+    patient_id: 2,
+    schedule_id: 8,
+    appointment_status: AppointmentStatus.TO_CONFIRM
+  },
+
+  {
+    patient_id: 2,
+    schedule_id: 2,
+    appointment_status: AppointmentStatus.CONFIRMED
+  },
+
+  {
+    patient_id: 2,
+    schedule_id: 14,
+    appointment_status: AppointmentStatus.TO_CONFIRM
+  },
+
+  {
+    patient_id: 3,
+    schedule_id: 9,
+    appointment_status: AppointmentStatus.CANCELLED
+  },
+
+  {
+    patient_id: 3,
+    schedule_id: 10,
+    appointment_status: AppointmentStatus.TO_CONFIRM
+  },
+
+  {
+    patient_id: 3,
+    schedule_id: 11,
+    appointment_status: AppointmentStatus.CONFIRMED
+  },
+
+  {
+    patient_id: 4,
+    schedule_id: 12,
+    appointment_status: AppointmentStatus.CONFIRMED
+  },
+
+  {
+    patient_id: 4,
+    schedule_id: 13,
+    appointment_status: AppointmentStatus.TO_CONFIRM
+  },
+
+  {
+    patient_id: 4,
+    schedule_id: 15,
+    appointment_status: AppointmentStatus.TO_CONFIRM
+  },
+
+  {
+    patient_id: 5,
+    schedule_id: 16,
+    appointment_status: AppointmentStatus.CANCELLED
+  },
+
+  {
+    patient_id: 5,
+    schedule_id: 17,
+    appointment_status: AppointmentStatus.TO_CONFIRM
+  },
+
+  {
+    patient_id: 5,
+    schedule_id: 18,
+    appointment_status: AppointmentStatus.CANCELLED
+  }
 ];

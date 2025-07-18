@@ -2,7 +2,6 @@ import { z } from "zod";
 
 import { ProfessionSchema } from "@/app/profession/models/profession";
 import { RoleSchema } from "@/app/role/models/role";
-import { ServiceProviderScheme } from "@/app/service-provider/models/service-provider";
 
 export const ProfessionalSchema = z.object({
   id: z.number().positive().optional(),
@@ -14,8 +13,7 @@ export const ProfessionalSchema = z.object({
   phone: z.string(),
   email: z.string().email().optional(),
   role: RoleSchema,
-  professions: z.array(ProfessionSchema),
-  service_provider: z.optional(ServiceProviderScheme)
+  professions: z.array(ProfessionSchema)
 });
 
 export const ProfessionalForAppointmentDetailSchema = z.object({

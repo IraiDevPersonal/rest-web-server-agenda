@@ -10,7 +10,6 @@ import {
 import { CustomError } from "@/lib/custom-error";
 import { Uid } from "@/lib/uid";
 import { safeArray } from "@/lib/utils";
-import { ServiceProviderMapper } from "@/app/service-provider/mappers/service-provider-mapper";
 
 export class ProfessionalMapper {
   static validate(item: any): ProfessionalModel {
@@ -28,8 +27,7 @@ export class ProfessionalMapper {
         role: RoleMapper.validate(user?.role),
         professions: ProfessionMapper.toArray(
           item?.professional_profession ?? []
-        ),
-        service_provider: ServiceProviderMapper.validate(item?.serviceProvider)
+        )
       };
 
       return ProfessionalSchema.parse(data);

@@ -88,6 +88,7 @@ export class AppointmentService {
   }: AppointmentFilters) {
     return await this.db.appointment.findMany({
       select: {
+        id: true,
         uid: true,
         appointment_status: true,
         schedule: {
