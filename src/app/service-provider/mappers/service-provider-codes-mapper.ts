@@ -41,7 +41,7 @@ export class ServiceProviderCodesMapper {
       id: item?.id,
       code: item?.code,
       title: item?.title,
-      serviceProviderId: item?.serviceProviderId
+      service_provider_id: item?.service_provider_id
     };
   }
 }

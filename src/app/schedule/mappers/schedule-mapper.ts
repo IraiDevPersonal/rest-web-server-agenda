@@ -48,14 +48,16 @@ export class ScheduleMapper {
 
   private static mapper(item: any): ScheduleModel {
     return {
-      id: item?.id ?? null,
+      id: item?.id,
       uid: item?.uid ?? Uid.createV4(),
       professional_id: item?.professional_id ?? 0,
       date: item?.date ?? new Date(),
       time_from: item?.time_from ?? "hh:mm",
       time_to: item?.time_to ?? "hh:mm",
       is_enabled: item?.is_enabled ?? false,
-      professional: ProfessionalMapper.validate(item?.professional)
+      professional: item?.professional
+        ? ProfessionalMapper.validate(item?.professional)
+        : undefined
     };
   }
 }

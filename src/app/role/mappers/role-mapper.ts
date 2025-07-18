@@ -30,7 +30,7 @@ export class RoleMapper {
 
   private static mapper(item: any): RoleModel {
     return {
-      id: Number(item?.id),
+      id: item?.id,
       name: item?.name ?? "Rol indeterminado"
     };
   }

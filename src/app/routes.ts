@@ -3,8 +3,8 @@ import { Router } from "express";
 import { AppointmentRoutes } from "./appointment/routes";
 import { ProfessionRoutes } from "./profession/routes";
 import { ProfessionalRoutes } from "./professional/routes";
-import { SeedRoutes } from "@/features/seed/presentation/routes";
 import { PatientRoutes } from "./patient/routes";
+import { SeedRoutes } from "./seed/routes";
 
 export class Routes {
   static get routes(): Router {

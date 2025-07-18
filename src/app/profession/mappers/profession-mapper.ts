@@ -36,8 +36,8 @@ export class ProfessionMapper {
 
   private static mapper(item: any): ProfessionModel {
     return {
-      id: item?.id ?? null,
-      name: item.names ?? "profesión indeterminada"
+      id: item?.id,
+      name: item.name ?? "profesión indeterminada"
     };
   }
 }

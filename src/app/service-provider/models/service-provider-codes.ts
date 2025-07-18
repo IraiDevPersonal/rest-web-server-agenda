@@ -4,7 +4,7 @@ export const ServiceProviderCodesScheme = z.object({
   id: z.number().optional(),
   code: z.string(),
   title: z.string(),
-  serviceProviderId: z.number()
+  service_provider_id: z.number().optional()
 });
 
 export type ServiceProviderCodesModel = z.infer<

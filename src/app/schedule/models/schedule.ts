@@ -3,7 +3,7 @@ import { z } from "zod";
 import { ProfessionalSchema } from "@/app/professional/models/professional";
 
 export const ScheduleSchema = z.object({
-  id: z.optional(z.bigint().positive().nullable()),
+  id: z.number().positive().optional(),
   uid: z.optional(z.string().uuid()),
   professional_id: z.number(),
   date: z.date(),

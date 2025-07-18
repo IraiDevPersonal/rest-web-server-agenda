@@ -41,9 +41,11 @@ export class ProfessionalToFilterMapper {
     const professions = safeArray<any>(item?.professional_profession);
 
     return {
-      value: item?.id,
+      value: `${item?.id}`,
       label: `${user?.names ?? "sin nombre"} ${user?.last_names ?? "sin nombre"}`,
-      professions: professions.map((i) => i?.profession_id).filter(Boolean)
+      professions: professions
+        .map((i) => (i?.profession_id ? `${i?.profession_id}` : ""))
+        .filter(Boolean)
     };
   }
 }

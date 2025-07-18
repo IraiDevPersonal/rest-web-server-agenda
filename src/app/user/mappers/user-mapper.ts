@@ -2,6 +2,7 @@ import { type UserModel, UserSchema } from "../models/user";
 
 import { RoleMapper } from "@/app/role/mappers/role-mapper";
 import { CustomError } from "@/lib/custom-error";
+import { Uid } from "@/lib/uid";
 import { safeArray } from "@/lib/utils";
 
 export class UserMapper {
@@ -32,7 +33,7 @@ export class UserMapper {
   private static mapper(item: any): UserModel {
     return {
       email: item?.email ?? "sin correo",
-      uid: item?.uid ?? "sin uid",
+      uid: item?.uid ?? Uid.createV4(),
       rut: item?.rut ?? "sin rut",
       names: item?.names ?? "sin nombres",
       last_names: item?.last_names ?? "sin apellidos",
@@ -41,7 +42,7 @@ export class UserMapper {
       password: item?.password ?? "",
       role_id: item?.role_id ?? 0,
       role: RoleMapper.validate(item?.role),
-      id: item?.id ?? null
+      id: item?.id
     };
   }
 }

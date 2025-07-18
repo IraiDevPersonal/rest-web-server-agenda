@@ -51,7 +51,7 @@ export class AppointmentMapper {
       throw CustomError.badRequest("Id es requerida para actualizar");
     }
 
-    return { data: appointment, id: appointment.id };
+    return appointment;
   }
 
   private static validateUpsertValues(value: any) {

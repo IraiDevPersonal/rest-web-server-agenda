@@ -3,7 +3,7 @@ import { z } from "zod";
 import { RoleSchema } from "@/app/role/models/role";
 
 export const UserSchema = z.object({
-  id: z.optional(z.bigint().positive().nullable()),
+  id: z.optional(z.bigint().positive()),
   email: z.string().email(),
   is_admin: z.boolean(),
   last_names: z.string(),

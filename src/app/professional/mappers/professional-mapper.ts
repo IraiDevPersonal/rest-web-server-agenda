@@ -10,27 +10,32 @@ import {
 import { CustomError } from "@/lib/custom-error";
 import { Uid } from "@/lib/uid";
 import { safeArray } from "@/lib/utils";
+import { ServiceProviderMapper } from "@/app/service-provider/mappers/service-provider-mapper";
 
 export class ProfessionalMapper {
   static validate(item: any): ProfessionalModel {
     try {
       const user = item?.user;
       const data: ProfessionalModel = {
-        id: user?.id ?? null,
+        id: item?.id,
+        user_id: BigInt(user?.id),
         names: user?.names ?? "sin nombres",
         uid: user?.uid ?? Uid.createV4(),
         rut: user?.rut ?? "sin rut",
         last_names: user?.last_names ?? "sin apellidos",
         phone: user?.phone ?? "sin teléfono",
-        email: user?.email ?? "sin correo",
+        email: user?.email,
         role: RoleMapper.validate(user?.role),
-        professions: ProfessionMapper.toArray(item?.professional_profession)
+        professions: ProfessionMapper.toArray(
+          item?.professional_profession ?? []
+        ),
+        service_provider: ServiceProviderMapper.validate(item?.serviceProvider)
       };
 
       return ProfessionalSchema.parse(data);
     } catch (error) {
       throw CustomError.internalServer(
-        CustomError.getErrorMessage(error, "profession-mapper.ts: (validate)")
+        CustomError.getErrorMessage(error, "professional-mapper.ts: (validate)")
       );
     }
   }
