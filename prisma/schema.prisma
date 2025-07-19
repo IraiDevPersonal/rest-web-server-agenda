@@ -79,23 +79,12 @@ model schedules {
   id              BigInt        @id @default(autoincrement())
   uid             String        @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   professional_id BigInt
-  week_day        WeekDay
   date            DateTime      @db.Date
   time_from       String
   time_to         String
   is_enabled      Boolean       @default(true)
   professional    professionals @relation(fields: [professional_id], references: [id])
   appointments    appointment[]
-}
-
-enum WeekDay {
-  LUNES
-  MARTES
-  MIERCOLES
-  JUEVES
-  VIERNES
-  SABADO
-  DOMINGO
 }
 
 model patients {
@@ -122,8 +111,9 @@ model appointment {
 }
 
 enum AppointmentStatus {
-  TO_CONFIRM
-  CONFIRMED
-  CANCELLED
-  AVAILABLE
+  TO_CONFIRM    @map("to-confirm")
+  CONFIRMED     @map("confirmed")
+  CANCELLED     @map("cancelled")
+  AVAILABLE     @map("available")
+  INDETERMINATE @map("indeterminate")
 }

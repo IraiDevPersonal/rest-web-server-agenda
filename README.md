@@ -20,7 +20,6 @@
    - ejecutar `docker-compose up -d`,
    - ejecutar `npx prisma db push`
 3. una vez creada la bd con las tablas:
-
    - _appointment_
    - _appointment_status_
    - _patients_
@@ -201,3 +200,11 @@ OJO: no se valida el uid, por ende si no envias uno en un formato valido manda e
 - falta validar campos de mejor manera,
 - zod devuelve mensaje en ingles
 - devolver algo al crear usuario
+
+- se actualizo la estructura de directorios y se ordeno el codigo, ademas todas las validaciones estan pasando por zod y los modelos se infieren de los equemas de zod, en los mappers se encuentran las validaciones para las respuestas de cada endpoint
+- se agregaron las colecciones de bruno para probar los endpoints
+- los nombres de los endpoints sufrieron algunos cambios
+- aun se conservan los erroes de zod en ingles, pero aun no lo veo necesario ya que esas validaciones son de servidor, no deberian llegar al cliente (almenos en los mappers que devuelven estructuras de datos, para insersiones y actualizaciones ahi es otra cosa, ya que esos si llegarian al cliente)
+- para que es seed funcione de debe tener la variable de entorno IS_PRODUCTION=false, por defecto en config/envs este valor esta en true, asi que si no esta en el .env el seed sera detenido
+
+- cada que se agregue una tabla en la base de datos, agregar el tipo en src/types/bd-model.ts para mantener los tipos de BD (si falta alguno que no haya agregar agregar)

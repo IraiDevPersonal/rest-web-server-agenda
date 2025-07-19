@@ -1,0 +1,45 @@
+import { Request, Response } from "express";
+
+import { Controllers } from "@/lib/controllers";
+import { CustomError } from "@/lib/custom-error";
+import { ProfessionFilters } from "./models/profession-filters";
+import { ProfessionToFilterMapper } from "./mappers/profession-to-filter-mapper";
+import { ProfessionMapper } from "./mappers/profession-mapper";
+import { ProfessionService } from "./service";
+
+export class ProfessionController implements Controllers<ProfessionFilters> {
+  public constructor(private readonly service: ProfessionService) {}
+
+  public getProfessions = async (req: Request, res: Response) => {
+    try {
+      const filters = this.getFilters(req);
+      const bdProfessions = await this.service.getProfessions(filters);
+      const professions = ProfessionMapper.response(bdProfessions);
+
+      return res.json(professions);
+    } catch (error) {
+      return CustomError.handleError(error, res);
+    }
+  };
+
+  public getProfessionsToFilter = async (req: Request, res: Response) => {
+    try {
+      const filters = this.getFilters(req);
+      const bdProfessions = await this.service.getProfessions(filters);
+      const professions = ProfessionToFilterMapper.response(bdProfessions);
+
+      return res.json(professions);
+    } catch (error) {
+      return CustomError.handleError(error, res);
+    }
+  };
+
+  getFilters(request: Request) {
+    const { id } = request.query;
+
+    return {
+      id: id ? Number(id) : undefined
+      // name: name as string,
+    };
+  }
+}
