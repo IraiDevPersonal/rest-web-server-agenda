@@ -17,7 +17,8 @@ export const PatientSchema = z.object({
   email: z.string().email({ message: "Debe ser un email valido" }),
   phone: z.string().min(9, { message: "Mínimo 9 caracteres" }),
   address: z.string().min(10, { message: "Minimo 10 caracteres" }),
-  is_deleted: z.optional(z.boolean().default(false))
+  is_deleted: z.boolean().optional().default(false),
+  avatar_image: z.string().optional().nullable()
 });
 
 export const PatientForAppointmentDetailSchema = z

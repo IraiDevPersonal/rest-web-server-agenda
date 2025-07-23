@@ -1,3 +1,11 @@
+export type ResponseWithPagination<T extends object> = {
+  total: number;
+  page: number;
+  pages: number;
+  limit: number;
+  data: T[];
+};
+
 export type StrictRequired<T> = {
   [P in keyof T]-?: Exclude<T[P], undefined>;
 };
