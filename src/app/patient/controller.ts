@@ -38,7 +38,7 @@ export class PatientController implements Controllers<PatientFilters> {
   public getPatientByUid = async (
     req: Request,
     res: Response<{
-      patient: PatientModel;
+      data: PatientModel;
       appointment_history?: any[];
     }>
   ) => {
@@ -65,7 +65,7 @@ export class PatientController implements Controllers<PatientFilters> {
 
       return res.status(200).json({
         appointment_history,
-        patient
+        data: patient
       });
     } catch (error) {
       return CustomError.handleError(error, res);
