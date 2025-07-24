@@ -6,7 +6,7 @@ import { AppointmentService } from "./service";
 import { DateFormatter } from "@/lib/date-formatter";
 import { CustomError } from "@/lib/custom-error";
 import { Controllers } from "@/lib/controllers";
-import { isYearMonth } from "@lib/utils";
+import { isYearMonth } from "@/lib/utils";
 
 import type { AppointmentFilters } from "./models/appointment-filters";
 import { AppointmentMapper } from "./mappers/appointment-mapper";
