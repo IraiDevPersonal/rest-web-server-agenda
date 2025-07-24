@@ -6,22 +6,35 @@ import { PatientService } from "./service";
 
 import { CustomError } from "@/lib/custom-error";
 import { Controllers } from "@/lib/controllers";
+import { ResponseWithPagination } from "@/types/global";
+import { PatientModel } from "./models/patient";
 
 export class PatientController implements Controllers<PatientFilters> {
   public constructor(private readonly service: PatientService) {}
 
-  public getPatients = async (req: Request, res: Response) => {
+  public getPatients = async (
+    req: Request,
+    res: Response<ResponseWithPagination<PatientModel>>
+  ) => {
     try {
       const filters = this.getFilters(req);
-      const bdPatients = await this.service.getPatients(filters);
+      const { data: bdPatients, ...pagination } =
+        await this.service.getPatients(filters);
       const patients = PatientMapper.response(bdPatients);
 
-      return res.status(200).json(patients);
+      return res.status(200).json({
+        total: pagination.total,
+        page: pagination.page,
+        pages: pagination.pages,
+        limit: pagination.limit,
+        data: patients
+      });
     } catch (error) {
       return CustomError.handleError(error, res);
     }
   };
 
+  // TODO: agregar avatar_image
   public create = async (req: Request, res: Response) => {
     try {
       const patient = req.patient!;
@@ -53,6 +66,7 @@ export class PatientController implements Controllers<PatientFilters> {
     }
   };
 
+  // TODO: agregar avatar_image
   public update = async (req: Request, res: Response) => {
     try {
       const uid = req.params.uid!;
@@ -115,13 +129,17 @@ export class PatientController implements Controllers<PatientFilters> {
   };
 
   public getFilters(req: Request) {
-    const { rut, names, last_names, email } = req.query;
+    const { rut, name, email, status, page = "1", limit = "10" } = req.query;
 
     return {
       rut: rut as string | undefined,
-      names: names as string | undefined,
-      last_names: last_names as string | undefined,
-      email: email as string | undefined
+      name: name as string | undefined,
+      email: email as string | undefined,
+      is_deleted: status
+        ? status === "inactive"
+        : (undefined as boolean | undefined),
+      page: !isNaN(Number(page)) && Number(page) > 0 ? Number(page) : 1,
+      limit: !isNaN(Number(limit)) && Number(limit) > 0 ? Number(limit) : 10
     };
   }
 }

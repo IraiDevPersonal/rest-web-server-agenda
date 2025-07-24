@@ -1,6 +1,7 @@
-import { PatientMapper } from "@patients/domain/mappers/patient_Mapper";
 import { PrismaClient } from "@prisma/client";
 import { PatientFilters } from "./models/patient-filters";
+import { PatientModel } from "./models/patient";
+import { ResponseWithPagination } from "@/types/global";
 
 export class PatientService {
   private readonly db: PrismaClient;
@@ -9,39 +10,67 @@ export class PatientService {
     this.db = new PrismaClient();
   }
 
-  async getPatients(filters: PatientFilters) {
-    return await this.db.patients.findMany({
-      select: {
-        uid: true,
-        email: true,
-        rut: true,
-        names: true,
-        last_names: true,
-        phone: true,
-        address: true
+  async getPatients({
+    page = 1,
+    limit = 10,
+    ...filters
+  }: PatientFilters): Promise<ResponseWithPagination<any>> {
+    const skip = (page - 1) * limit;
+
+    const whereClause: any = {
+      rut: {
+        equals: filters.rut,
+        mode: "insensitive"
       },
-      where: {
-        rut: {
-          equals: filters.rut,
-          mode: "insensitive"
-        },
-        names: {
-          contains: filters.names,
-          mode: "insensitive"
-        },
-        last_names: {
-          contains: filters.last_names,
-          mode: "insensitive"
-        },
-        email: {
-          contains: filters.email,
-          mode: "insensitive"
-        }
+      ...(filters.name
+        ? {
+            OR: [
+              {
+                names: { contains: filters.name.trim(), mode: "insensitive" }
+              },
+              {
+                last_names: {
+                  contains: filters.name.trim(),
+                  mode: "insensitive"
+                }
+              }
+            ]
+          }
+        : {}),
+      email: {
+        contains: filters.email,
+        mode: "insensitive"
       },
-      orderBy: {
-        last_names: "asc"
+      is_deleted: {
+        equals: filters.is_deleted
       }
-    });
+    };
+
+    const [total, patients] = await this.db.$transaction([
+      this.db.patients.count({ where: whereClause }),
+      this.db.patients.findMany({
+        select: {
+          uid: true,
+          email: true,
+          rut: true,
+          names: true,
+          last_names: true,
+          phone: true,
+          address: true,
+          is_deleted: true
+        },
+        where: whereClause,
+        orderBy: {
+          last_names: "asc"
+        },
+        take: limit,
+        skip
+      })
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return { data: patients, total, page, pages: totalPages, limit };
   }
 
   async findByRutOrEmail(rut: string, email: string, notId?: bigint) {
@@ -68,7 +97,7 @@ export class PatientService {
     });
   }
 
-  async create(patient: PatientMapper) {
+  async create(patient: PatientModel) {
     const patientCreated = await this.db.patients.create({
       data: {
         rut: patient.rut,

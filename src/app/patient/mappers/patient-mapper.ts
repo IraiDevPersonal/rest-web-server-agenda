@@ -116,7 +116,8 @@ export class PatientMapper {
       email: bdPatient.email,
       phone: bdPatient.phone,
       address: bdPatient.address,
-      is_deleted: bdPatient.is_deleted
+      is_deleted: bdPatient.is_deleted,
+      avatar_image: null // agregar avatar para usuarios en general
     };
   }
 }
