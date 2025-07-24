@@ -17,7 +17,7 @@ export const ProfessionalSchema = z.object({
 });
 
 export const ProfessionalForAppointmentDetailSchema = z.object({
-  full_name: z.string(),
+  fullname: z.string(),
   professions: z.array(z.string()),
   pay_methods: z.array(z.string()),
   confirm_methods: z.array(z.string())

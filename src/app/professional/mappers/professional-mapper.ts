@@ -62,7 +62,7 @@ export class ProfessionalMapper {
         (p) => p.professions.name
       );
       const data: ProfessionalForAppointmentDetailModel = {
-        full_name: `${user.names} ${user.last_names}`,
+        fullname: `${user.names} ${user.last_names}`,
         professions: professions,
         pay_methods: ["fonasa", "particular (Efectivo, Transferencia)"],
         confirm_methods: ["whatsapp", "teléfono", "correo", "presencial"]

@@ -27,7 +27,7 @@ type BdAppointmentWithSchedule = BdAppointment<{
 }>;
 
 export class PatientMapper {
-  static validate(item: any): PatientModel {
+  static validate(item: BdPatient): PatientModel {
     try {
       const data = PatientMapper.mapper(item);
       return PatientSchema.parse(data);
@@ -38,7 +38,7 @@ export class PatientMapper {
     }
   }
 
-  static response(item: any): PatientModel[] {
+  static response(item: BdPatient[]): PatientModel[] {
     return safeArray(item, {
       errorMessage: "patient-mapper.ts (response): se espera un array"
     }).map(PatientMapper.validate);

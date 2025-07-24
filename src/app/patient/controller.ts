@@ -8,6 +8,7 @@ import { CustomError } from "@/lib/custom-error";
 import { Controllers } from "@/lib/controllers";
 import { ResponseWithPagination } from "@/types/global";
 import { PatientModel } from "./models/patient";
+import { ExpandPatientTypes } from "./models";
 
 export class PatientController implements Controllers<PatientFilters> {
   public constructor(private readonly service: PatientService) {}
@@ -28,6 +29,43 @@ export class PatientController implements Controllers<PatientFilters> {
         pages: pagination.pages,
         limit: pagination.limit,
         data: patients
+      });
+    } catch (error) {
+      return CustomError.handleError(error, res);
+    }
+  };
+
+  public getPatientByUid = async (
+    req: Request,
+    res: Response<{
+      patient: PatientModel;
+      appointment_history?: any[];
+    }>
+  ) => {
+    try {
+      const uid = req.params.uid;
+      const expand = req.query.expand as ExpandPatientTypes[] | undefined;
+
+      const bdPatient = await this.service.findByUid(uid, {
+        omit: {
+          id: !expand?.includes("id")
+        }
+      });
+
+      if (!bdPatient) {
+        throw CustomError.badRequest(
+          `Paciente con Uid: (${uid}) no encontrado`
+        );
+      }
+
+      const patient = PatientMapper.validate(bdPatient);
+      const appointment_history = expand?.includes("appointment_history")
+        ? []
+        : undefined;
+
+      return res.status(200).json({
+        appointment_history,
+        patient
       });
     } catch (error) {
       return CustomError.handleError(error, res);

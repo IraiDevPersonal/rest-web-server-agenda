@@ -3,8 +3,38 @@ import { NextFunction, Request, Response } from "express";
 import { CustomError } from "@/lib/custom-error";
 import { RutManager } from "@/lib/rut-manager";
 import { PatientSchema } from "../models/patient";
+import { ExpandPatientTypes } from "../models";
 
 export class PatientMiddleware {
+  static queryExpandValidation(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const expand = req.query.expand;
+
+      if (expand) {
+        const allowedExpands: ExpandPatientTypes[] = [
+          "id",
+          "appointment_history"
+        ];
+        const expandArray = Array.isArray(expand) ? expand : [expand];
+
+        for (const item of expandArray) {
+          if (!allowedExpands.includes(item as any)) {
+            throw CustomError.badRequest(
+              `El parametro recibido en "expand" '${item}' no es soportado.`
+            );
+          }
+        }
+      }
+      next();
+    } catch (error) {
+      return CustomError.handleError(error, res);
+    }
+  }
+
   static insertValidation(req: Request, res: Response, next: NextFunction) {
     try {
       const { rut, names, last_names, email, phone, address } = req.body;

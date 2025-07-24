@@ -1,7 +1,8 @@
-import { PrismaClient } from "@prisma/client";
-import { PatientFilters } from "./models/patient-filters";
-import { PatientModel } from "./models/patient";
 import { ResponseWithPagination } from "@/types/global";
+import { Prisma, PrismaClient } from "@prisma/client";
+import { DefaultArgs } from "@prisma/client/runtime/library";
+import { PatientModel } from "./models/patient";
+import { PatientFilters } from "./models/patient-filters";
 
 export class PatientService {
   private readonly db: PrismaClient;
@@ -79,8 +80,14 @@ export class PatientService {
     });
   }
 
-  async findByUid(uid: string) {
-    return await this.db.patients.findUnique({ where: { uid: uid } });
+  async findByUid(
+    uid: string,
+    options?: Prisma.patientsDefaultArgs<DefaultArgs>
+  ) {
+    return await this.db.patients.findUnique({
+      ...options,
+      where: { uid: uid }
+    });
   }
 
   async update(patientLike: Record<string, any>, id: bigint) {
