@@ -1,6 +1,6 @@
 import {
-  PatientForAppointmentDetailSchema,
-  PatientHistoryForAppointmentDetailSchema
+  PatientHistoryForAppointmentDetailSchema,
+  PatientSchema
 } from "@/app/patient/models/patient";
 import { ProfessionalForAppointmentDetailSchema } from "@/app/professional/models/professional";
 import { AppointmentStatus } from "@prisma/client";
@@ -20,7 +20,9 @@ export const AppointmentDetailSchema = z.object({
   status: z.nativeEnum(AppointmentStatus),
   patient_history: z.array(PatientHistoryForAppointmentDetailSchema),
   professional: ProfessionalForAppointmentDetailSchema,
-  patient: PatientForAppointmentDetailSchema,
+  patient: PatientSchema.omit({
+    is_deleted: true
+  }).nullable(),
   alert: AlertAppointmentDetailMapperSchema
 });
 

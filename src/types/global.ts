@@ -6,6 +6,11 @@ export type ResponseWithPagination<T extends object> = {
   data: T[];
 };
 
+export type UpsertResponse<T extends object> = {
+  data?: T;
+  message: string;
+};
+
 export type StrictRequired<T> = {
   [P in keyof T]-?: Exclude<T[P], undefined>;
 };

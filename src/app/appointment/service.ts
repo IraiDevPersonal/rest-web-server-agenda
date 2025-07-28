@@ -42,13 +42,10 @@ export class AppointmentService {
           }
         },
         patient: {
-          select: {
-            names: true,
-            last_names: true,
-            rut: true,
-            phone: true,
-            email: true,
-            address: true,
+          omit: {
+            id: true
+          },
+          include: {
             appointments: {
               orderBy: {
                 schedule: {

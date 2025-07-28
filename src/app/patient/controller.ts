@@ -6,7 +6,7 @@ import { PatientService } from "./service";
 
 import { CustomError } from "@/lib/custom-error";
 import { Controllers } from "@/lib/controllers";
-import { ResponseWithPagination } from "@/types/global";
+import { ResponseWithPagination, UpsertResponse } from "@/types/global";
 import { PatientModel } from "./models/patient";
 import { ExpandPatientTypes } from "./models";
 
@@ -72,17 +72,19 @@ export class PatientController implements Controllers<PatientFilters> {
     }
   };
 
-  // TODO: agregar avatar_image
-  public create = async (req: Request, res: Response) => {
+  public create = async (
+    req: Request,
+    res: Response<UpsertResponse<PatientModel>>
+  ) => {
     try {
       const patient = req.patient!;
 
-      const rutAndEmail = await this.service.findByRutOrEmail(
+      const rutOrEmail = await this.service.findByRutOrEmail(
         patient.rut,
         patient.email
       );
 
-      if (rutAndEmail) {
+      if (rutOrEmail) {
         throw CustomError.badRequest(
           `Paciente con rut (${patient.rut}) o email (${patient.email}) ya existe`
         );
@@ -98,14 +100,19 @@ export class PatientController implements Controllers<PatientFilters> {
         is_deleted: false
       });
 
-      return res.status(201).json(PatientMapper.validate(createdPatient));
+      return res.status(201).json({
+        message: "Paciente creado correctamente",
+        data: PatientMapper.validate(createdPatient)
+      });
     } catch (error) {
       return CustomError.handleError(error, res);
     }
   };
 
-  // TODO: agregar avatar_image
-  public update = async (req: Request, res: Response) => {
+  public update = async (
+    req: Request,
+    res: Response<UpsertResponse<PatientModel>>
+  ) => {
     try {
       const uid = req.params.uid!;
       const { rut, names, last_names, email, phone, address } = req.body;
@@ -139,9 +146,15 @@ export class PatientController implements Controllers<PatientFilters> {
         address
       };
 
-      await this.service.update(payload, findedPatient.id);
+      const updatedPatient = await this.service.update(
+        payload,
+        findedPatient.id
+      );
 
-      return res.status(200).json();
+      return res.status(200).json({
+        message: "Paciente actualizado correctamente",
+        data: PatientMapper.validate(updatedPatient)
+      });
     } catch (error) {
       return CustomError.handleError(error, res);
     }

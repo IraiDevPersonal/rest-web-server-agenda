@@ -1,8 +1,6 @@
 import {
-  PatientForAppointmentDetailSchema,
   PatientHistoryForAppointmentDetailSchema,
   PatientSchema,
-  type PatientForAppointmentDetailModel,
   type PatientHistoryForAppointmentDetailModel,
   type PatientModel
 } from "../models/patient";
@@ -42,34 +40,6 @@ export class PatientMapper {
     return safeArray(item, {
       errorMessage: "patient-mapper.ts (response): se espera un array"
     }).map(PatientMapper.validate);
-  }
-
-  static validatePatientForAppointmentDetail(
-    item: BdPatient | null
-  ): PatientForAppointmentDetailModel {
-    try {
-      let data: PatientForAppointmentDetailModel = null;
-
-      if (item) {
-        data = {
-          names: item.names,
-          last_names: item.last_names,
-          rut: item.rut,
-          phone: item.phone,
-          email: item.email,
-          address: item.address
-        };
-      }
-
-      return PatientForAppointmentDetailSchema.parse(data);
-    } catch (error) {
-      throw CustomError.internalServer(
-        CustomError.getErrorMessage(
-          error,
-          "patient-mapper.ts: (validatePatienForAppointmentDetail)"
-        )
-      );
-    }
   }
 
   static validatePatientHistoryForAppointmentDetail(

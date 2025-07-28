@@ -91,7 +91,7 @@ export class AppointmentDetailMapper {
       patient_history: PatientMapper.patientHistoryToArray(
         patient?.appointments ?? []
       ),
-      patient: PatientMapper.validatePatientForAppointmentDetail(patient),
+      patient: patient ? PatientMapper.validate(patient) : null,
       alert: AlertAppointmentMapper.validate(undefined)
     };
   }

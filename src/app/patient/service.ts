@@ -76,7 +76,8 @@ export class PatientService {
 
   async findByRutOrEmail(rut: string, email: string, notId?: bigint) {
     return await this.db.patients.findFirst({
-      where: { OR: [{ email, rut }], NOT: { id: notId } }
+      select: { id: true },
+      where: { OR: [{ rut: rut }, { email: email }], NOT: { id: notId } }
     });
   }
 
@@ -91,7 +92,7 @@ export class PatientService {
   }
 
   async update(patientLike: Record<string, any>, id: bigint) {
-    await this.db.patients.update({
+    return await this.db.patients.update({
       where: { id: id },
       data: {
         rut: patientLike.rut,

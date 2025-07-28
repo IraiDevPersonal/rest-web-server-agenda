@@ -48,6 +48,7 @@ export class PatientMiddleware {
         address
       });
 
+      console.log(patient);
       req.patient = patient;
 
       next();
