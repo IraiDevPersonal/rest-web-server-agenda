@@ -91,16 +91,17 @@ export class PatientService {
     });
   }
 
-  async update(patientLike: Record<string, any>, id: bigint) {
+  async update(patientLike: Record<string, any>, uid: string) {
     return await this.db.patients.update({
-      where: { id: id },
+      where: { uid: uid },
       data: {
         rut: patientLike.rut,
         names: patientLike.names,
         last_names: patientLike.last_names,
         email: patientLike.email,
         phone: patientLike.phone,
-        address: patientLike.address
+        address: patientLike.address,
+        is_deleted: patientLike.is_deleted ?? false
       }
     });
   }

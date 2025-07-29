@@ -13,7 +13,7 @@ import { ExpandPatientTypes } from "./models";
 export class PatientController implements Controllers<PatientFilters> {
   public constructor(private readonly service: PatientService) {}
 
-  public getPatients = async (
+  public getAll = async (
     req: Request,
     res: Response<ResponseWithPagination<PatientModel>>
   ) => {
@@ -35,7 +35,7 @@ export class PatientController implements Controllers<PatientFilters> {
     }
   };
 
-  public getPatientByUid = async (
+  public getByUid = async (
     req: Request,
     res: Response<{
       data: PatientModel;
@@ -148,7 +148,7 @@ export class PatientController implements Controllers<PatientFilters> {
 
       const updatedPatient = await this.service.update(
         payload,
-        findedPatient.id
+        findedPatient.uid
       );
 
       return res.status(200).json({
@@ -160,20 +160,31 @@ export class PatientController implements Controllers<PatientFilters> {
     }
   };
 
-  public delete = async (req: Request, res: Response) => {
+  public toggleStatus = async (
+    req: Request,
+    res: Response<UpsertResponse<PatientModel>>
+  ) => {
     const uid = req.params.uid!;
 
     try {
       const findedPatient = await this.service.findByUid(uid);
       if (!findedPatient) {
         throw CustomError.badRequest(
-          `Paciente con identificacion (${uid}) no encontrado`
+          `No se ha encontrado el paciente con UID: (${uid})`
         );
       }
 
-      await this.service.update({ is_deleted: true }, findedPatient.id);
+      const updatedPatient = await this.service.update(
+        { is_deleted: !findedPatient.is_deleted },
+        findedPatient.uid
+      );
 
-      return res.status(204).json();
+      return res.status(200).json({
+        message: `Se ha cambiado el estado del paciente a ${
+          updatedPatient.is_deleted ? "inactivo" : "activo"
+        }`,
+        data: PatientMapper.validate(updatedPatient)
+      });
     } catch (error) {
       return CustomError.handleError(error, res);
     }

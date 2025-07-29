@@ -12,14 +12,14 @@ export class PatientRoutes {
     const service = new PatientService();
     const controller = new PatientController(service);
 
-    router.get("/", [], controller.getPatients);
+    router.get("/", [], controller.getAll);
     router.get(
       "/:uid",
       [
         UidValidatorMiddleware.validate,
         PatientMiddleware.queryExpandValidation
       ],
-      controller.getPatientByUid
+      controller.getByUid
     );
 
     router.post("/", [PatientMiddleware.insertValidation], controller.create);
@@ -30,10 +30,10 @@ export class PatientRoutes {
       controller.update
     );
 
-    router.delete(
+    router.patch(
       "/:uid",
       [UidValidatorMiddleware.validate],
-      controller.delete
+      controller.toggleStatus
     );
 
     return router;
