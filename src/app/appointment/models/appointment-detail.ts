@@ -3,7 +3,7 @@ import {
   PatientHistoryForAppointmentDetailSchema
 } from "@/app/patient/models/patient";
 import { ProfessionalForAppointmentDetailSchema } from "@/app/professional/models/professional";
-import { AppointmentStatus } from "@prisma/client";
+import { ScheduleStatus } from "@prisma/client";
 import { z } from "zod";
 
 export const AlertAppointmentDetailMapperSchema = z.object({
@@ -17,7 +17,7 @@ export const AppointmentDetailSchema = z.object({
   time_from: z.string(),
   time_to: z.string(),
   is_enabled: z.boolean(),
-  status: z.nativeEnum(AppointmentStatus),
+  status: z.nativeEnum(ScheduleStatus),
   patient_history: z.array(PatientHistoryForAppointmentDetailSchema),
   professional: ProfessionalForAppointmentDetailSchema,
   patient: PatientForAppointmentDetailSchema,

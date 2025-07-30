@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { AppointmentStatus } from "@prisma/client";
+import { ScheduleStatus } from "@prisma/client";
 
 import { AppointmentService } from "./service";
 
@@ -77,7 +77,7 @@ export class AppointmentController implements Controllers<AppointmentFilters> {
       professional_id: professional_id ? Number(professional_id) : undefined,
       profession_id: profession_id ? Number(profession_id) : undefined,
       patient_rut: patient_rut as string,
-      type: type as AppointmentStatus,
+      type: type as ScheduleStatus,
       date_from: queryDateFrom,
       date_to: queryDateTo,
       date: queryDate

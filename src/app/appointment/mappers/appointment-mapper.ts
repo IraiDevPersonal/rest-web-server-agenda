@@ -6,31 +6,27 @@ import {
 import { CustomError } from "@/lib/custom-error";
 import { DateFormatter } from "@/lib/date-formatter";
 import { safeArray } from "@/lib/utils";
-import { BdAppointment } from "@/types/bd-model";
+import { BdSchedule } from "@/types/bd-model";
 
-type BdAppointmentScheduleAndProfessions = BdAppointment<{
+type BdAppointmentScheduleAndProfessions = BdSchedule<{
   include: {
-    schedule: {
+    patient: true;
+    professional: {
+      select: {
+        user: true;
+      };
       include: {
-        professional: {
-          select: {
-            user: true;
-          };
+        professional_profession: {
           include: {
-            professional_profession: {
-              include: {
-                professions: {
-                  select: {
-                    name: true;
-                  };
-                };
+            professions: {
+              select: {
+                name: true;
               };
             };
           };
         };
       };
     };
-    patient: true;
   };
 }>;
 
@@ -55,54 +51,23 @@ export class AppointmentMapper {
   private static mapper(
     item: BdAppointmentScheduleAndProfessions
   ): AppointmentModel {
-    const schedule = item.schedule;
     const patient = item.patient;
-    const professional = schedule.professional;
+    const professional = item.professional;
     const professions = professional.professional_profession.map(
       (p) => p.professions.name
     );
 
     return {
       uid: item.uid,
-      time_from: schedule.time_from,
-      time_to: schedule.time_to,
+      time_from: item.time_from,
+      time_to: item.time_to,
       patient_rut: patient?.rut ?? null,
       patient_phone: patient?.phone ?? null,
       patient_name: patient ? `${patient.names} ${patient.last_names}` : null,
       professional_name: `${professional.user.names} ${professional.user.last_names}`,
-      date: DateFormatter.formatDate(schedule.date, "ymd"),
-      appointment_status: item.appointment_status,
+      date: DateFormatter.formatDate(item.date, "ymd"),
+      appointment_status: item.schedule_status,
       professions
     };
   }
-
-  // static upsertDTO(
-  //   object: UpsertAppointmentValues,
-  //   action: "create" | "update"
-  // ) {
-  //   const appointment = AppointmentMapper.validateUpsertValues(object);
-
-  //   if (action === "create") {
-  //     delete appointment.id;
-  //   }
-
-  //   if (action === "update" && !appointment.id) {
-  //     throw CustomError.badRequest("Id es requerida para actualizar");
-  //   }
-
-  //   return appointment;
-  // }
-
-  // private static validateUpsertValues(value: any) {
-  //   try {
-  //     return UpsertAppointmentSchema.parse(value);
-  //   } catch (error) {
-  //     throw CustomError.internalServer(
-  //       CustomError.getErrorMessage(
-  //         error,
-  //         "appointment-mapper.ts: (validateValues)"
-  //       )
-  //     );
-  //   }
-  // }
 }

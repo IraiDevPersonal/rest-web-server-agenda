@@ -1,8 +1,8 @@
 import { UndefinedObject } from "@/types/global";
-import { AppointmentStatus } from "@prisma/client";
+import { ScheduleStatus } from "@prisma/client";
 
 export type AppointmentFilters = UndefinedObject<{
-  type: AppointmentStatus;
+  type: ScheduleStatus;
   professional_id: number;
   profession_id: number;
   patient_rut: string;

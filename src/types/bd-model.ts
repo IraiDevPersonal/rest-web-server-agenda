@@ -1,10 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { DefaultArgs } from "@prisma/client/runtime/library";
 
-export type BdAppointment<
-  T extends Prisma.appointmentDefaultArgs<DefaultArgs> = {}
-> = Prisma.appointmentGetPayload<T>;
-
 export type BdProfession<
   T extends Prisma.professionsDefaultArgs<DefaultArgs> = {}
 > = Prisma.professionsGetPayload<T>;

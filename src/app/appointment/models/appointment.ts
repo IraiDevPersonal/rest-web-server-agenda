@@ -1,4 +1,4 @@
-import { AppointmentStatus } from "@prisma/client";
+import { ScheduleStatus } from "@prisma/client";
 import { z } from "zod";
 
 export const AppointmentSchema = z.object({
@@ -10,7 +10,7 @@ export const AppointmentSchema = z.object({
   patient_rut: z.string().nullable(),
   patient_phone: z.string().nullable(),
   professional_name: z.string(),
-  appointment_status: z.nativeEnum(AppointmentStatus),
+  appointment_status: z.nativeEnum(ScheduleStatus),
   professions: z.array(z.string())
 });
 
@@ -23,8 +23,8 @@ export const UpsertAppointmentSchema = z.object({
   schedule_id: z
     .number()
     .positive("El ID del horario debe ser un número positivo"),
-  appointment_status: z.nativeEnum(AppointmentStatus, {
-    message: "status inválido"
+  appointment_status: z.nativeEnum(ScheduleStatus, {
+    message: "Estado de la cita inválida"
   })
 });
 

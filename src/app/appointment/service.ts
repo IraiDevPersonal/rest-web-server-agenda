@@ -9,34 +9,30 @@ export class AppointmentService {
   }
 
   async getAppointmentDetail(appointment_uid: string) {
-    return await this.db.appointment.findFirst({
+    return await this.db.schedules.findFirst({
       select: {
         uid: true,
-        appointment_status: true,
-        schedule: {
+        schedule_status: true,
+        date: true,
+        time_from: true,
+        time_to: true,
+        is_enabled: true,
+        professional: {
           select: {
-            date: true,
-            time_from: true,
-            time_to: true,
-            is_enabled: true,
-            professional: {
+            professional_profession: {
               select: {
-                professional_profession: {
+                professions: {
                   select: {
-                    professions: {
-                      select: {
-                        name: true
-                      }
-                    }
-                  }
-                },
-                user: {
-                  select: {
-                    names: true,
-                    last_names: true,
-                    rut: true
+                    name: true
                   }
                 }
+              }
+            },
+            user: {
+              select: {
+                names: true,
+                last_names: true,
+                rut: true
               }
             }
           }
@@ -51,21 +47,15 @@ export class AppointmentService {
             address: true,
             appointments: {
               orderBy: {
-                schedule: {
-                  date: "desc"
-                }
+                date: "desc"
               },
               take: 4,
               select: {
                 uid: true,
-                appointment_status: true,
-                schedule: {
-                  select: {
-                    date: true,
-                    time_from: true,
-                    time_to: true
-                  }
-                }
+                schedule_status: true,
+                date: true,
+                time_from: true,
+                time_to: true
               }
             }
           }
@@ -86,29 +76,25 @@ export class AppointmentService {
     date,
     type
   }: AppointmentFilters) {
-    return await this.db.appointment.findMany({
+    return await this.db.schedules.findMany({
       select: {
         id: true,
         uid: true,
-        appointment_status: true,
-        schedule: {
+        schedule_status: true,
+        date: true,
+        time_from: true,
+        time_to: true,
+        professional: {
           select: {
-            date: true,
-            time_from: true,
-            time_to: true,
-            professional: {
+            user: {
               select: {
-                user: {
-                  select: {
-                    names: true,
-                    last_names: true
-                  }
-                },
-                professional_profession: {
-                  select: {
-                    professions: true
-                  }
-                }
+                names: true,
+                last_names: true
+              }
+            },
+            professional_profession: {
+              select: {
+                professions: true
               }
             }
           }
@@ -123,37 +109,29 @@ export class AppointmentService {
         }
       },
       where: {
-        appointment_status: type,
-        schedule: {
-          date: date ?? {
-            gte: date_from,
-            lte: date_to
-          },
-
-          professional_id: professional_id,
-          professional: {
-            professional_profession: {
-              some: {
-                profession_id: profession_id
-              }
+        schedule_status: type,
+        date: date ?? {
+          gte: date_from,
+          lte: date_to
+        },
+        professional_id: professional_id,
+        professional: {
+          professional_profession: {
+            some: {
+              profession_id: profession_id
             }
           }
         },
-
         patient: {
           rut: { contains: patient_rut }
         }
       },
       orderBy: [
         {
-          schedule: {
-            date: "asc"
-          }
+          date: "asc"
         },
         {
-          schedule: {
-            time_from: "asc"
-          }
+          time_from: "asc"
         }
       ]
     });

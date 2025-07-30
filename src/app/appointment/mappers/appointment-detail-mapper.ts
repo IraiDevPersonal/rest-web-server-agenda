@@ -8,44 +8,36 @@ import { AlertAppointmentMapper } from "./alert-appointment-mapper";
 
 import { CustomError } from "@/lib/custom-error";
 import { DateFormatter } from "@/lib/date-formatter";
-import { BdAppointment } from "@/types/bd-model";
+import { BdSchedule } from "@/types/bd-model";
 
-type BdAppointmentDetail = BdAppointment<{
+type BdAppointmentDetail = BdSchedule<{
   include: {
     patient: {
       include: {
         appointments: {
-          include: {
+          select: {
             uid: true;
-            appointment_status: true;
-            schedule: {
-              select: {
-                date: true;
-                time_from: true;
-                time_to: true;
-              };
-            };
+            schedule_status: true;
+            date: true;
+            time_from: true;
+            time_to: true;
           };
         };
       };
     };
-    schedule: {
+    professional: {
       include: {
-        professional: {
+        user: {
           include: {
-            user: {
-              include: {
-                role: true;
-              };
-            };
-            professional_profession: {
+            role: true;
+          };
+        };
+        professional_profession: {
+          select: {
+            professions: {
               select: {
-                professions: {
-                  select: {
-                    id: true;
-                    name: true;
-                  };
-                };
+                id: true;
+                name: true;
               };
             };
           };
@@ -75,18 +67,17 @@ export class AppointmentDetailMapper {
   }
 
   private static mapper(item: BdAppointmentDetail): AppointmentDetailModel {
-    const schedule = item.schedule;
     const patient = item.patient;
 
     return {
       uid: item.uid,
-      date: DateFormatter.formatDate(schedule.date, "ymd"),
-      time_from: schedule.time_from,
-      time_to: schedule.time_to,
-      is_enabled: schedule.is_enabled,
-      status: item.appointment_status,
+      date: DateFormatter.formatDate(item.date, "ymd"),
+      time_from: item.time_from,
+      time_to: item.time_to,
+      is_enabled: item.is_enabled,
+      status: item.schedule_status,
       professional: ProfessionalMapper.validateProfessionalForAppointmentDetail(
-        schedule.professional
+        item.professional
       ),
       patient_history: PatientMapper.patientHistoryToArray(
         patient?.appointments ?? []

@@ -76,41 +76,33 @@ model users {
 }
 
 model schedules {
-  id              BigInt        @id @default(autoincrement())
-  uid             String        @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id              BigInt         @id @default(autoincrement())
+  uid             String         @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   professional_id BigInt
-  date            DateTime      @db.Date
+  date            DateTime       @db.Date
   time_from       String
   time_to         String
-  is_enabled      Boolean       @default(true)
-  professional    professionals @relation(fields: [professional_id], references: [id])
-  appointments    appointment[]
+  patient_id      BigInt?
+  is_enabled      Boolean        @default(true)
+  professional    professionals  @relation(fields: [professional_id], references: [id])
+  schedule_status ScheduleStatus @default(AVAILABLE)
+  patient         patients?      @relation(fields: [patient_id], references: [id])
 }
 
 model patients {
-  id           BigInt        @id @default(autoincrement())
-  uid          String        @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  rut          String        @unique
+  id           BigInt      @id @default(autoincrement())
+  uid          String      @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  rut          String      @unique
   names        String
   last_names   String
-  email        String        @unique
+  email        String      @unique
   phone        String
-  address      String        @default("")
-  is_deleted   Boolean       @default(false)
-  appointments appointment[]
+  address      String      @default("")
+  is_deleted   Boolean     @default(false)
+  appointments schedules[]
 }
 
-model appointment {
-  id                 BigInt            @id @default(autoincrement())
-  uid                String            @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  patient_id         BigInt?
-  schedule_id        BigInt            @unique
-  appointment_status AppointmentStatus
-  schedule           schedules         @relation(fields: [schedule_id], references: [id])
-  patient            patients?         @relation(fields: [patient_id], references: [id])
-}
-
-enum AppointmentStatus {
+enum ScheduleStatus {
   TO_CONFIRM    @map("to-confirm")
   CONFIRMED     @map("confirmed")
   CANCELLED     @map("cancelled")
