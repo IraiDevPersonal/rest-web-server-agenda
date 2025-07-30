@@ -74,17 +74,22 @@ export class PatientService {
     return { data: patients, total, page, pages: totalPages, limit };
   }
 
-  async findByRutOrEmail(rut: string, email: string, notId?: bigint) {
+  async findByRutOrEmail({
+    email,
+    rut,
+    id
+  }: {
+    rut?: string;
+    email?: string;
+    id?: bigint;
+  }) {
     return await this.db.patients.findFirst({
-      select: { id: true },
-      where: { OR: [{ rut: rut }, { email: email }], NOT: { id: notId } }
+      select: { id: !!id, rut: !!rut, email: !!email },
+      where: { OR: [{ rut: rut }, { email: email }], NOT: { id: id } }
     });
   }
 
-  async findByUid(
-    uid: string,
-    options?: Prisma.patientsDefaultArgs<DefaultArgs>
-  ) {
+  async findByUid(uid: string, options?: Prisma.patientsDefaultArgs<DefaultArgs>) {
     return await this.db.patients.findUnique({
       ...options,
       where: { uid: uid }

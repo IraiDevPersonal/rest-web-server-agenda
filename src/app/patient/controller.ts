@@ -1,16 +1,15 @@
 import { Request, Response } from "express";
 
-import { type PatientFilters } from "./models/patient-filters";
 import { PatientMapper } from "./mappers/patient-mapper";
 import { PatientService } from "./service";
 
 import { CustomError } from "@/lib/custom-error";
-import { Controllers } from "@/lib/controllers";
 import { ResponseWithPagination, UpsertResponse } from "@/types/global";
+import { PatientFiltersMapper } from "./mappers/patient-filters-mapper";
 import { PatientModel } from "./models/patient";
-import { ExpandPatientTypes } from "./models";
+import { PatientValidations } from "./validations/patient-validations";
 
-export class PatientController implements Controllers<PatientFilters> {
+export class PatientController {
   public constructor(private readonly service: PatientService) {}
 
   public getAll = async (
@@ -18,16 +17,12 @@ export class PatientController implements Controllers<PatientFilters> {
     res: Response<ResponseWithPagination<PatientModel>>
   ) => {
     try {
-      const filters = this.getFilters(req);
-      const { data: bdPatients, ...pagination } =
-        await this.service.getPatients(filters);
+      const filters = PatientFiltersMapper.getFilters(req);
+      const { data: bdPatients, ...pagination } = await this.service.getPatients(filters);
       const patients = PatientMapper.response(bdPatients);
 
       return res.status(200).json({
-        total: pagination.total,
-        page: pagination.page,
-        pages: pagination.pages,
-        limit: pagination.limit,
+        ...pagination,
         data: patients
       });
     } catch (error) {
@@ -38,30 +33,19 @@ export class PatientController implements Controllers<PatientFilters> {
   public getByUid = async (
     req: Request,
     res: Response<{
-      data: PatientModel;
       appointment_history?: any[];
+      data: PatientModel;
     }>
   ) => {
     try {
       const uid = req.params.uid;
-      const expand = req.query.expand as ExpandPatientTypes[] | undefined;
-
-      const bdPatient = await this.service.findByUid(uid, {
-        omit: {
-          id: !expand?.includes("id")
-        }
+      let bdPatient = await this.service.findByUid(uid, {
+        omit: { id: PatientValidations.withId(req) }
       });
 
-      if (!bdPatient) {
-        throw CustomError.badRequest(
-          `Paciente con Uid: (${uid}) no encontrado`
-        );
-      }
-
+      bdPatient = PatientValidations.patientExists(bdPatient, uid);
       const patient = PatientMapper.validate(bdPatient);
-      const appointment_history = expand?.includes("appointment_history")
-        ? []
-        : undefined;
+      const appointment_history = PatientValidations.withHistory(req);
 
       return res.status(200).json({
         appointment_history,
@@ -72,88 +56,65 @@ export class PatientController implements Controllers<PatientFilters> {
     }
   };
 
-  public create = async (
-    req: Request,
-    res: Response<UpsertResponse<PatientModel>>
-  ) => {
+  public create = async (req: Request, res: Response<UpsertResponse<PatientModel>>) => {
     try {
-      const patient = req.patient!;
-
-      const rutOrEmail = await this.service.findByRutOrEmail(
-        patient.rut,
-        patient.email
-      );
-
-      if (rutOrEmail) {
-        throw CustomError.badRequest(
-          `Paciente con rut (${patient.rut}) o email (${patient.email}) ya existe`
-        );
-      }
-
-      const createdPatient = await this.service.create({
-        rut: patient.rut,
-        names: patient.names,
-        last_names: patient.last_names,
-        email: patient.email,
-        phone: patient.phone,
-        address: patient.address,
-        is_deleted: false
+      const payload = PatientValidations.insertValidation(req);
+      const findedRut = await this.service.findByRutOrEmail({
+        rut: payload.rut
       });
 
+      PatientValidations.rutInUse(findedRut?.rut);
+
+      const findedEmail = await this.service.findByRutOrEmail({
+        email: payload.email
+      });
+
+      PatientValidations.emailInUse(findedEmail?.email);
+
+      const createdPatient = await this.service.create({
+        ...payload,
+        is_deleted: false
+      });
+      const patient = PatientMapper.validate(createdPatient);
+
       return res.status(201).json({
-        message: "Paciente creado correctamente",
-        data: PatientMapper.validate(createdPatient)
+        message: "Paciente creado",
+        data: patient
       });
     } catch (error) {
       return CustomError.handleError(error, res);
     }
   };
 
-  public update = async (
-    req: Request,
-    res: Response<UpsertResponse<PatientModel>>
-  ) => {
+  public update = async (req: Request, res: Response<UpsertResponse<PatientModel>>) => {
     try {
       const uid = req.params.uid!;
-      const { rut, names, last_names, email, phone, address } = req.body;
+      const payload = PatientValidations.updateValidation(req);
 
-      const findedPatient = await this.service.findByUid(uid);
+      let findedPatient = await this.service.findByUid(uid);
 
-      if (!findedPatient) {
-        throw CustomError.badRequest(
-          `Paciente con identificacion (${uid}) no encontrado`
-        );
-      }
+      findedPatient = PatientValidations.patientExists(findedPatient, uid);
 
-      const rutAndEmail = await this.service.findByRutOrEmail(
-        rut,
-        email,
-        findedPatient.id
-      );
+      const findedRut = await this.service.findByRutOrEmail({
+        rut: payload.rut,
+        id: findedPatient.id
+      });
 
-      if (rutAndEmail) {
-        throw CustomError.badRequest(
-          `Paciente con rut (${rut ?? ""}) o email (${email ?? ""}) ya existe`
-        );
-      }
+      PatientValidations.rutInUse(findedRut?.rut);
 
-      const payload = {
-        rut,
-        names,
-        last_names,
-        email,
-        phone,
-        address
-      };
+      const findedEmail = await this.service.findByRutOrEmail({
+        email: payload.email,
+        id: findedPatient.id
+      });
 
-      const updatedPatient = await this.service.update(
-        payload,
-        findedPatient.uid
-      );
+      PatientValidations.emailInUse(findedEmail?.email);
+
+      const updatedPatient = await this.service.update(payload, findedPatient.uid);
+      const patient = PatientMapper.validate(updatedPatient);
 
       return res.status(200).json({
-        message: "Paciente actualizado correctamente",
-        data: PatientMapper.validate(updatedPatient)
+        message: "Paciente actualizado",
+        data: patient
       });
     } catch (error) {
       return CustomError.handleError(error, res);
@@ -164,44 +125,28 @@ export class PatientController implements Controllers<PatientFilters> {
     req: Request,
     res: Response<UpsertResponse<PatientModel>>
   ) => {
-    const uid = req.params.uid!;
-
     try {
-      const findedPatient = await this.service.findByUid(uid);
-      if (!findedPatient) {
-        throw CustomError.badRequest(
-          `No se ha encontrado el paciente con UID: (${uid})`
-        );
-      }
+      const uid = req.params.uid;
+      let findedPatient = await this.service.findByUid(uid);
+
+      findedPatient = PatientValidations.patientExists(findedPatient, uid);
 
       const updatedPatient = await this.service.update(
         { is_deleted: !findedPatient.is_deleted },
         findedPatient.uid
       );
 
+      const patient = PatientMapper.validate(updatedPatient);
+      const message = `Se ha cambiado el estado del paciente a ${
+        updatedPatient.is_deleted ? "inactivo" : "activo"
+      }`;
+
       return res.status(200).json({
-        message: `Se ha cambiado el estado del paciente a ${
-          updatedPatient.is_deleted ? "inactivo" : "activo"
-        }`,
-        data: PatientMapper.validate(updatedPatient)
+        data: patient,
+        message
       });
     } catch (error) {
       return CustomError.handleError(error, res);
     }
   };
-
-  public getFilters(req: Request) {
-    const { rut, name, email, status, page = "1", limit = "10" } = req.query;
-
-    return {
-      rut: rut as string | undefined,
-      name: name as string | undefined,
-      email: email as string | undefined,
-      is_deleted: status
-        ? status === "inactive"
-        : (undefined as boolean | undefined),
-      page: !isNaN(Number(page)) && Number(page) > 0 ? Number(page) : 1,
-      limit: !isNaN(Number(limit)) && Number(limit) > 0 ? Number(limit) : 10
-    };
-  }
 }
