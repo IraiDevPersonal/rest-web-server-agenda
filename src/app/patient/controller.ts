@@ -76,9 +76,10 @@ export class PatientController {
         is_deleted: false
       });
       const patient = PatientMapper.validate(createdPatient);
+      const message = `Paciente ${patient.names} ${patient.last_names} creado(a)`;
 
       return res.status(201).json({
-        message: "Paciente creado",
+        message: message,
         data: patient
       });
     } catch (error) {
@@ -111,9 +112,10 @@ export class PatientController {
 
       const updatedPatient = await this.service.update(payload, findedPatient.uid);
       const patient = PatientMapper.validate(updatedPatient);
+      const message = `Paciente ${patient.names} ${patient.last_names} actualizado(a)`;
 
       return res.status(200).json({
-        message: "Paciente actualizado",
+        message: message,
         data: patient
       });
     } catch (error) {
@@ -137,8 +139,8 @@ export class PatientController {
       );
 
       const patient = PatientMapper.validate(updatedPatient);
-      const message = `Se ha cambiado el estado del paciente a ${
-        updatedPatient.is_deleted ? "inactivo" : "activo"
+      const message = `Paciente ${patient.names} ${patient.last_names} a sido ${
+        updatedPatient.is_deleted ? "deshabilitado(a)" : "habilitado(a)"
       }`;
 
       return res.status(200).json({

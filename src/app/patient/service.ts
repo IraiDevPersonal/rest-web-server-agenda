@@ -106,7 +106,7 @@ export class PatientService {
         email: patientLike.email,
         phone: patientLike.phone,
         address: patientLike.address,
-        is_deleted: patientLike.is_deleted ?? false
+        is_deleted: patientLike.is_deleted
       }
     });
   }
