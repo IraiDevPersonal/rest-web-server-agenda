@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 import {
-  appointments,
   patients,
   professionalProfession,
   professionals,
@@ -22,9 +21,7 @@ export class SeedService {
     await this.db.$executeRawUnsafe(
       `TRUNCATE TABLE "schedules" RESTART IDENTITY CASCADE;`
     );
-    await this.db.$executeRawUnsafe(
-      `TRUNCATE TABLE "appointment" RESTART IDENTITY CASCADE;`
-    );
+
     await this.db.$executeRawUnsafe(
       `TRUNCATE TABLE "professional_professions" RESTART IDENTITY CASCADE;`
     );
@@ -91,9 +88,6 @@ export class SeedService {
     });
     await this.db.schedules.createMany({
       data: schedules
-    });
-    await this.db.appointment.createMany({
-      data: appointments
     });
   }
 }

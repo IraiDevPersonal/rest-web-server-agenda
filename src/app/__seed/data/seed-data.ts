@@ -1,8 +1,7 @@
-import { AppointmentStatus } from "@prisma/client";
+import { ScheduleStatus } from "@prisma/client";
 
 import { Uid } from "@/lib/uid";
 import {
-  BdAppointment,
   BdPatient,
   BdProfession,
   BdProfessional,
@@ -164,7 +163,9 @@ export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
     professional_id: BigInt(1),
     time_from: "08:00",
     time_to: "08:45",
-    is_enabled: true
+    is_enabled: true,
+    patient_id: null,
+    schedule_status: ScheduleStatus.AVAILABLE
   },
 
   {
@@ -172,7 +173,9 @@ export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
     professional_id: BigInt(1),
     time_from: "15:00",
     time_to: "15:45",
-    is_enabled: true
+    is_enabled: true,
+    patient_id: null,
+    schedule_status: ScheduleStatus.AVAILABLE
   },
 
   {
@@ -180,7 +183,9 @@ export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
     professional_id: BigInt(1),
     time_from: "16:00",
     time_to: "16:45",
-    is_enabled: false
+    is_enabled: false,
+    patient_id: null,
+    schedule_status: ScheduleStatus.INDETERMINATE
   },
 
   {
@@ -188,7 +193,9 @@ export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
     professional_id: BigInt(1),
     time_from: "08:00",
     time_to: "08:45",
-    is_enabled: true
+    is_enabled: true,
+    patient_id: null,
+    schedule_status: ScheduleStatus.AVAILABLE
   },
 
   {
@@ -196,7 +203,9 @@ export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
     professional_id: BigInt(1),
     time_from: "15:00",
     time_to: "15:45",
-    is_enabled: true
+    is_enabled: true,
+    patient_id: null,
+    schedule_status: ScheduleStatus.AVAILABLE
   },
 
   {
@@ -204,7 +213,9 @@ export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
     professional_id: BigInt(1),
     time_from: "16:00",
     time_to: "16:45",
-    is_enabled: false
+    is_enabled: false,
+    patient_id: null,
+    schedule_status: ScheduleStatus.INDETERMINATE
   },
 
   {
@@ -212,7 +223,9 @@ export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
     professional_id: BigInt(1),
     time_from: "08:00",
     time_to: "08:45",
-    is_enabled: true
+    is_enabled: true,
+    patient_id: null,
+    schedule_status: ScheduleStatus.AVAILABLE
   },
 
   {
@@ -220,7 +233,9 @@ export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
     professional_id: BigInt(1),
     time_from: "15:00",
     time_to: "15:45",
-    is_enabled: true
+    is_enabled: true,
+    patient_id: BigInt(1),
+    schedule_status: ScheduleStatus.AVAILABLE
   },
 
   {
@@ -228,7 +243,9 @@ export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
     professional_id: BigInt(1),
     time_from: "16:00",
     time_to: "16:45",
-    is_enabled: false
+    is_enabled: false,
+    patient_id: null,
+    schedule_status: ScheduleStatus.INDETERMINATE
   },
 
   {
@@ -236,7 +253,9 @@ export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
     professional_id: BigInt(2),
     time_from: "08:00",
     time_to: "08:45",
-    is_enabled: true
+    is_enabled: true,
+    patient_id: BigInt(1),
+    schedule_status: ScheduleStatus.CONFIRMED
   },
 
   {
@@ -244,7 +263,9 @@ export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
     professional_id: BigInt(2),
     time_from: "15:00",
     time_to: "15:45",
-    is_enabled: true
+    is_enabled: true,
+    patient_id: BigInt(1),
+    schedule_status: ScheduleStatus.TO_CONFIRM
   },
 
   {
@@ -252,7 +273,9 @@ export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
     professional_id: BigInt(2),
     time_from: "16:00",
     time_to: "16:45",
-    is_enabled: false
+    is_enabled: false,
+    patient_id: null,
+    schedule_status: ScheduleStatus.INDETERMINATE
   },
 
   {
@@ -260,7 +283,9 @@ export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
     professional_id: BigInt(2),
     time_from: "08:00",
     time_to: "08:45",
-    is_enabled: true
+    is_enabled: true,
+    patient_id: BigInt(2),
+    schedule_status: ScheduleStatus.TO_CONFIRM
   },
 
   {
@@ -268,7 +293,9 @@ export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
     professional_id: BigInt(2),
     time_from: "15:00",
     time_to: "15:45",
-    is_enabled: true
+    is_enabled: true,
+    patient_id: BigInt(4),
+    schedule_status: ScheduleStatus.TO_CONFIRM
   },
 
   {
@@ -276,7 +303,9 @@ export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
     professional_id: BigInt(2),
     time_from: "16:00",
     time_to: "16:45",
-    is_enabled: false
+    is_enabled: false,
+    schedule_status: ScheduleStatus.INDETERMINATE,
+    patient_id: null
   },
 
   {
@@ -284,7 +313,9 @@ export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
     professional_id: BigInt(2),
     time_from: "08:00",
     time_to: "08:45",
-    is_enabled: true
+    is_enabled: true,
+    patient_id: BigInt(5),
+    schedule_status: ScheduleStatus.CANCELLED
   },
 
   {
@@ -292,7 +323,9 @@ export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
     professional_id: BigInt(2),
     time_from: "15:00",
     time_to: "15:45",
-    is_enabled: true
+    is_enabled: true,
+    patient_id: BigInt(5),
+    schedule_status: ScheduleStatus.TO_CONFIRM
   },
 
   {
@@ -300,7 +333,9 @@ export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
     professional_id: BigInt(2),
     time_from: "16:00",
     time_to: "16:45",
-    is_enabled: false
+    is_enabled: true,
+    patient_id: BigInt(5),
+    schedule_status: ScheduleStatus.CANCELLED
   },
 
   {
@@ -308,7 +343,9 @@ export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
     professional_id: BigInt(2),
     time_from: "10:00",
     time_to: "10:45",
-    is_enabled: true
+    is_enabled: true,
+    patient_id: BigInt(2),
+    schedule_status: ScheduleStatus.CONFIRMED
   },
 
   {
@@ -316,7 +353,9 @@ export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
     professional_id: BigInt(2),
     time_from: "12:00",
     time_to: "12:45",
-    is_enabled: true
+    is_enabled: true,
+    patient_id: BigInt(2),
+    schedule_status: ScheduleStatus.TO_CONFIRM
   },
 
   {
@@ -324,7 +363,9 @@ export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
     professional_id: BigInt(2),
     time_from: "14:00",
     time_to: "14:45",
-    is_enabled: false
+    is_enabled: false,
+    patient_id: null,
+    schedule_status: ScheduleStatus.INDETERMINATE
   },
 
   {
@@ -332,7 +373,9 @@ export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
     professional_id: BigInt(2),
     time_from: "09:00",
     time_to: "09:15",
-    is_enabled: true
+    is_enabled: true,
+    patient_id: BigInt(3),
+    schedule_status: ScheduleStatus.TO_CONFIRM
   },
 
   {
@@ -340,7 +383,9 @@ export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
     professional_id: BigInt(2),
     time_from: "09:30",
     time_to: "09:45",
-    is_enabled: true
+    is_enabled: true,
+    patient_id: BigInt(3),
+    schedule_status: ScheduleStatus.CONFIRMED
   },
 
   {
@@ -348,7 +393,9 @@ export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
     professional_id: BigInt(2),
     time_from: "12:00",
     time_to: "12:15",
-    is_enabled: false
+    is_enabled: false,
+    patient_id: null,
+    schedule_status: ScheduleStatus.CONFIRMED
   },
 
   {
@@ -356,7 +403,9 @@ export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
     professional_id: BigInt(2),
     time_from: "08:00",
     time_to: "08:45",
-    is_enabled: true
+    is_enabled: true,
+    patient_id: BigInt(4),
+    schedule_status: ScheduleStatus.CONFIRMED
   },
 
   {
@@ -364,7 +413,9 @@ export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
     professional_id: BigInt(2),
     time_from: "15:00",
     time_to: "15:45",
-    is_enabled: true
+    is_enabled: true,
+    patient_id: BigInt(4),
+    schedule_status: ScheduleStatus.TO_CONFIRM
   },
 
   {
@@ -372,98 +423,8 @@ export const schedules: MakeOptional<BdSchedule, "id" | "uid">[] = [
     professional_id: BigInt(2),
     time_from: "16:00",
     time_to: "16:45",
-    is_enabled: false
-  }
-];
-
-export const appointments: MakeOptional<BdAppointment, "id" | "uid">[] = [
-  {
-    patient_id: BigInt(1),
-    schedule_id: BigInt(1),
-    appointment_status: AppointmentStatus.AVAILABLE
-  },
-
-  {
-    patient_id: BigInt(1),
-    schedule_id: BigInt(5),
-    appointment_status: AppointmentStatus.CONFIRMED
-  },
-
-  {
-    patient_id: BigInt(1),
-    schedule_id: BigInt(6),
-    appointment_status: AppointmentStatus.TO_CONFIRM
-  },
-
-  {
-    patient_id: BigInt(2),
-    schedule_id: BigInt(8),
-    appointment_status: AppointmentStatus.TO_CONFIRM
-  },
-
-  {
-    patient_id: BigInt(2),
-    schedule_id: BigInt(2),
-    appointment_status: AppointmentStatus.CONFIRMED
-  },
-
-  {
-    patient_id: BigInt(2),
-    schedule_id: BigInt(14),
-    appointment_status: AppointmentStatus.TO_CONFIRM
-  },
-
-  {
-    patient_id: BigInt(3),
-    schedule_id: BigInt(9),
-    appointment_status: AppointmentStatus.CANCELLED
-  },
-
-  {
-    patient_id: BigInt(3),
-    schedule_id: BigInt(10),
-    appointment_status: AppointmentStatus.TO_CONFIRM
-  },
-
-  {
-    patient_id: BigInt(3),
-    schedule_id: BigInt(11),
-    appointment_status: AppointmentStatus.CONFIRMED
-  },
-
-  {
-    patient_id: BigInt(4),
-    schedule_id: BigInt(12),
-    appointment_status: AppointmentStatus.CONFIRMED
-  },
-
-  {
-    patient_id: BigInt(4),
-    schedule_id: BigInt(13),
-    appointment_status: AppointmentStatus.TO_CONFIRM
-  },
-
-  {
-    patient_id: BigInt(4),
-    schedule_id: BigInt(15),
-    appointment_status: AppointmentStatus.TO_CONFIRM
-  },
-
-  {
-    patient_id: BigInt(5),
-    schedule_id: BigInt(16),
-    appointment_status: AppointmentStatus.CANCELLED
-  },
-
-  {
-    patient_id: BigInt(5),
-    schedule_id: BigInt(17),
-    appointment_status: AppointmentStatus.TO_CONFIRM
-  },
-
-  {
-    patient_id: BigInt(5),
-    schedule_id: BigInt(18),
-    appointment_status: AppointmentStatus.CANCELLED
+    is_enabled: false,
+    patient_id: null,
+    schedule_status: ScheduleStatus.INDETERMINATE
   }
 ];
