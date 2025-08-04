@@ -1,12 +1,11 @@
 import { CustomError } from "@/lib/custom-error";
-import { ExpandPatientTypes } from "../models";
-import { Request } from "express";
-import { PatientSchema } from "../models/patient";
 import { RutManager } from "@/lib/rut-manager";
+import { ExpandPatientTypes } from "../models";
+import { PatientSchema } from "../models/patient";
 
 export class PatientValidations {
-  static insertValidation(req: Request) {
-    const { rut, names, last_names, email, phone, address } = req.body;
+  static insertValidation(body: any) {
+    const { rut, names, last_names, email, phone, address } = body;
 
     return PatientSchema.parse({
       rut: RutManager.format(rut, { dots: true }),
@@ -18,8 +17,8 @@ export class PatientValidations {
     });
   }
 
-  static updateValidation(req: Request) {
-    const { rut, names, last_names, email, phone, address } = req.body;
+  static updateValidation(body: any) {
+    const { rut, names, last_names, email, phone, address } = body;
 
     if (rut) {
       PatientSchema.shape.rut.parse(rut);
@@ -69,13 +68,11 @@ export class PatientValidations {
     }
   }
 
-  static withHistory(req: Request) {
-    const expand = req.query.expand as ExpandPatientTypes[] | undefined;
+  static withHistory(expand: ExpandPatientTypes[] | undefined) {
     return expand?.includes("appointment_history") ? [] : undefined;
   }
 
-  static withId(req: Request) {
-    const expand = req.query.expand as ExpandPatientTypes[] | undefined;
+  static withId(expand: ExpandPatientTypes[] | undefined) {
     return !expand?.includes("id");
   }
 }

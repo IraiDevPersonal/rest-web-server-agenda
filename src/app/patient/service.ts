@@ -74,29 +74,14 @@ export class PatientService {
     return { data: patients, total, page, pages: totalPages, limit };
   }
 
-  async findByRutOrEmail({
-    email,
-    rut,
-    id
-  }: {
-    rut?: string;
-    email?: string;
-    id?: bigint;
-  }) {
-    return await this.db.patients.findFirst({
-      select: { id: !!id, rut: !!rut, email: !!email },
-      where: { OR: [{ rut: rut }, { email: email }], NOT: { id: id } }
-    });
-  }
-
-  async findByUid(uid: string, options?: Prisma.patientsDefaultArgs<DefaultArgs>) {
+  async getPatientDetail(uid: string, options?: Prisma.patientsDefaultArgs<DefaultArgs>) {
     return await this.db.patients.findUnique({
       ...options,
       where: { uid: uid }
     });
   }
 
-  async update(patientLike: Record<string, any>, uid: string) {
+  async updatePatient(patientLike: Record<string, any>, uid: string) {
     return await this.db.patients.update({
       where: { uid: uid },
       data: {
@@ -111,7 +96,7 @@ export class PatientService {
     });
   }
 
-  async create(patient: PatientModel) {
+  async createPatient(patient: PatientModel) {
     const patientCreated = await this.db.patients.create({
       data: {
         rut: patient.rut,
@@ -125,5 +110,20 @@ export class PatientService {
 
     // console.log(patientCreated);
     return patientCreated;
+  }
+
+  async findPatientByRutOrEmail({
+    email,
+    rut,
+    id
+  }: {
+    rut?: string;
+    email?: string;
+    id?: bigint;
+  }) {
+    return await this.db.patients.findFirst({
+      select: { id: !!id, rut: !!rut, email: !!email },
+      where: { OR: [{ rut: rut }, { email: email }], NOT: { id: id } }
+    });
   }
 }

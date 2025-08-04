@@ -1,152 +1,62 @@
 import { Request, Response } from "express";
 
-import { PatientMapper } from "./mappers/patient-mapper";
-import { PatientService } from "./service";
-
 import { CustomError } from "@/lib/custom-error";
-import { ResponseWithPagination, UpsertResponse } from "@/types/global";
 import { PatientFiltersMapper } from "./mappers/patient-filters-mapper";
-import { PatientModel } from "./models/patient";
-import { PatientValidations } from "./validations/patient-validations";
+import { PatientUseCases } from "./use-cases/patient-use-cases";
 
 export class PatientController {
-  public constructor(private readonly service: PatientService) {}
+  constructor(private readonly useCases: PatientUseCases) {}
 
-  public getAll = async (
-    req: Request,
-    res: Response<ResponseWithPagination<PatientModel>>
-  ) => {
+  getPatients = async (req: Request, res: Response) => {
     try {
       const filters = PatientFiltersMapper.getFilters(req);
-      const { data: bdPatients, ...pagination } = await this.service.getPatients(filters);
-      const patients = PatientMapper.response(bdPatients);
+      const response = await this.useCases.getPatients(filters);
 
-      return res.status(200).json({
-        ...pagination,
-        data: patients
-      });
+      return res.status(200).json(response);
     } catch (error) {
       return CustomError.handleError(error, res);
     }
   };
 
-  public getByUid = async (
-    req: Request,
-    res: Response<{
-      appointment_history?: any[];
-      data: PatientModel;
-    }>
-  ) => {
+  getPatientDetail = async (req: Request, res: Response) => {
     try {
       const uid = req.params.uid;
-      let bdPatient = await this.service.findByUid(uid, {
-        omit: { id: PatientValidations.withId(req) }
-      });
+      const expand = req.query.expand;
+      const response = await this.useCases.getPatientDetail(uid, expand);
 
-      bdPatient = PatientValidations.patientExists(bdPatient, uid);
-      const patient = PatientMapper.validate(bdPatient);
-      const appointment_history = PatientValidations.withHistory(req);
-
-      return res.status(200).json({
-        appointment_history,
-        data: patient
-      });
+      return res.status(200).json(response);
     } catch (error) {
       return CustomError.handleError(error, res);
     }
   };
 
-  public create = async (req: Request, res: Response<UpsertResponse<PatientModel>>) => {
+  createPatient = async (req: Request, res: Response) => {
     try {
-      const payload = PatientValidations.insertValidation(req);
-      const findedRut = await this.service.findByRutOrEmail({
-        rut: payload.rut
-      });
+      const response = await this.useCases.createPatient(req.body);
 
-      PatientValidations.rutInUse(findedRut?.rut);
-
-      const findedEmail = await this.service.findByRutOrEmail({
-        email: payload.email
-      });
-
-      PatientValidations.emailInUse(findedEmail?.email);
-
-      const createdPatient = await this.service.create({
-        ...payload,
-        is_deleted: false
-      });
-      const patient = PatientMapper.validate(createdPatient);
-      const message = `Paciente ${patient.names} ${patient.last_names} creado(a)`;
-
-      return res.status(201).json({
-        message: message,
-        data: patient
-      });
+      return res.status(201).json(response);
     } catch (error) {
       return CustomError.handleError(error, res);
     }
   };
 
-  public update = async (req: Request, res: Response<UpsertResponse<PatientModel>>) => {
-    try {
-      const uid = req.params.uid!;
-      const payload = PatientValidations.updateValidation(req);
-
-      let findedPatient = await this.service.findByUid(uid);
-
-      findedPatient = PatientValidations.patientExists(findedPatient, uid);
-
-      const findedRut = await this.service.findByRutOrEmail({
-        rut: payload.rut,
-        id: findedPatient.id
-      });
-
-      PatientValidations.rutInUse(findedRut?.rut);
-
-      const findedEmail = await this.service.findByRutOrEmail({
-        email: payload.email,
-        id: findedPatient.id
-      });
-
-      PatientValidations.emailInUse(findedEmail?.email);
-
-      const updatedPatient = await this.service.update(payload, findedPatient.uid);
-      const patient = PatientMapper.validate(updatedPatient);
-      const message = `Paciente ${patient.names} ${patient.last_names} actualizado(a)`;
-
-      return res.status(200).json({
-        message: message,
-        data: patient
-      });
-    } catch (error) {
-      return CustomError.handleError(error, res);
-    }
-  };
-
-  public toggleStatus = async (
-    req: Request,
-    res: Response<UpsertResponse<PatientModel>>
-  ) => {
+  updatePatient = async (req: Request, res: Response) => {
     try {
       const uid = req.params.uid;
-      let findedPatient = await this.service.findByUid(uid);
+      const response = await this.useCases.updatePatient(req.body, uid);
 
-      findedPatient = PatientValidations.patientExists(findedPatient, uid);
+      return res.status(200).json(response);
+    } catch (error) {
+      return CustomError.handleError(error, res);
+    }
+  };
 
-      const updatedPatient = await this.service.update(
-        { is_deleted: !findedPatient.is_deleted },
-        findedPatient.uid
-      );
+  togglePatientStatus = async (req: Request, res: Response) => {
+    try {
+      const uid = req.params.uid;
+      const response = await this.useCases.togglePatientStatus(uid);
 
-      const patient = PatientMapper.validate(updatedPatient);
-      const message = `Paciente ${patient.names} ${patient.last_names} a sido ${
-        updatedPatient.is_deleted ? "deshabilitado(a)" : "habilitado(a)"
-      }`;
-
-      return res.status(200).json({
-        data: patient,
-        message
-      });
+      return res.status(200).json(response);
     } catch (error) {
       return CustomError.handleError(error, res);
     }
