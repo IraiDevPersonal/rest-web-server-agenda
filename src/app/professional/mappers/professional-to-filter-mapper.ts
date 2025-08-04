@@ -8,7 +8,8 @@ import { safeArray } from "@/lib/utils";
 import { BdProfessional } from "@/types/bd-model";
 
 type BdProfessionalWithProfessions = BdProfessional<{
-  include: {
+  select: {
+    id: true;
     user: {
       select: {
         names: true;
@@ -24,34 +25,24 @@ type BdProfessionalWithProfessions = BdProfessional<{
 }>;
 
 export class ProfessionalToFilterMapper {
-  static validate(
-    item: BdProfessionalWithProfessions
-  ): ProfessionalOptionModel {
+  static validate(item: BdProfessionalWithProfessions): ProfessionalOptionModel {
     try {
       const data = ProfessionalToFilterMapper.mapper(item);
       return ProfessionalOptionSchema.parse(data);
     } catch (error) {
       throw CustomError.internalServer(
-        CustomError.getErrorMessage(
-          error,
-          "profession-to-filter-mapper.ts: (validate)"
-        )
+        CustomError.getErrorMessage(error, "profession-to-filter-mapper.ts: (validate)")
       );
     }
   }
 
-  static response(
-    data: BdProfessionalWithProfessions[]
-  ): ProfessionalOptionModel[] {
+  static response(data: BdProfessionalWithProfessions[]): ProfessionalOptionModel[] {
     return safeArray(data, {
-      errorMessage:
-        "professional-to-filter-mapper.ts (response): se esperaba un array"
+      errorMessage: "professional-to-filter-mapper.ts (response): se esperaba un array"
     }).map(ProfessionalToFilterMapper.validate);
   }
 
-  private static mapper(
-    item: BdProfessionalWithProfessions
-  ): ProfessionalOptionModel {
+  private static mapper(item: BdProfessionalWithProfessions): ProfessionalOptionModel {
     const user = item.user;
     const professions = item.professional_profession;
 
