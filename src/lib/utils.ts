@@ -1,3 +1,5 @@
+import queryString from "query-string";
+
 type YearMonth = `${number}-${Month}`;
 type Month =
   | "01"
@@ -34,4 +36,21 @@ export function safeArray<T = any>(
 
   console.error(errorMessage);
   return [] as T[];
+}
+
+export function parseQuery<T extends object>(value: T, defaultValues?: Partial<T>) {
+  const stringifyQuery = queryString.stringify(
+    { ...value, ...defaultValues },
+    {
+      skipEmptyString: true,
+      skipNull: true
+    }
+  );
+
+  return queryString.parse(stringifyQuery, {
+    arrayFormat: "bracket-separator",
+    arrayFormatSeparator: ",",
+    parseBooleans: true,
+    parseNumbers: true
+  });
 }

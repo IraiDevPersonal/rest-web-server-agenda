@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 
 import { CustomError } from "@/lib/custom-error";
-import { PatientFiltersMapper } from "./mappers/patient-filters-mapper";
 import { PatientUseCases } from "./use-cases/patient-use-cases";
 
 export class PatientController {
@@ -9,10 +8,8 @@ export class PatientController {
 
   getPatients = async (req: Request, res: Response) => {
     try {
-      const filters = PatientFiltersMapper.getFilters(req);
-      const response = await this.useCases.getPatients(filters);
-
-      return res.status(200).json(response);
+      const data = await this.useCases.getPatients(req.query);
+      return res.status(200).json(data);
     } catch (error) {
       return CustomError.handleError(error, res);
     }
@@ -21,10 +18,9 @@ export class PatientController {
   getPatientDetail = async (req: Request, res: Response) => {
     try {
       const uid = req.params.uid;
-      const expand = req.query.expand;
-      const response = await this.useCases.getPatientDetail(uid, expand);
+      const data = await this.useCases.getPatientDetail(uid, req.query);
 
-      return res.status(200).json(response);
+      return res.status(200).json(data);
     } catch (error) {
       return CustomError.handleError(error, res);
     }
@@ -32,9 +28,8 @@ export class PatientController {
 
   createPatient = async (req: Request, res: Response) => {
     try {
-      const response = await this.useCases.createPatient(req.body);
-
-      return res.status(201).json(response);
+      const data = await this.useCases.createPatient(req.body);
+      return res.status(201).json(data);
     } catch (error) {
       return CustomError.handleError(error, res);
     }
@@ -43,9 +38,8 @@ export class PatientController {
   updatePatient = async (req: Request, res: Response) => {
     try {
       const uid = req.params.uid;
-      const response = await this.useCases.updatePatient(req.body, uid);
-
-      return res.status(200).json(response);
+      const data = await this.useCases.updatePatient(uid, req.body);
+      return res.status(200).json(data);
     } catch (error) {
       return CustomError.handleError(error, res);
     }
@@ -54,9 +48,8 @@ export class PatientController {
   togglePatientStatus = async (req: Request, res: Response) => {
     try {
       const uid = req.params.uid;
-      const response = await this.useCases.togglePatientStatus(uid);
-
-      return res.status(200).json(response);
+      const data = await this.useCases.togglePatientStatus(uid);
+      return res.status(200).json(data);
     } catch (error) {
       return CustomError.handleError(error, res);
     }

@@ -1,6 +1,4 @@
-import { UndefinedObject } from "@/types/global";
-
-export type PatientFilters = UndefinedObject<{
+export type PatientFilters = Partial<{
   rut: string;
   name: string;
   email: string;

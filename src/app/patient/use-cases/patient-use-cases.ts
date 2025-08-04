@@ -1,7 +1,7 @@
 import { ResponseWithPagination, UpsertResponse } from "@/types/global";
+import { Request } from "express";
 import { PatientMapper } from "../mappers/patient-mapper";
 import { PatientModel } from "../models/patient";
-import { PatientFilters } from "../models/patient-filters";
 import { PatientService } from "../service";
 import { PatientValidations } from "../validations/patient-validations";
 
@@ -9,8 +9,9 @@ export class PatientUseCases {
   constructor(private readonly service: PatientService) {}
 
   getPatients = async (
-    filters: PatientFilters
+    query: Request["query"]
   ): Promise<ResponseWithPagination<PatientModel>> => {
+    const filters = PatientMapper.getFilters(query);
     const { data: bdPatients, ...pagination } = await this.service.getPatients(filters);
     const patients = PatientMapper.response(bdPatients);
 
@@ -22,18 +23,18 @@ export class PatientUseCases {
 
   getPatientDetail = async (
     uid: string,
-    expandQuery: any
+    query: Request["query"]
   ): Promise<{
     appointment_history?: any[];
     data: PatientModel;
   }> => {
     let bdPatient = await this.service.getPatientDetail(uid, {
-      omit: { id: PatientValidations.withId(expandQuery) }
+      omit: { id: PatientValidations.withId(query) }
     });
 
     bdPatient = PatientValidations.patientExists(bdPatient, uid);
     const patient = PatientMapper.validate(bdPatient);
-    const appointment_history = PatientValidations.withHistory(expandQuery);
+    const appointment_history = PatientValidations.withHistory(query);
 
     return {
       appointment_history,
@@ -69,8 +70,8 @@ export class PatientUseCases {
   };
 
   updatePatient = async (
-    body: any,
-    uid: string
+    uid: string,
+    body: any
   ): Promise<UpsertResponse<PatientModel>> => {
     const payload = PatientValidations.updateValidation(body);
 

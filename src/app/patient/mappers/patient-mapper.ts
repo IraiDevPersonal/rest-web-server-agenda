@@ -7,8 +7,10 @@ import {
 
 import { CustomError } from "@/lib/custom-error";
 import { DateFormatter } from "@/lib/date-formatter";
-import { safeArray } from "@/lib/utils";
+import { parseQuery, safeArray } from "@/lib/utils";
 import { BdAppointment, BdPatient } from "@/types/bd-model";
+import { PatientFilters } from "../models/patient-filters";
+import { Request } from "express";
 
 type BdAppointmentWithSchedule = BdAppointment<{
   select: {
@@ -71,9 +73,21 @@ export class PatientMapper {
   static patientHistoryToArray(
     data: BdAppointmentWithSchedule[]
   ): PatientHistoryForAppointmentDetailModel[] {
-    return safeArray(data).map(
-      PatientMapper.validatePatientHistoryForAppointmentDetail
+    return safeArray(data).map(PatientMapper.validatePatientHistoryForAppointmentDetail);
+  }
+
+  static getFilters(query: Request["query"]): PatientFilters {
+    const { rut, name, email, status, page, limit } = query;
+
+    const { status: statusQuery, ...parsedQueries } = parseQuery(
+      { rut, name, email, status, page, limit },
+      { page: "1", limit: "10" }
     );
+
+    return {
+      ...parsedQueries,
+      is_deleted: statusQuery ? statusQuery === "inactive" : undefined
+    };
   }
 
   private static mapper(bdPatient: BdPatient): PatientModel {

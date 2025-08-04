@@ -2,6 +2,7 @@ import { CustomError } from "@/lib/custom-error";
 import { RutManager } from "@/lib/rut-manager";
 import { ExpandPatientTypes } from "../models";
 import { PatientSchema } from "../models/patient";
+import { Request } from "express";
 
 export class PatientValidations {
   static insertValidation(body: any) {
@@ -68,11 +69,15 @@ export class PatientValidations {
     }
   }
 
-  static withHistory(expand: ExpandPatientTypes[] | undefined) {
-    return expand?.includes("appointment_history") ? [] : undefined;
+  static withHistory(query: Request["query"]) {
+    return this.getExpandQuery(query)?.includes("appointment_history") ? [] : undefined;
   }
 
-  static withId(expand: ExpandPatientTypes[] | undefined) {
-    return !expand?.includes("id");
+  static withId(query: Request["query"]) {
+    return !this.getExpandQuery(query)?.includes("id");
+  }
+
+  private static getExpandQuery(query: Request["query"]) {
+    return query.expand as ExpandPatientTypes[] | undefined;
   }
 }
