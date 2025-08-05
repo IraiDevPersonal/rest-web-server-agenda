@@ -210,3 +210,5 @@ OJO: no se valida el uid, por ende si no envias uno en un formato valido manda e
 - cada que se agregue una tabla en la base de datos, agregar el tipo en src/types/bd-model.ts para mantener los tipos de BD (si falta alguno que no haya agregar agregar)
 
 - actualizacion 05-08-2025 normalizacion de todos los modulos, aplicacion de variante de arquitactura limpia y principios solid (hasta donde logro entender xDD), a falta de globlizar schemas de zod que puedan compartirse (para manejar los mensajes de error desde un solo punto para aquellos modelos que compartan validaciones), para cada modulo se agregaron los use-cases con el fin de mantener completamente limpios los controladores
+
+- actualizacion 05-08-2025 se actualizo el esquema de bruno.json para probar los endpoints
