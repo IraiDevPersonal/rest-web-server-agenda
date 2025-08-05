@@ -1,60 +1,53 @@
-import {
-  type AppointmentModel,
-  AppointmentSchema
-} from "../models/appointment";
+import { type AppointmentModel, AppointmentSchema } from "../models/appointment";
 
 import { CustomError } from "@/lib/custom-error";
 import { DateFormatter } from "@/lib/date-formatter";
-import { safeArray } from "@/lib/utils";
+import { isYearMonth, parseQuery, safeArray } from "@/lib/utils";
 import { BdAppointment } from "@/types/bd-model";
+import { Request } from "express";
+import { AppointmentFilters } from "../models/appointment-filters";
+import { AppointmentStatus } from "@prisma/client";
 
 type BdAppointmentScheduleAndProfessions = BdAppointment<{
-  include: {
+  select: {
+    id: true;
+    uid: true;
+    appointment_status: true;
     schedule: {
-      include: {
+      select: {
+        date: true;
+        time_from: true;
+        time_to: true;
         professional: {
           select: {
-            user: true;
-          };
-          include: {
+            user: {
+              select: {
+                names: true;
+                last_names: true;
+              };
+            };
             professional_profession: {
-              include: {
-                professions: {
-                  select: {
-                    name: true;
-                  };
-                };
+              select: {
+                professions: true;
               };
             };
           };
         };
       };
     };
-    patient: true;
+    patient: {
+      select: {
+        names: true;
+        last_names: true;
+        rut: true;
+        phone: true;
+      };
+    };
   };
 }>;
 
 export class AppointmentMapper {
-  static validate(item: BdAppointmentScheduleAndProfessions): AppointmentModel {
-    try {
-      const data = AppointmentMapper.mapper(item);
-      return AppointmentSchema.parse(data);
-    } catch (error) {
-      throw CustomError.internalServer(
-        CustomError.getErrorMessage(error, "appointment-mapper.ts: (validate)")
-      );
-    }
-  }
-
-  static response(data: any): AppointmentModel[] {
-    return safeArray(data, {
-      errorMessage: "appointment-mapper.ts (response): se eperaba un array"
-    }).map(AppointmentMapper.validate);
-  }
-
-  private static mapper(
-    item: BdAppointmentScheduleAndProfessions
-  ): AppointmentModel {
+  private static _mapper(item: BdAppointmentScheduleAndProfessions): AppointmentModel {
     const schedule = item.schedule;
     const patient = item.patient;
     const professional = schedule.professional;
@@ -76,33 +69,69 @@ export class AppointmentMapper {
     };
   }
 
-  // static upsertDTO(
-  //   object: UpsertAppointmentValues,
-  //   action: "create" | "update"
-  // ) {
-  //   const appointment = AppointmentMapper.validateUpsertValues(object);
+  static validate(item: BdAppointmentScheduleAndProfessions): AppointmentModel {
+    try {
+      const data = AppointmentMapper._mapper(item);
+      return AppointmentSchema.parse(data);
+    } catch (error) {
+      throw CustomError.internalServer(
+        CustomError.getErrorMessage(error, "appointment-mapper.ts: (validate)")
+      );
+    }
+  }
 
-  //   if (action === "create") {
-  //     delete appointment.id;
-  //   }
+  static response(data: BdAppointmentScheduleAndProfessions[]): AppointmentModel[] {
+    return safeArray(data, {
+      errorMessage: "appointment-mapper.ts (response): se eperaba un array"
+    }).map(AppointmentMapper.validate);
+  }
 
-  //   if (action === "update" && !appointment.id) {
-  //     throw CustomError.badRequest("Id es requerida para actualizar");
-  //   }
+  static getFilters(
+    query: Request["query"],
+    params?: Request["params"]
+  ): AppointmentFilters {
+    const { professional_id, profession_id, patient_rut, date_to, month, date } = query;
+    const type = params?.type as AppointmentStatus | undefined;
 
-  //   return appointment;
-  // }
+    const {
+      date: parsedDate,
+      date_to: parsedDateTo,
+      month: parsedMonth,
+      ...parsedQueries
+    } = parseQuery({
+      professional_id,
+      profession_id,
+      patient_rut,
+      date_to,
+      month,
+      date
+    });
 
-  // private static validateUpsertValues(value: any) {
-  //   try {
-  //     return UpsertAppointmentSchema.parse(value);
-  //   } catch (error) {
-  //     throw CustomError.internalServer(
-  //       CustomError.getErrorMessage(
-  //         error,
-  //         "appointment-mapper.ts: (validateValues)"
-  //       )
-  //     );
-  //   }
-  // }
+    let queryDate: Date | undefined = parsedDate
+      ? DateFormatter.stringToDate(parsedDate as string)
+      : undefined;
+    let queryDateFrom: Date | undefined = undefined;
+    let queryDateTo: Date | undefined = undefined;
+
+    if (parsedDateTo && parsedDate) {
+      queryDate = undefined;
+      queryDateFrom = DateFormatter.stringToDate(date as string);
+      queryDateTo = DateFormatter.stringToDate(parsedDateTo as string);
+    }
+
+    if (isYearMonth(parsedMonth as string | undefined)) {
+      queryDate = undefined;
+      const currentDate = `${parsedMonth}-01`;
+      queryDateFrom = DateFormatter.stringToDate(currentDate);
+      queryDateTo = DateFormatter.getLastDayOfMonth(currentDate) as Date;
+    }
+
+    return {
+      ...parsedQueries,
+      date_from: queryDateFrom,
+      date_to: queryDateTo,
+      date: queryDate,
+      type
+    };
+  }
 }

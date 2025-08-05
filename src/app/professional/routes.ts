@@ -13,7 +13,7 @@ export class ProfessionalRoutes {
     const controller = this.controller;
 
     router.get("/", [], controller.getProfessionals);
-    router.get("/to-filter", [], controller.getProfessionalsForFilters);
+    router.get("/for-filter", [], controller.getProfessionalsForFilters);
 
     return router;
   }

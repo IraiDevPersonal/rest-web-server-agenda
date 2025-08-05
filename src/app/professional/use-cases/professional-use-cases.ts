@@ -3,7 +3,7 @@ import { ProfessionalMapper } from "../mappers/professional-mapper";
 import { ResponseWithPagination } from "@/types/global";
 import { ProfessionalModel } from "../models/professional";
 import { ProfessionalService } from "../service";
-import { ProfessionalToFilterMapper } from "../mappers/professional-to-filter-mapper";
+import { ProfessionalForFiltersMapper } from "../mappers/professional-for-filters-mapper";
 import { ProfessionalOptionModel } from "../models/professional-to-filter";
 
 export class ProfessionalUseCases {
@@ -27,6 +27,6 @@ export class ProfessionalUseCases {
     const filters = ProfessionalMapper.getFilters(query);
     const bdProfessionals = await this.service.getProfessionalsForFilters(filters);
 
-    return ProfessionalToFilterMapper.response(bdProfessionals);
+    return ProfessionalForFiltersMapper.response(bdProfessionals);
   };
 }

@@ -52,5 +52,5 @@ export function parseQuery<T extends object>(value: T, defaultValues?: Partial<T
     arrayFormatSeparator: ",",
     parseBooleans: true,
     parseNumbers: true
-  });
+  }) as Record<keyof T, any>;
 }

@@ -56,25 +56,7 @@ type BdAppointmentDetail = BdAppointment<{
 }>;
 
 export class AppointmentDetailMapper {
-  static validate(item: any): AppointmentDetailModel {
-    try {
-      const data = AppointmentDetailMapper.mapper(item);
-      return AppointmentDetailSchema.parse(data);
-    } catch (error) {
-      throw CustomError.internalServer(
-        CustomError.getErrorMessage(
-          error,
-          "appointment-detail-mapper.ts: (validate)"
-        )
-      );
-    }
-  }
-
-  static response(object: any): AppointmentDetailModel {
-    return AppointmentDetailMapper.validate(object);
-  }
-
-  private static mapper(item: BdAppointmentDetail): AppointmentDetailModel {
+  private static _mapper(item: BdAppointmentDetail): AppointmentDetailModel {
     const schedule = item.schedule;
     const patient = item.patient;
 
@@ -88,11 +70,24 @@ export class AppointmentDetailMapper {
       professional: ProfessionalMapper.validateProfessionalForAppointmentDetail(
         schedule.professional
       ),
-      patient_history: PatientMapper.patientHistoryToArray(
-        patient?.appointments ?? []
-      ),
+      patient_history: PatientMapper.patientHistoryToArray(patient?.appointments ?? []),
       patient: patient ? PatientMapper.validate(patient) : null,
       alert: AlertAppointmentMapper.validate(undefined)
     };
+  }
+
+  static validate(item: any): AppointmentDetailModel {
+    try {
+      const data = AppointmentDetailMapper._mapper(item);
+      return AppointmentDetailSchema.parse(data);
+    } catch (error) {
+      throw CustomError.internalServer(
+        CustomError.getErrorMessage(error, "appointment-detail-mapper.ts: (validate)")
+      );
+    }
+  }
+
+  static response(object: any): AppointmentDetailModel {
+    return AppointmentDetailMapper.validate(object);
   }
 }

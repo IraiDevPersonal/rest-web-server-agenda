@@ -1,45 +1,26 @@
 import { Request, Response } from "express";
 
-import { Controllers } from "@/lib/controllers";
 import { CustomError } from "@/lib/custom-error";
-import { ProfessionFilters } from "./models/profession-filters";
-import { ProfessionToFilterMapper } from "./mappers/profession-to-filter-mapper";
-import { ProfessionMapper } from "./mappers/profession-mapper";
-import { ProfessionService } from "./service";
+import { ProfessionUseCases } from "./use-cases/profession-use-cases";
 
-export class ProfessionController implements Controllers<ProfessionFilters> {
-  public constructor(private readonly service: ProfessionService) {}
+export class ProfessionController {
+  public constructor(private readonly useCases: ProfessionUseCases) {}
 
   public getProfessions = async (req: Request, res: Response) => {
     try {
-      const filters = this.getFilters(req);
-      const bdProfessions = await this.service.getProfessions(filters);
-      const professions = ProfessionMapper.response(bdProfessions);
-
-      return res.json(professions);
+      const professions = await this.useCases.getProfessions(req.query);
+      return res.status(200).json(professions);
     } catch (error) {
       return CustomError.handleError(error, res);
     }
   };
 
-  public getProfessionsToFilter = async (req: Request, res: Response) => {
+  public getProfessionsForFilters = async (req: Request, res: Response) => {
     try {
-      const filters = this.getFilters(req);
-      const bdProfessions = await this.service.getProfessions(filters);
-      const professions = ProfessionToFilterMapper.response(bdProfessions);
-
-      return res.json(professions);
+      const professions = await this.useCases.getProfessionsForFilters(req.query);
+      return res.status(200).json(professions);
     } catch (error) {
       return CustomError.handleError(error, res);
     }
   };
-
-  getFilters(request: Request) {
-    const { id } = request.query;
-
-    return {
-      id: id ? Number(id) : undefined
-      // name: name as string,
-    };
-  }
 }
