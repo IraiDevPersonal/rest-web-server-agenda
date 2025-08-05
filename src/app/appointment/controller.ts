@@ -7,7 +7,7 @@ export class AppointmentController {
 
   public getAppointments = async (req: Request, res: Response) => {
     try {
-      const appointments = this.useCases.getAppointments(req.query);
+      const appointments = await this.useCases.getAppointments(req.query);
       return res.status(200).json(appointments);
     } catch (error) {
       return CustomError.handleError(error, res);
@@ -17,7 +17,7 @@ export class AppointmentController {
   public getAppointmentDetail = async (req: Request, res: Response) => {
     try {
       const uid = req.params.uid;
-      const appointment = this.useCases.getAppointmentDetail(uid);
+      const appointment = await this.useCases.getAppointmentDetail(uid);
       return res.status(200).json(appointment);
     } catch (error) {
       return CustomError.handleError(error, res);
