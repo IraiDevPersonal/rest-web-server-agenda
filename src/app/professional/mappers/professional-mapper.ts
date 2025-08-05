@@ -44,9 +44,31 @@ type BdProfessionalWithRoleAndProfessions = BdProfessional<{
 }>;
 
 export class ProfessionalMapper {
+  private static _mapper(item: BdProfessionalWithRoleAndProfessions): ProfessionalModel {
+    const user = item?.user;
+
+    return {
+      // id: item.id,
+      user_id: user.id,
+      names: user.names,
+      uid: user.uid,
+      rut: user.rut,
+      last_names: user.last_names,
+      phone: user.phone,
+      email: user.email,
+      role: RoleMapper.validate(user.role),
+      professions: ProfessionMapper.toArray(
+        item.professional_profession.map((i) => ({
+          id: i.professions.id,
+          name: i.professions.name
+        }))
+      )
+    };
+  }
+
   static validate(item: BdProfessionalWithRoleAndProfessions): ProfessionalModel {
     try {
-      const data = ProfessionalMapper.mapper(item);
+      const data = ProfessionalMapper._mapper(item);
       return ProfessionalSchema.parse(data);
     } catch (error) {
       throw CustomError.internalServer(
@@ -92,27 +114,5 @@ export class ProfessionalMapper {
       { id, names, last_names, profession_id, rut, page, limit },
       { limit: "10", page: "1" }
     );
-  }
-
-  private static mapper(item: BdProfessionalWithRoleAndProfessions): ProfessionalModel {
-    const user = item?.user;
-
-    return {
-      // id: item.id,
-      user_id: user.id,
-      names: user.names,
-      uid: user.uid,
-      rut: user.rut,
-      last_names: user.last_names,
-      phone: user.phone,
-      email: user.email,
-      role: RoleMapper.validate(user.role),
-      professions: ProfessionMapper.toArray(
-        item.professional_profession.map((i) => ({
-          id: i.professions.id,
-          name: i.professions.name
-        }))
-      )
-    };
   }
 }

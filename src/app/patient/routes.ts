@@ -8,11 +8,14 @@ import { PatientMiddleware } from "./middlewares/patient-middleware";
 import { PatientUseCases } from "./use-cases/patient-use-cases";
 
 export class PatientRoutes {
+  // TODO: Esto para mejorar el consumo de memoria y CPU creando una unica instancia de de estas clases y no creandolas cada vez que se llame a get routes()
+  private static readonly service = new PatientService();
+  private static readonly useCases = new PatientUseCases(this.service);
+  private static readonly controller = new PatientController(this.useCases);
+
   static get routes(): Router {
     const router = Router();
-    const service = new PatientService();
-    const useCases = new PatientUseCases(service);
-    const controller = new PatientController(useCases);
+    const controller = this.controller;
 
     router.get("/", [], controller.getPatients);
     router.get(

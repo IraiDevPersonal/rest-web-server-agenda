@@ -27,9 +27,24 @@ type BdAppointmentWithSchedule = BdAppointment<{
 }>;
 
 export class PatientMapper {
+  private static _mapper(bdPatient: BdPatient): PatientModel {
+    return {
+      id: bdPatient.id,
+      uid: bdPatient.uid,
+      rut: bdPatient.rut,
+      names: bdPatient.names,
+      last_names: bdPatient.last_names,
+      email: bdPatient.email,
+      phone: bdPatient.phone,
+      address: bdPatient.address,
+      is_deleted: bdPatient.is_deleted,
+      avatar_image: null // agregar avatar para usuarios en general
+    };
+  }
+
   static validate(item: BdPatient): PatientModel {
     try {
-      const data = PatientMapper.mapper(item);
+      const data = PatientMapper._mapper(item);
       return PatientSchema.parse(data);
     } catch (error) {
       throw CustomError.internalServer(
@@ -87,21 +102,6 @@ export class PatientMapper {
     return {
       ...parsedQueries,
       is_deleted: statusQuery ? statusQuery === "inactive" : undefined
-    };
-  }
-
-  private static mapper(bdPatient: BdPatient): PatientModel {
-    return {
-      id: bdPatient.id,
-      uid: bdPatient.uid,
-      rut: bdPatient.rut,
-      names: bdPatient.names,
-      last_names: bdPatient.last_names,
-      email: bdPatient.email,
-      phone: bdPatient.phone,
-      address: bdPatient.address,
-      is_deleted: bdPatient.is_deleted,
-      avatar_image: null // agregar avatar para usuarios en general
     };
   }
 }

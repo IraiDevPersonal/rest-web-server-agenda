@@ -4,9 +4,15 @@ import { PatientMapper } from "../mappers/patient-mapper";
 import { PatientModel } from "../models/patient";
 import { PatientService } from "../service";
 import { PatientValidations } from "../validations/patient-validations";
+import { patients as Patient } from "@prisma/client";
 
 export class PatientUseCases {
   constructor(private readonly service: PatientService) {}
+
+  private _getAndValidatePatient = async (uid: string): Promise<Patient> => {
+    const patient = await this.service.getPatientDetail(uid);
+    return PatientValidations.patientExists(patient, uid);
+  };
 
   getPatients = async (
     query: Request["query"]
@@ -28,99 +34,95 @@ export class PatientUseCases {
     appointment_history?: any[];
     data: PatientModel;
   }> => {
-    let bdPatient = await this.service.getPatientDetail(uid, {
-      omit: { id: PatientValidations.withId(query) }
-    });
-
-    bdPatient = PatientValidations.patientExists(bdPatient, uid);
+    const bdPatient = await this._getAndValidatePatient(uid);
     const patient = PatientMapper.validate(bdPatient);
-    const appointment_history = PatientValidations.withHistory(query);
+    let appointment_history: any[] | undefined = undefined;
+
+    // 1. Se valida si el query pide el historial
+    if (PatientValidations.withHistory(query)) {
+      // 2. Si lo pide, se llama al servicio para obtenerlo (lógica de ejemplo)
+      // appointment_history = await this.service.getAppointmentHistory(bdPatient.id);
+      appointment_history = []; // Placeholder
+    }
 
     return {
-      appointment_history,
-      data: patient
+      data: patient,
+      appointment_history
     };
   };
 
-  createPatient = async (body: any): Promise<UpsertResponse<PatientModel>> => {
+  createPatient = async (body: unknown): Promise<UpsertResponse<PatientModel>> => {
     const payload = PatientValidations.insertValidation(body);
-    const findedRut = await this.service.findPatientByRutOrEmail({
-      rut: payload.rut
-    });
 
-    PatientValidations.rutInUse(findedRut?.rut);
-
-    const findedEmail = await this.service.findPatientByRutOrEmail({
+    const existingPatient = await this.service.findPatientByRutOrEmail({
+      rut: payload.rut,
       email: payload.email
     });
 
-    PatientValidations.emailInUse(findedEmail?.email);
+    if (existingPatient) {
+      if (existingPatient.rut === payload.rut) {
+        PatientValidations.rutInUse(payload.rut);
+      }
+      if (existingPatient.email === payload.email) {
+        PatientValidations.emailInUse(payload.email);
+      }
+    }
 
     const createdPatient = await this.service.createPatient({
       ...payload,
       is_deleted: false
     });
     const patient = PatientMapper.validate(createdPatient);
-    const message = `Paciente ${patient.names} ${patient.last_names} creado(a)`;
 
     return {
-      message: message,
+      message: `Paciente ${patient.names} ${patient.last_names} creado(a)`,
       data: patient
     };
   };
 
   updatePatient = async (
     uid: string,
-    body: any
+    body: unknown
   ): Promise<UpsertResponse<PatientModel>> => {
     const payload = PatientValidations.updateValidation(body);
+    const findedPatient = await this._getAndValidatePatient(uid);
 
-    let findedPatient = await this.service.getPatientDetail(uid);
-
-    findedPatient = PatientValidations.patientExists(findedPatient, uid);
-
-    const findedRut = await this.service.findPatientByRutOrEmail({
+    const existingPatientWithData = await this.service.findPatientByRutOrEmail({
       rut: payload.rut,
-      id: findedPatient.id
-    });
-
-    PatientValidations.rutInUse(findedRut?.rut);
-
-    const findedEmail = await this.service.findPatientByRutOrEmail({
       email: payload.email,
-      id: findedPatient.id
+      id: findedPatient.id // Excluir al paciente actual de la búsqueda
     });
 
-    PatientValidations.emailInUse(findedEmail?.email);
+    if (existingPatientWithData) {
+      if (existingPatientWithData.rut === payload.rut)
+        PatientValidations.rutInUse(payload.rut);
+      if (existingPatientWithData.email === payload.email)
+        PatientValidations.emailInUse(payload.email);
+    }
 
-    const updatedPatient = await this.service.updatePatient(payload, findedPatient.uid);
+    const updatedPatient = await this.service.updatePatient(findedPatient.uid, payload);
     const patient = PatientMapper.validate(updatedPatient);
-    const message = `Paciente ${patient.names} ${patient.last_names} actualizado(a)`;
 
     return {
-      message: message,
+      message: `Paciente ${patient.names} ${patient.last_names} actualizado(a)`,
       data: patient
     };
   };
 
   togglePatientStatus = async (uid: string): Promise<UpsertResponse<PatientModel>> => {
-    let findedPatient = await this.service.getPatientDetail(uid);
+    const findedPatient = await this._getAndValidatePatient(uid);
 
-    findedPatient = PatientValidations.patientExists(findedPatient, uid);
-
-    const updatedPatient = await this.service.updatePatient(
-      { is_deleted: !findedPatient.is_deleted },
-      findedPatient.uid
-    );
+    const updatedPatient = await this.service.updatePatient(findedPatient.uid, {
+      is_deleted: !findedPatient.is_deleted
+    });
 
     const patient = PatientMapper.validate(updatedPatient);
-    const message = `Paciente ${patient.names} ${patient.last_names} a sido ${
-      updatedPatient.is_deleted ? "deshabilitado(a)" : "habilitado(a)"
-    }`;
 
     return {
       data: patient,
-      message
+      message: `Paciente ${patient.names} ${patient.last_names} ha sido ${
+        updatedPatient.is_deleted ? "deshabilitado(a)" : "habilitado(a)"
+      }`
     };
   };
 }

@@ -5,6 +5,10 @@ import { PatientSchema } from "../models/patient";
 import { Request } from "express";
 
 export class PatientValidations {
+  private static _getExpandQuery(query: Request["query"]) {
+    return query.expand as ExpandPatientTypes[] | undefined;
+  }
+
   static insertValidation(body: any) {
     const { rut, names, last_names, email, phone, address } = body;
 
@@ -19,35 +23,7 @@ export class PatientValidations {
   }
 
   static updateValidation(body: any) {
-    const { rut, names, last_names, email, phone, address } = body;
-
-    if (rut) {
-      PatientSchema.shape.rut.parse(rut);
-    }
-    if (names) {
-      PatientSchema.shape.names.parse(names);
-    }
-    if (last_names) {
-      PatientSchema.shape.last_names.parse(last_names);
-    }
-    if (email) {
-      PatientSchema.shape.email.parse(email);
-    }
-    if (phone) {
-      PatientSchema.shape.phone.parse(phone);
-    }
-    if (address) {
-      PatientSchema.shape.address.parse(address);
-    }
-
-    return {
-      rut,
-      names,
-      last_names,
-      email,
-      phone,
-      address
-    };
+    return PatientSchema.partial().parse(body);
   }
 
   static patientExists<T>(bdPatient: T, uid: string): NonNullable<T> {
@@ -70,14 +46,10 @@ export class PatientValidations {
   }
 
   static withHistory(query: Request["query"]) {
-    return this.getExpandQuery(query)?.includes("appointment_history") ? [] : undefined;
+    return this._getExpandQuery(query)?.includes("appointment_history") ? [] : undefined;
   }
 
   static withId(query: Request["query"]) {
-    return !this.getExpandQuery(query)?.includes("id");
-  }
-
-  private static getExpandQuery(query: Request["query"]) {
-    return query.expand as ExpandPatientTypes[] | undefined;
+    return !this._getExpandQuery(query)?.includes("id");
   }
 }

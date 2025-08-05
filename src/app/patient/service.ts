@@ -81,7 +81,7 @@ export class PatientService {
     });
   }
 
-  async updatePatient(patientLike: Record<string, any>, uid: string) {
+  async updatePatient(uid: string, patientLike: Partial<PatientModel>) {
     return await this.db.patients.update({
       where: { uid: uid },
       data: {
