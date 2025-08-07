@@ -11,6 +11,8 @@ export const ProfessionalSchema = z.object({
   names: z.string(),
   last_names: z.string(),
   phone: z.string(),
+  address: z.string(),
+  avatar_image: z.string().optional().nullable(),
   email: z.string().email().optional(),
   role: RoleSchema,
   professions: z.array(ProfessionSchema)

@@ -71,6 +71,43 @@ export class ProfessionalService {
     return { data, total, page, pages, limit };
   }
 
+  async getProfessionalDetail(uid: string) {
+    return await this.db.professionals.findFirst({
+      select: {
+        // id: true;
+        user: {
+          omit: {
+            password: true,
+            role_id: true
+          },
+          include: {
+            role: {
+              select: {
+                name: true,
+                id: true
+              }
+            }
+          }
+        },
+        professional_profession: {
+          select: {
+            professions: {
+              select: {
+                id: true,
+                name: true
+              }
+            }
+          }
+        }
+      },
+      where: {
+        user: {
+          uid
+        }
+      }
+    });
+  }
+
   async getProfessionalsForFilters(filters: ProfessionalFilters) {
     return await this.db.professionals.findMany({
       select: {

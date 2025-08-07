@@ -56,6 +56,8 @@ export class ProfessionalMapper {
       last_names: user.last_names,
       phone: user.phone,
       email: user.email,
+      address: "direccion indeterminada...",
+      avatar_image: null,
       role: RoleMapper.validate(user.role),
       professions: ProfessionMapper.toArray(
         item.professional_profession.map((i) => ({

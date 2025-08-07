@@ -11,7 +11,7 @@ export class PatientUseCases {
 
   private _getAndValidatePatient = async (uid: string): Promise<Patient> => {
     const patient = await this.service.getPatientDetail(uid);
-    return PatientValidations.patientExists(patient, uid);
+    return PatientValidations.exists(patient, uid);
   };
 
   getPatients = async (
@@ -34,8 +34,8 @@ export class PatientUseCases {
     appointment_history?: any[];
     data: PatientModel;
   }> => {
-    const bdPatient = await this._getAndValidatePatient(uid);
-    const patient = PatientMapper.validate(bdPatient);
+    const result = await this._getAndValidatePatient(uid);
+    const patient = PatientMapper.validate(result);
     let appointment_history: any[] | undefined = undefined;
 
     // 1. Se valida si el query pide el historial

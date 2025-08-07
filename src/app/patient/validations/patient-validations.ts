@@ -26,7 +26,7 @@ export class PatientValidations {
     return PatientSchema.partial().parse(body);
   }
 
-  static patientExists<T>(bdPatient: T, uid: string): NonNullable<T> {
+  static exists<T>(bdPatient: T, uid: string): NonNullable<T> {
     if (!bdPatient) {
       throw CustomError.badRequest(`No se ha encontrado al paciente UID: ${uid}`);
     }
