@@ -14,12 +14,12 @@ export class ProfessionalRoutes {
     const controller = this.controller;
 
     router.get("/", [], controller.getProfessionals);
+    router.get("/for-filter", [], controller.getProfessionalsForFilters);
     router.get(
       "/:uid",
       [UidValidatorMiddleware.validate],
       controller.getProfessionalDetail
     );
-    router.get("/for-filter", [], controller.getProfessionalsForFilters);
 
     return router;
   }
