@@ -11,13 +11,15 @@ export const ProfessionalSchema = z.object({
   names: z.string(),
   last_names: z.string(),
   phone: z.string(),
+  address: z.string(),
+  avatar_image: z.string().optional().nullable(),
   email: z.string().email().optional(),
   role: RoleSchema,
   professions: z.array(ProfessionSchema)
 });
 
 export const ProfessionalForAppointmentDetailSchema = z.object({
-  full_name: z.string(),
+  fullname: z.string(),
   professions: z.array(z.string()),
   pay_methods: z.array(z.string()),
   confirm_methods: z.array(z.string())

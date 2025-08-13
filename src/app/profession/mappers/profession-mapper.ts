@@ -1,13 +1,22 @@
 import { type ProfessionModel, ProfessionSchema } from "../models/profession";
 
 import { CustomError } from "@/lib/custom-error";
-import { safeArray } from "@/lib/utils";
+import { parseQuery, safeArray } from "@/lib/utils";
 import { BdProfession } from "@/types/bd-model";
+import { Request } from "express";
+import { ProfessionFilters } from "../models/profession-filters";
 
 export class ProfessionMapper {
+  private static _mapper(item: BdProfession): ProfessionModel {
+    return {
+      id: item.id,
+      name: item.name
+    };
+  }
+
   static validate(item: BdProfession): ProfessionModel {
     try {
-      const data = ProfessionMapper.mapper(item);
+      const data = ProfessionMapper._mapper(item);
       return ProfessionSchema.parse(data);
     } catch (error) {
       throw CustomError.internalServer(
@@ -26,10 +35,9 @@ export class ProfessionMapper {
     }).map(ProfessionMapper.validate);
   }
 
-  private static mapper(item: BdProfession): ProfessionModel {
-    return {
-      id: item.id,
-      name: item.name
-    };
+  static getFilters(query: Request["query"]): ProfessionFilters {
+    const { id } = query;
+
+    return parseQuery({ id });
   }
 }

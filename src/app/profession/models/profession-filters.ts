@@ -1,5 +1,3 @@
-import { UndefinedObject } from '@/types/global';
-
-export type ProfessionFilters = UndefinedObject<{
+export type ProfessionFilters = Partial<{
   id: number;
 }>;

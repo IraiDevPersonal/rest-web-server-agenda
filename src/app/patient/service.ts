@@ -1,7 +1,8 @@
-import { PrismaClient } from "@prisma/client";
-import { PatientFilters } from "./models/patient-filters";
-import { PatientModel } from "./models/patient";
 import { ResponseWithPagination } from "@/types/global";
+import { Prisma, PrismaClient } from "@prisma/client";
+import { DefaultArgs } from "@prisma/client/runtime/library";
+import { PatientModel } from "./models/patient";
+import { PatientFilters } from "./models/patient-filters";
 
 export class PatientService {
   private readonly db: PrismaClient;
@@ -73,31 +74,29 @@ export class PatientService {
     return { data: patients, total, page, pages: totalPages, limit };
   }
 
-  async findByRutOrEmail(rut: string, email: string, notId?: bigint) {
-    return await this.db.patients.findFirst({
-      where: { OR: [{ email, rut }], NOT: { id: notId } }
+  async getPatientDetail(uid: string, options?: Prisma.patientsDefaultArgs<DefaultArgs>) {
+    return await this.db.patients.findUnique({
+      ...options,
+      where: { uid: uid }
     });
   }
 
-  async findByUid(uid: string) {
-    return await this.db.patients.findUnique({ where: { uid: uid } });
-  }
-
-  async update(patientLike: Record<string, any>, id: bigint) {
-    await this.db.patients.update({
-      where: { id: id },
+  async updatePatient(uid: string, patientLike: Partial<PatientModel>) {
+    return await this.db.patients.update({
+      where: { uid: uid },
       data: {
         rut: patientLike.rut,
         names: patientLike.names,
         last_names: patientLike.last_names,
         email: patientLike.email,
         phone: patientLike.phone,
-        address: patientLike.address
+        address: patientLike.address,
+        is_deleted: patientLike.is_deleted
       }
     });
   }
 
-  async create(patient: PatientModel) {
+  async createPatient(patient: PatientModel) {
     const patientCreated = await this.db.patients.create({
       data: {
         rut: patient.rut,
@@ -111,5 +110,20 @@ export class PatientService {
 
     // console.log(patientCreated);
     return patientCreated;
+  }
+
+  async findPatientByRutOrEmail({
+    email,
+    rut,
+    id
+  }: {
+    rut?: string;
+    email?: string;
+    id?: bigint;
+  }) {
+    return await this.db.patients.findFirst({
+      select: { id: !!id, rut: !!rut, email: !!email },
+      where: { OR: [{ rut: rut }, { email: email }], NOT: { id: id } }
+    });
   }
 }

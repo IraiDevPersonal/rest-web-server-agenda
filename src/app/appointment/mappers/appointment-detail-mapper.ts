@@ -48,6 +48,8 @@ type BdAppointmentDetail = BdSchedule<{
 }>;
 
 export class AppointmentDetailMapper {
+  private static _mapper(item: BdAppointmentDetail): AppointmentDetailModel {
+    const schedule = item.schedule;
   static validate(item: any): AppointmentDetailModel {
     try {
       const data = AppointmentDetailMapper.mapper(item);
@@ -79,11 +81,24 @@ export class AppointmentDetailMapper {
       professional: ProfessionalMapper.validateProfessionalForAppointmentDetail(
         item.professional
       ),
-      patient_history: PatientMapper.patientHistoryToArray(
-        patient?.appointments ?? []
-      ),
-      patient: PatientMapper.validatePatientForAppointmentDetail(patient),
+      patient_history: PatientMapper.patientHistoryToArray(patient?.appointments ?? []),
+      patient: patient ? PatientMapper.validate(patient) : null,
       alert: AlertAppointmentMapper.validate(undefined)
     };
+  }
+
+  static validate(item: any): AppointmentDetailModel {
+    try {
+      const data = AppointmentDetailMapper._mapper(item);
+      return AppointmentDetailSchema.parse(data);
+    } catch (error) {
+      throw CustomError.internalServer(
+        CustomError.getErrorMessage(error, "appointment-detail-mapper.ts: (validate)")
+      );
+    }
+  }
+
+  static response(object: any): AppointmentDetailModel {
+    return AppointmentDetailMapper.validate(object);
   }
 }

@@ -21,17 +21,6 @@ export const PatientSchema = z.object({
   avatar_image: z.string().optional().nullable()
 });
 
-export const PatientForAppointmentDetailSchema = z
-  .object({
-    names: z.string(),
-    last_names: z.string(),
-    rut: z.string(),
-    phone: z.string(),
-    email: z.string(),
-    address: z.string()
-  })
-  .nullable();
-
 export const PatientHistoryForAppointmentDetailSchema = z.object({
   uid: z.string().uuid("El UID debe ser un UUID válido"),
   date_time: z.string(),
@@ -39,9 +28,6 @@ export const PatientHistoryForAppointmentDetailSchema = z.object({
 });
 
 export type PatientModel = z.infer<typeof PatientSchema>;
-export type PatientForAppointmentDetailModel = z.infer<
-  typeof PatientForAppointmentDetailSchema
->;
 export type PatientHistoryForAppointmentDetailModel = z.infer<
   typeof PatientHistoryForAppointmentDetailSchema
 >;

@@ -33,24 +33,18 @@
       "items": [
         {
           "type": "http",
-          "name": "get-appointments",
-          "seq": 1,
+          "name": "get-appointment-detail",
+          "seq": 2,
           "request": {
-            "url": "http://localhost:3000/api/appointments",
+            "url": "http://localhost:3000/api/appointments/:uid",
             "method": "GET",
             "headers": [],
             "params": [
               {
-                "name": "date",
-                "value": "2025-06-09",
-                "type": "query",
-                "enabled": false
-              },
-              {
-                "name": "date_to",
-                "value": "2025-06-15",
-                "type": "query",
-                "enabled": false
+                "name": "uid",
+                "value": "dae36323-4c0a-485a-92ee-c1b06a818bef",
+                "type": "path",
+                "enabled": true
               }
             ],
             "body": {
@@ -71,20 +65,82 @@
         },
         {
           "type": "http",
-          "name": "get-appointment-detail",
-          "seq": 2,
+          "name": "get-appointments",
+          "seq": 1,
           "request": {
-            "url": "http://localhost:3000/api/appointments/:uid",
+            "url": "http://localhost:3000/api/appointments?date=2025-07-14&date_to=2025-07-20",
             "method": "GET",
             "headers": [],
             "params": [
               {
-                "name": "uid",
-                "value": "55a32702-f8d8-465e-afcd-2057df07da5a",
-                "type": "path",
+                "name": "date",
+                "value": "2025-07-14",
+                "type": "query",
+                "enabled": true
+              },
+              {
+                "name": "date_to",
+                "value": "2025-07-20",
+                "type": "query",
                 "enabled": true
               }
             ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "filters",
+      "items": [
+        {
+          "type": "http",
+          "name": "professionals-for-filters",
+          "seq": 2,
+          "request": {
+            "url": "http://localhost:3000/api/professionals/for-filter",
+            "method": "GET",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "professions-for-filters",
+          "seq": 1,
+          "request": {
+            "url": "http://localhost:3000/api/professions/for-filter",
+            "method": "GET",
+            "headers": [],
+            "params": [],
             "body": {
               "mode": "none",
               "formUrlEncoded": [],
@@ -136,100 +192,6 @@
     },
     {
       "type": "folder",
-      "name": "filters",
-      "items": [
-        {
-          "type": "http",
-          "name": "professionals-to-filters",
-          "seq": 2,
-          "request": {
-            "url": "http://localhost:3000/api/professionals/to-filter",
-            "method": "GET",
-            "headers": [],
-            "params": [],
-            "body": {
-              "mode": "none",
-              "formUrlEncoded": [],
-              "multipartForm": [],
-              "file": []
-            },
-            "script": {},
-            "vars": {},
-            "assertions": [],
-            "tests": "",
-            "docs": "",
-            "auth": {
-              "mode": "none"
-            }
-          }
-        },
-        {
-          "type": "http",
-          "name": "professions-to-filters",
-          "seq": 1,
-          "request": {
-            "url": "http://localhost:3000/api/professions/to-filter",
-            "method": "GET",
-            "headers": [],
-            "params": [],
-            "body": {
-              "mode": "none",
-              "formUrlEncoded": [],
-              "multipartForm": [],
-              "file": []
-            },
-            "script": {},
-            "vars": {},
-            "assertions": [],
-            "tests": "",
-            "docs": "",
-            "auth": {
-              "mode": "none"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "type": "folder",
-      "name": "patients",
-      "items": [
-        {
-          "type": "http",
-          "name": "get-patients",
-          "seq": 1,
-          "request": {
-            "url": "http://localhost:3000/api/patients",
-            "method": "GET",
-            "headers": [],
-            "params": [
-              {
-                "name": "rut",
-                "value": "3.560.077-9",
-                "type": "query",
-                "enabled": false
-              }
-            ],
-            "body": {
-              "mode": "none",
-              "formUrlEncoded": [],
-              "multipartForm": [],
-              "file": []
-            },
-            "script": {},
-            "vars": {},
-            "assertions": [],
-            "tests": "",
-            "docs": "",
-            "auth": {
-              "mode": "none"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "type": "folder",
       "name": "professions",
       "items": [
         {
@@ -258,6 +220,126 @@
           }
         }
       ]
+    },
+    {
+      "type": "folder",
+      "name": "patients",
+      "items": [
+        {
+          "type": "http",
+          "name": "get-patient-by-uid",
+          "seq": 2,
+          "request": {
+            "url": "http://localhost:3000/api/patients/:uid",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "expand",
+                "value": "appointment_history",
+                "type": "query",
+                "enabled": false
+              },
+              {
+                "name": "expand",
+                "value": "with-id",
+                "type": "query",
+                "enabled": false
+              },
+              {
+                "name": "uid",
+                "value": "1e2b9e11-e6e4-4ff1-b3bc-1d26a7354268",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "get-patients",
+          "seq": 1,
+          "request": {
+            "url": "http://localhost:3000/api/patients",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "rut",
+                "value": "3.560.077-9",
+                "type": "query",
+                "enabled": false
+              },
+              {
+                "name": "status",
+                "value": "active",
+                "type": "query",
+                "enabled": false
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "toggle-patient-status",
+          "seq": 3,
+          "request": {
+            "url": "http://localhost:3000/api/patients/:uid",
+            "method": "PATCH",
+            "headers": [],
+            "params": [
+              {
+                "name": "uid",
+                "value": "1e2b9e11-e6e4-4ff1-b3bc-1d26a7354268",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
     }
   ],
   "environments": [],
@@ -269,7 +351,7 @@
       "node_modules",
       ".git"
     ],
-    "size": 0.0011882781982421875,
-    "filesCount": 8
+    "size": 0.0017194747924804688,
+    "filesCount": 10
   }
 }

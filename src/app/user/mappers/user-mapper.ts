@@ -18,24 +18,7 @@ type BdUserWithRole = BdUser<{
 }>;
 
 export class UserMapper {
-  static validate(item: BdUserWithRole): UserModel {
-    try {
-      const data = UserMapper.mapper(item);
-      return UserSchema.parse(data);
-    } catch (error) {
-      throw CustomError.internalServer(
-        CustomError.getErrorMessage(error, "user-mapper.ts (validate)")
-      );
-    }
-  }
-
-  static response(data: BdUserWithRole[]): UserModel[] {
-    return safeArray(data, {
-      errorMessage: "user-mapper (response): Se esperaba un arreglo de usuarios"
-    }).map(UserMapper.validate);
-  }
-
-  private static mapper(item: BdUserWithRole): UserModel {
+  private static _mapper(item: BdUserWithRole): UserModel {
     return {
       email: item.email,
       uid: item.uid,
@@ -49,5 +32,22 @@ export class UserMapper {
       id: item?.id,
       role: RoleMapper.validate(item.role)
     };
+  }
+
+  static validate(item: BdUserWithRole): UserModel {
+    try {
+      const data = UserMapper._mapper(item);
+      return UserSchema.parse(data);
+    } catch (error) {
+      throw CustomError.internalServer(
+        CustomError.getErrorMessage(error, "user-mapper.ts (validate)")
+      );
+    }
+  }
+
+  static response(data: BdUserWithRole[]): UserModel[] {
+    return safeArray(data, {
+      errorMessage: "user-mapper (response): Se esperaba un arreglo de usuarios"
+    }).map(UserMapper.validate);
   }
 }

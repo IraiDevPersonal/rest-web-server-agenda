@@ -1,145 +1,57 @@
 import { Request, Response } from "express";
 
-import { type PatientFilters } from "./models/patient-filters";
-import { PatientMapper } from "./mappers/patient-mapper";
-import { PatientService } from "./service";
-
 import { CustomError } from "@/lib/custom-error";
-import { Controllers } from "@/lib/controllers";
-import { ResponseWithPagination } from "@/types/global";
-import { PatientModel } from "./models/patient";
+import { PatientUseCases } from "./use-cases/patient-use-cases";
 
-export class PatientController implements Controllers<PatientFilters> {
-  public constructor(private readonly service: PatientService) {}
+export class PatientController {
+  constructor(private readonly useCases: PatientUseCases) {}
 
-  public getPatients = async (
-    req: Request,
-    res: Response<ResponseWithPagination<PatientModel>>
-  ) => {
+  getPatients = async (req: Request, res: Response) => {
     try {
-      const filters = this.getFilters(req);
-      const { data: bdPatients, ...pagination } =
-        await this.service.getPatients(filters);
-      const patients = PatientMapper.response(bdPatients);
-
-      return res.status(200).json({
-        total: pagination.total,
-        page: pagination.page,
-        pages: pagination.pages,
-        limit: pagination.limit,
-        data: patients
-      });
+      const data = await this.useCases.getPatients(req.query);
+      return res.status(200).json(data);
     } catch (error) {
       return CustomError.handleError(error, res);
     }
   };
 
-  // TODO: agregar avatar_image
-  public create = async (req: Request, res: Response) => {
+  getPatientDetail = async (req: Request, res: Response) => {
     try {
-      const patient = req.patient!;
+      const uid = req.params.uid;
+      const data = await this.useCases.getPatientDetail(uid, req.query);
 
-      const rutAndEmail = await this.service.findByRutOrEmail(
-        patient.rut,
-        patient.email
-      );
-
-      if (rutAndEmail) {
-        throw CustomError.badRequest(
-          `Paciente con rut (${patient.rut}) o email (${patient.email}) ya existe`
-        );
-      }
-
-      const createdPatient = await this.service.create({
-        rut: patient.rut,
-        names: patient.names,
-        last_names: patient.last_names,
-        email: patient.email,
-        phone: patient.phone,
-        address: patient.address,
-        is_deleted: false
-      });
-
-      return res.status(201).json(PatientMapper.validate(createdPatient));
+      return res.status(200).json(data);
     } catch (error) {
       return CustomError.handleError(error, res);
     }
   };
 
-  // TODO: agregar avatar_image
-  public update = async (req: Request, res: Response) => {
+  createPatient = async (req: Request, res: Response) => {
     try {
-      const uid = req.params.uid!;
-      const { rut, names, last_names, email, phone, address } = req.body;
-
-      const findedPatient = await this.service.findByUid(uid);
-
-      if (!findedPatient) {
-        throw CustomError.badRequest(
-          `Paciente con identificacion (${uid}) no encontrado`
-        );
-      }
-
-      const rutAndEmail = await this.service.findByRutOrEmail(
-        rut,
-        email,
-        findedPatient.id
-      );
-
-      if (rutAndEmail) {
-        throw CustomError.badRequest(
-          `Paciente con rut (${rut ?? ""}) o email (${email ?? ""}) ya existe`
-        );
-      }
-
-      const payload = {
-        rut,
-        names,
-        last_names,
-        email,
-        phone,
-        address
-      };
-
-      await this.service.update(payload, findedPatient.id);
-
-      return res.status(200).json();
+      const data = await this.useCases.createPatient(req.body);
+      return res.status(201).json(data);
     } catch (error) {
       return CustomError.handleError(error, res);
     }
   };
 
-  public delete = async (req: Request, res: Response) => {
-    const uid = req.params.uid!;
-
+  updatePatient = async (req: Request, res: Response) => {
     try {
-      const findedPatient = await this.service.findByUid(uid);
-      if (!findedPatient) {
-        throw CustomError.badRequest(
-          `Paciente con identificacion (${uid}) no encontrado`
-        );
-      }
-
-      await this.service.update({ is_deleted: true }, findedPatient.id);
-
-      return res.status(204).json();
+      const uid = req.params.uid;
+      const data = await this.useCases.updatePatient(uid, req.body);
+      return res.status(200).json(data);
     } catch (error) {
       return CustomError.handleError(error, res);
     }
   };
 
-  public getFilters(req: Request) {
-    const { rut, name, email, status, page = "1", limit = "10" } = req.query;
-
-    return {
-      rut: rut as string | undefined,
-      name: name as string | undefined,
-      email: email as string | undefined,
-      is_deleted: status
-        ? status === "inactive"
-        : (undefined as boolean | undefined),
-      page: !isNaN(Number(page)) && Number(page) > 0 ? Number(page) : 1,
-      limit: !isNaN(Number(limit)) && Number(limit) > 0 ? Number(limit) : 10
-    };
-  }
+  togglePatientStatus = async (req: Request, res: Response) => {
+    try {
+      const uid = req.params.uid;
+      const data = await this.useCases.togglePatientStatus(uid);
+      return res.status(200).json(data);
+    } catch (error) {
+      return CustomError.handleError(error, res);
+    }
+  };
 }

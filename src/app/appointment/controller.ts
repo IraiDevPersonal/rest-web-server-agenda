@@ -5,22 +5,14 @@ import { AppointmentService } from "./service";
 
 import { DateFormatter } from "@/lib/date-formatter";
 import { CustomError } from "@/lib/custom-error";
-import { Controllers } from "@/lib/controllers";
-import { isYearMonth } from "@lib/utils";
+import { AppointmentUseCases } from "./use-cases/appoinment-use-cases";
 
-import type { AppointmentFilters } from "./models/appointment-filters";
-import { AppointmentMapper } from "./mappers/appointment-mapper";
-import { AppointmentDetailMapper } from "./mappers/appointment-detail-mapper";
-
-export class AppointmentController implements Controllers<AppointmentFilters> {
-  public constructor(private readonly service: AppointmentService) {}
+export class AppointmentController {
+  public constructor(private readonly useCases: AppointmentUseCases) {}
 
   public getAppointments = async (req: Request, res: Response) => {
     try {
-      const filters = this.getFilters(req);
-      const bdAppointments = await this.service.getAppointments(filters);
-      const appointments = AppointmentMapper.response(bdAppointments);
-
+      const appointments = await this.useCases.getAppointments(req.query);
       return res.status(200).json(appointments);
     } catch (error) {
       return CustomError.handleError(error, res);
@@ -30,13 +22,7 @@ export class AppointmentController implements Controllers<AppointmentFilters> {
   public getAppointmentDetail = async (req: Request, res: Response) => {
     try {
       const uid = req.params.uid;
-      const bdAppoitnment = await this.service.getAppointmentDetail(uid);
-
-      if (!bdAppoitnment) {
-        throw CustomError.badRequest(`No se encontró cita para el UID: ${uid}`);
-      }
-
-      const appointment = AppointmentDetailMapper.response(bdAppoitnment);
+      const appointment = await this.useCases.getAppointmentDetail(uid);
       return res.status(200).json(appointment);
     } catch (error) {
       return CustomError.handleError(error, res);
@@ -44,14 +30,8 @@ export class AppointmentController implements Controllers<AppointmentFilters> {
   };
 
   public getFilters(req: Request) {
-    const {
-      date,
-      patient_rut,
-      professional_id,
-      profession_id,
-      date_to,
-      month
-    } = req.query;
+    const { date, patient_rut, professional_id, profession_id, date_to, month } =
+      req.query;
     const type = req.params.type ?? req.query.type;
 
     let queryDate: Date | undefined = date

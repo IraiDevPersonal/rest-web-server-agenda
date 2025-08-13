@@ -8,14 +8,26 @@ import {
 } from "../models/professional";
 
 import { CustomError } from "@/lib/custom-error";
-import { safeArray } from "@/lib/utils";
+import { parseQuery, safeArray } from "@/lib/utils";
 import { BdProfessional } from "@/types/bd-model";
+import { Request } from "express";
+import { ProfessionalFilters } from "../models/professional-filters";
 
 type BdProfessionalWithRoleAndProfessions = BdProfessional<{
-  include: {
+  select: {
+    // id: true;
     user: {
+      omit: {
+        password: true;
+        role_id: true;
+      };
       include: {
-        role: true;
+        role: {
+          select: {
+            name: true;
+            id: true;
+          };
+        };
       };
     };
     professional_profession: {
@@ -32,11 +44,33 @@ type BdProfessionalWithRoleAndProfessions = BdProfessional<{
 }>;
 
 export class ProfessionalMapper {
-  static validate(
-    item: BdProfessionalWithRoleAndProfessions
-  ): ProfessionalModel {
+  private static _mapper(item: BdProfessionalWithRoleAndProfessions): ProfessionalModel {
+    const user = item?.user;
+
+    return {
+      // id: item.id,
+      user_id: user.id,
+      names: user.names,
+      uid: user.uid,
+      rut: user.rut,
+      last_names: user.last_names,
+      phone: user.phone,
+      email: user.email,
+      address: "direccion indeterminada...",
+      avatar_image: null,
+      role: RoleMapper.validate(user.role),
+      professions: ProfessionMapper.toArray(
+        item.professional_profession.map((i) => ({
+          id: i.professions.id,
+          name: i.professions.name
+        }))
+      )
+    };
+  }
+
+  static validate(item: BdProfessionalWithRoleAndProfessions): ProfessionalModel {
     try {
-      const data = ProfessionalMapper.mapper(item);
+      const data = ProfessionalMapper._mapper(item);
       return ProfessionalSchema.parse(data);
     } catch (error) {
       throw CustomError.internalServer(
@@ -45,9 +79,7 @@ export class ProfessionalMapper {
     }
   }
 
-  static response(
-    data: BdProfessionalWithRoleAndProfessions[]
-  ): ProfessionalModel[] {
+  static response(data: BdProfessionalWithRoleAndProfessions[]): ProfessionalModel[] {
     return safeArray(data, {
       errorMessage: "professional-mapper.ts (response): se esperaba un array"
     }).map(ProfessionalMapper.validate);
@@ -58,11 +90,9 @@ export class ProfessionalMapper {
   ): ProfessionalForAppointmentDetailModel {
     try {
       const user = item.user;
-      const professions = item.professional_profession.map(
-        (p) => p.professions.name
-      );
+      const professions = item.professional_profession.map((p) => p.professions.name);
       const data: ProfessionalForAppointmentDetailModel = {
-        full_name: `${user.names} ${user.last_names}`,
+        fullname: `${user.names} ${user.last_names}`,
         professions: professions,
         pay_methods: ["fonasa", "particular (Efectivo, Transferencia)"],
         confirm_methods: ["whatsapp", "teléfono", "correo", "presencial"]
@@ -79,27 +109,12 @@ export class ProfessionalMapper {
     }
   }
 
-  private static mapper(
-    item: BdProfessionalWithRoleAndProfessions
-  ): ProfessionalModel {
-    const user = item?.user;
+  static getFilters(query: Request["query"]): ProfessionalFilters {
+    const { id, names, last_names, profession_id, rut, page, limit } = query;
 
-    return {
-      id: item.id,
-      user_id: user.id,
-      names: user.names,
-      uid: user.uid,
-      rut: user.rut,
-      last_names: user.last_names,
-      phone: user.phone,
-      email: user.email,
-      role: RoleMapper.validate(user.role),
-      professions: ProfessionMapper.toArray(
-        item.professional_profession.map((i) => ({
-          id: i.professions.id,
-          name: i.professions.name
-        }))
-      )
-    };
+    return parseQuery(
+      { id, names, last_names, profession_id, rut, page, limit },
+      { limit: "10", page: "1" }
+    );
   }
 }

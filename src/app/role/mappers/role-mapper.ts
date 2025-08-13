@@ -5,9 +5,16 @@ import { safeArray } from "@/lib/utils";
 import { BdRole } from "@/types/bd-model";
 
 export class RoleMapper {
+  private static _mapper(item: BdRole): RoleModel {
+    return {
+      id: item.id,
+      name: item.name
+    };
+  }
+
   static validate(object: BdRole): RoleModel {
     try {
-      const data = RoleMapper.mapper(object);
+      const data = RoleMapper._mapper(object);
       return RoleSchema.parse(data);
     } catch (error) {
       throw CustomError.internalServer(
@@ -20,12 +27,5 @@ export class RoleMapper {
     return safeArray(data, {
       errorMessage: "role-mapper.ts (response): Se esperaba un array"
     }).map(RoleMapper.validate);
-  }
-
-  private static mapper(item: BdRole): RoleModel {
-    return {
-      id: item.id,
-      name: item.name
-    };
   }
 }

@@ -1,16 +1,16 @@
 import {
-  PatientForAppointmentDetailSchema,
   PatientHistoryForAppointmentDetailSchema,
   PatientSchema,
-  type PatientForAppointmentDetailModel,
   type PatientHistoryForAppointmentDetailModel,
   type PatientModel
 } from "../models/patient";
 
 import { CustomError } from "@/lib/custom-error";
 import { DateFormatter } from "@/lib/date-formatter";
-import { safeArray } from "@/lib/utils";
+import { parseQuery, safeArray } from "@/lib/utils";
 import { BdAppointment, BdPatient } from "@/types/bd-model";
+import { PatientFilters } from "../models/patient-filters";
+import { Request } from "express";
 
 type BdAppointmentWithSchedule = BdAppointment<{
   select: {
@@ -27,9 +27,24 @@ type BdAppointmentWithSchedule = BdAppointment<{
 }>;
 
 export class PatientMapper {
-  static validate(item: any): PatientModel {
+  private static _mapper(bdPatient: BdPatient): PatientModel {
+    return {
+      id: bdPatient.id,
+      uid: bdPatient.uid,
+      rut: bdPatient.rut,
+      names: bdPatient.names,
+      last_names: bdPatient.last_names,
+      email: bdPatient.email,
+      phone: bdPatient.phone,
+      address: bdPatient.address,
+      is_deleted: bdPatient.is_deleted,
+      avatar_image: null // agregar avatar para usuarios en general
+    };
+  }
+
+  static validate(item: BdPatient): PatientModel {
     try {
-      const data = PatientMapper.mapper(item);
+      const data = PatientMapper._mapper(item);
       return PatientSchema.parse(data);
     } catch (error) {
       throw CustomError.internalServer(
@@ -38,38 +53,10 @@ export class PatientMapper {
     }
   }
 
-  static response(item: any): PatientModel[] {
+  static response(item: BdPatient[]): PatientModel[] {
     return safeArray(item, {
       errorMessage: "patient-mapper.ts (response): se espera un array"
     }).map(PatientMapper.validate);
-  }
-
-  static validatePatientForAppointmentDetail(
-    item: BdPatient | null
-  ): PatientForAppointmentDetailModel {
-    try {
-      let data: PatientForAppointmentDetailModel = null;
-
-      if (item) {
-        data = {
-          names: item.names,
-          last_names: item.last_names,
-          rut: item.rut,
-          phone: item.phone,
-          email: item.email,
-          address: item.address
-        };
-      }
-
-      return PatientForAppointmentDetailSchema.parse(data);
-    } catch (error) {
-      throw CustomError.internalServer(
-        CustomError.getErrorMessage(
-          error,
-          "patient-mapper.ts: (validatePatienForAppointmentDetail)"
-        )
-      );
-    }
   }
 
   static validatePatientHistoryForAppointmentDetail(
@@ -101,23 +88,20 @@ export class PatientMapper {
   static patientHistoryToArray(
     data: BdAppointmentWithSchedule[]
   ): PatientHistoryForAppointmentDetailModel[] {
-    return safeArray(data).map(
-      PatientMapper.validatePatientHistoryForAppointmentDetail
-    );
+    return safeArray(data).map(PatientMapper.validatePatientHistoryForAppointmentDetail);
   }
 
-  private static mapper(bdPatient: BdPatient): PatientModel {
+  static getFilters(query: Request["query"]): PatientFilters {
+    const { rut, name, email, status, page, limit } = query;
+
+    const { status: statusQuery, ...parsedQueries } = parseQuery(
+      { rut, name, email, status, page, limit },
+      { page: "1", limit: "10" }
+    );
+
     return {
-      id: bdPatient.id,
-      uid: bdPatient.uid,
-      rut: bdPatient.rut,
-      names: bdPatient.names,
-      last_names: bdPatient.last_names,
-      email: bdPatient.email,
-      phone: bdPatient.phone,
-      address: bdPatient.address,
-      is_deleted: bdPatient.is_deleted,
-      avatar_image: null // agregar avatar para usuarios en general
+      ...parsedQueries,
+      is_deleted: statusQuery ? statusQuery === "inactive" : undefined
     };
   }
 }
