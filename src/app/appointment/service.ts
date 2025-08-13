@@ -122,9 +122,11 @@ export class AppointmentService {
             }
           }
         },
-        patient: {
-          rut: { contains: patient_rut }
-        }
+        ...(patient_rut && {
+          patient: {
+            rut: { contains: patient_rut }
+          }
+        })
       },
       orderBy: [
         {

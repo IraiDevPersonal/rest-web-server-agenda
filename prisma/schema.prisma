@@ -14,9 +14,18 @@ datasource db {
 }
 
 model roles {
-  id    Int     @id @default(autoincrement())
+  id    Int           @id @default(autoincrement())
   name  String
-  users users[]
+  users users_roles[]
+}
+
+model users_roles {
+  user_id BigInt
+  user    users  @relation(fields: [user_id], references: [id])
+  role_id Int
+  role    roles  @relation(fields: [role_id], references: [id])
+
+  @@id([user_id, role_id])
 }
 
 model professions {
@@ -25,84 +34,74 @@ model professions {
   professional_professions professional_professions[]
 }
 
-model professionals {
-  id                      BigInt                     @id @default(autoincrement())
-  user_id                 BigInt
-  service_provider_id     Int?
-  serviceProviders        service_providers?         @relation(fields: [service_provider_id], references: [id])
-  user                    users                      @relation(fields: [user_id], references: [id])
-  professional_profession professional_professions[]
-  schedules               schedules[]
-}
-
 model professional_professions {
-  professional_id BigInt
-  professionals   professionals @relation(fields: [professional_id], references: [id])
-  profession_id   Int
-  professions     professions   @relation(fields: [profession_id], references: [id])
+  user_id       BigInt
+  user          users       @relation(fields: [user_id], references: [id])
+  profession_id Int
+  profession    professions @relation(fields: [profession_id], references: [id])
 
-  @@id([profession_id, professional_id])
-}
-
-model service_providers {
-  id                     Int                      @id @default(autoincrement())
-  name                   String
-  rut                    String
-  service_provider_codes service_provider_codes[]
-  professionals          professionals[]
-}
-
-model service_provider_codes {
-  id                  Int               @id @default(autoincrement())
-  code                String
-  title               String
-  service_provider_id Int
-  service_providers   service_providers @relation(fields: [service_provider_id], references: [id])
+  @@id([profession_id, user_id])
 }
 
 model users {
-  id            BigInt          @id @default(autoincrement())
-  uid           String          @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  rut           String          @unique
-  names         String
-  last_names    String
-  email         String          @unique
-  password      String
-  is_admin      Boolean         @default(false)
-  phone         String
-  role          roles           @relation(fields: [role_id], references: [id])
-  role_id       Int
-  professionals professionals[]
+  id           BigInt                     @id @default(autoincrement())
+  uid          String                     @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  rut          String                     @unique
+  names        String                     @default("")
+  last_names   String                     @default("")
+  email        String                     @unique
+  password     String                     @default("")
+  phone        String                     @default("")
+  status       UserStatus                 @default(ACTIVE)
+  avatar_image String?                    @default("")
+  address      String                     @default("")
+  gender       Gender
+  roles        users_roles[]
+  professions  professional_professions[]
+  appointments appointments[]
 }
 
-model schedules {
-  id              BigInt         @id @default(autoincrement())
-  uid             String         @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  professional_id BigInt
-  date            DateTime       @db.Date
-  time_from       String
-  time_to         String
-  patient_id      BigInt?
-  is_enabled      Boolean        @default(true)
-  professional    professionals  @relation(fields: [professional_id], references: [id])
-  schedule_status ScheduleStatus @default(AVAILABLE)
-  patient         patients?      @relation(fields: [patient_id], references: [id])
+model appointments {
+  id                 BigInt           @id @default(autoincrement())
+  uid                String           @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id            BigInt
+  date               DateTime         @db.Date
+  time_from          String
+  time_to            String
+  patient_id         BigInt?
+  is_enabled         Boolean          @default(true)
+  user               users            @relation(fields: [user_id], references: [id])
+  appointment_status ApointmentStatus @default(AVAILABLE)
+  patient            patients?        @relation(fields: [patient_id], references: [id])
 }
 
 model patients {
-  id           BigInt      @id @default(autoincrement())
-  uid          String      @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  rut          String      @unique
-  names        String
-  last_names   String
-  email        String      @unique
-  phone        String
-  address      String      @default("")
-  is_deleted   Boolean     @default(false)
-  appointments schedules[]
+  id           BigInt         @id @default(autoincrement())
+  uid          String         @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  rut          String         @unique
+  names        String         @default("")
+  last_names   String         @default("")
+  email        String         @unique
+  phone        String         @default("")
+  address      String         @default("")
+  birth_date   DateTime       @default(now()) @db.Date
+  status       UserStatus     @default(ACTIVE)
+  gender       Gender
+  appointments appointments[]
 }
 
-enum ScheduleStatus {
+enum Gender {
+  MA @map("masculine")
+  FE @map("feminine")
+}
+
+enum UserStatus {
+  ACTIVE   @map("active")
+  INACTIVE @map("inactive")
+  BLOCKED  @map("blocked")
+}
+
+enum ApointmentStatus {
   TO_CONFIRM    @map("to-confirm")
   CONFIRMED     @map("confirmed")
   CANCELLED     @map("cancelled")
