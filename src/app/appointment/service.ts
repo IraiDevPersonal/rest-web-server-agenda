@@ -9,30 +9,22 @@ export class AppointmentService {
   }
 
   async getAppointmentDetail(appointment_uid: string) {
-    return await this.db.schedules.findFirst({
+    return await this.db.appointments.findFirst({
       select: {
         uid: true,
-        schedule_status: true,
+        appointment_status: true,
         date: true,
         time_from: true,
         time_to: true,
         is_enabled: true,
-        professional: {
+        user: {
           select: {
-            professional_profession: {
+            names: true,
+            last_names: true,
+            rut: true,
+            professions: {
               select: {
-                professions: {
-                  select: {
-                    name: true
-                  }
-                }
-              }
-            },
-            user: {
-              select: {
-                names: true,
-                last_names: true,
-                rut: true
+                profession: { select: { name: true } }
               }
             }
           }
@@ -49,7 +41,7 @@ export class AppointmentService {
               take: 4,
               select: {
                 uid: true,
-                schedule_status: true,
+                appointment_status: true,
                 date: true,
                 time_from: true,
                 time_to: true
@@ -73,27 +65,19 @@ export class AppointmentService {
     date,
     type
   }: AppointmentFilters) {
-    return await this.db.schedules.findMany({
+    return await this.db.appointments.findMany({
       select: {
         id: true,
         uid: true,
-        schedule_status: true,
+        appointment_status: true,
         date: true,
         time_from: true,
         time_to: true,
-        professional: {
+        user: {
           select: {
-            user: {
-              select: {
-                names: true,
-                last_names: true
-              }
-            },
-            professional_profession: {
-              select: {
-                professions: true
-              }
-            }
+            names: true,
+            last_names: true,
+            professions: true
           }
         },
         patient: {
@@ -106,17 +90,15 @@ export class AppointmentService {
         }
       },
       where: {
-        schedule_status: type,
+        appointment_status: type,
         date: date ?? {
           gte: date_from,
           lte: date_to
         },
-        professional_id: professional_id,
-        professional: {
-          professional_profession: {
-            some: {
-              profession_id: profession_id
-            }
+        user_id: professional_id,
+        user: {
+          professions: {
+            some: { profession_id: profession_id }
           }
         },
         ...(patient_rut && {

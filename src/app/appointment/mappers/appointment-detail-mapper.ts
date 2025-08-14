@@ -8,9 +8,9 @@ import { AlertAppointmentMapper } from "./alert-appointment-mapper";
 
 import { CustomError } from "@/lib/custom-error";
 import { DateFormatter } from "@/lib/date-formatter";
-import { BdSchedule } from "@/types/bd-model";
+import { BdAppointment } from "@/types/bd-model";
 
-type BdAppointmentDetail = BdSchedule<{
+type BdAppointmentDetail = BdAppointment<{
   include: {
     patient: {
       include: {
@@ -77,7 +77,7 @@ export class AppointmentDetailMapper {
       time_from: item.time_from,
       time_to: item.time_to,
       is_enabled: item.is_enabled,
-      status: item.schedule_status,
+      status: item.appointment_status,
       professional: ProfessionalMapper.validateProfessionalForAppointmentDetail(
         item.professional
       ),

@@ -1,40 +1,37 @@
 import { type UserModel, UserSchema } from "../models/user";
 
-import { RoleMapper } from "@/app/role/mappers/role-mapper";
-
 import { CustomError } from "@/lib/custom-error";
 import { safeArray } from "@/lib/utils";
 import { BdUser } from "@/types/bd-model";
 
-type BdUserWithRole = BdUser<{
+type BdUserWithRelations = BdUser<{
   include: {
-    role: {
-      select: {
-        id: true;
-        name: true;
-      };
-    };
+    roles: true;
+    appointments: true;
+    professions: true;
   };
 }>;
 
 export class UserMapper {
-  private static _mapper(item: BdUserWithRole): UserModel {
+  private static _mapper(item: BdUserWithRelations): UserModel {
     return {
       email: item.email,
       uid: item.uid,
       rut: item.rut,
       names: item.names,
+      gender: item.gender,
+      status: item.status,
+      avatar_image: item?.avatar_image ?? "",
       last_names: item.last_names,
-      is_admin: item.is_admin,
       phone: item.phone,
       password: item.password,
-      role_id: item.role_id,
-      id: item?.id,
-      role: RoleMapper.validate(item.role)
+      id: item?.id
+
+      // role: RoleMapper.validate(item.role)
     };
   }
 
-  static validate(item: BdUserWithRole): UserModel {
+  static validate(item: BdUserWithRelations): UserModel {
     try {
       const data = UserMapper._mapper(item);
       return UserSchema.parse(data);
@@ -45,7 +42,7 @@ export class UserMapper {
     }
   }
 
-  static response(data: BdUserWithRole[]): UserModel[] {
+  static response(data: BdUserWithRelations[]): UserModel[] {
     return safeArray(data, {
       errorMessage: "user-mapper (response): Se esperaba un arreglo de usuarios"
     }).map(UserMapper.validate);

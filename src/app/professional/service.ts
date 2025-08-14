@@ -18,12 +18,10 @@ export class ProfessionalService {
 
     const whereClause: any = {
       id: filters?.id,
-      user: {
-        names: { contains: filters?.names, mode: "insensitive" },
-        last_names: { contains: filters?.last_names, mode: "insensitive" },
-        rut: { equals: filters?.rut, mode: "insensitive" }
-      },
-      professional_profession: {
+      names: { contains: filters?.names, mode: "insensitive" },
+      last_names: { contains: filters?.last_names, mode: "insensitive" },
+      rut: { equals: filters?.rut, mode: "insensitive" },
+      professions: {
         some: {
           profession_id: filters?.profession_id
         }
@@ -31,27 +29,24 @@ export class ProfessionalService {
     };
 
     const [total, data] = await this.db.$transaction([
-      this.db.professionals.count({ where: whereClause }),
-      this.db.professionals.findMany({
+      this.db.users.count({ where: whereClause }),
+      this.db.users.findMany({
         select: {
           // id: true,
-          user: {
-            omit: {
-              password: true,
-              role_id: true
-            },
-            include: {
+          password: true,
+          roles: {
+            select: {
               role: {
                 select: {
-                  name: true,
-                  id: true
+                  id: true,
+                  name: true
                 }
               }
             }
           },
-          professional_profession: {
+          professions: {
             select: {
-              professions: {
+              profession: {
                 select: {
                   id: true,
                   name: true
@@ -72,26 +67,23 @@ export class ProfessionalService {
   }
 
   async getProfessionalDetail(uid: string) {
-    return await this.db.professionals.findFirst({
+    return await this.db.users.findFirst({
       select: {
         // id: true;
-        user: {
-          omit: {
-            password: true,
-            role_id: true
-          },
-          include: {
+        password: true,
+        roles: {
+          select: {
             role: {
               select: {
-                name: true,
-                id: true
+                id: true,
+                name: true
               }
             }
           }
         },
-        professional_profession: {
+        professions: {
           select: {
-            professions: {
+            profession: {
               select: {
                 id: true,
                 name: true
@@ -101,31 +93,30 @@ export class ProfessionalService {
         }
       },
       where: {
-        user: {
-          uid
-        }
+        uid: uid
       }
     });
   }
 
   async getProfessionalsForFilters(filters: ProfessionalFilters) {
-    return await this.db.professionals.findMany({
+    return await this.db.users.findMany({
       select: {
         id: true,
-        user: {
+        names: true,
+        last_names: true,
+        professions: {
           select: {
-            names: true,
-            last_names: true
-          }
-        },
-        professional_profession: {
-          select: {
-            profession_id: true
+            profession_id: true,
+            profession: {
+              select: {
+                name: true
+              }
+            }
           }
         }
       },
       where: {
-        professional_profession: {
+        professions: {
           some: {
             profession_id: filters?.profession_id
           }
