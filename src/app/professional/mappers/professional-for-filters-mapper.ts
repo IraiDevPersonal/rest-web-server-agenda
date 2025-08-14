@@ -5,18 +5,14 @@ import {
 
 import { CustomError } from "@/lib/custom-error";
 import { safeArray } from "@/lib/utils";
-import { BdProfessional } from "@/types/bd-model";
+import { BdUser } from "@/types/bd-model";
 
-type BdProfessionalWithProfessions = BdProfessional<{
+type BdProfessionalWithProfessions = BdUser<{
   select: {
     id: true;
-    user: {
-      select: {
-        names: true;
-        last_names: true;
-      };
-    };
-    professional_profession: {
+    names: true;
+    last_names: true;
+    professions: {
       select: {
         profession_id: true;
       };
@@ -26,12 +22,11 @@ type BdProfessionalWithProfessions = BdProfessional<{
 
 export class ProfessionalForFiltersMapper {
   private static _mapper(item: BdProfessionalWithProfessions): ProfessionalOptionModel {
-    const user = item.user;
-    const professions = item.professional_profession;
+    const professions = item.professions;
 
     return {
       value: `${item.id}`,
-      label: `${user.names} ${user.last_names}`,
+      label: `${item.names} ${item.last_names}`,
       professions: professions
         .map((i) => (i.profession_id ? `${i.profession_id}` : ""))
         .filter(Boolean)

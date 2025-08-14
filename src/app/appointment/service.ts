@@ -77,7 +77,9 @@ export class AppointmentService {
           select: {
             names: true,
             last_names: true,
-            professions: true
+            professions: {
+              select: { profession: true }
+            }
           }
         },
         patient: {

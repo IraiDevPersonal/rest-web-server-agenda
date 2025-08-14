@@ -17,7 +17,7 @@ type BdAppointmentDetail = BdAppointment<{
         appointments: {
           select: {
             uid: true;
-            schedule_status: true;
+            appointment_status: true;
             date: true;
             time_from: true;
             time_to: true;
@@ -49,26 +49,6 @@ type BdAppointmentDetail = BdAppointment<{
 
 export class AppointmentDetailMapper {
   private static _mapper(item: BdAppointmentDetail): AppointmentDetailModel {
-    const schedule = item.schedule;
-  static validate(item: any): AppointmentDetailModel {
-    try {
-      const data = AppointmentDetailMapper.mapper(item);
-      return AppointmentDetailSchema.parse(data);
-    } catch (error) {
-      throw CustomError.internalServer(
-        CustomError.getErrorMessage(
-          error,
-          "appointment-detail-mapper.ts: (validate)"
-        )
-      );
-    }
-  }
-
-  static response(object: any): AppointmentDetailModel {
-    return AppointmentDetailMapper.validate(object);
-  }
-
-  private static mapper(item: BdAppointmentDetail): AppointmentDetailModel {
     const patient = item.patient;
 
     return {

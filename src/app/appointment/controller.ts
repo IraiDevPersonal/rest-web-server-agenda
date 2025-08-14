@@ -1,11 +1,10 @@
+import { AppointmentStatus } from "@prisma/client";
 import { Request, Response } from "express";
-import { ScheduleStatus } from "@prisma/client";
 
-import { AppointmentService } from "./service";
-
-import { DateFormatter } from "@/lib/date-formatter";
 import { CustomError } from "@/lib/custom-error";
+import { DateFormatter } from "@/lib/date-formatter";
 import { AppointmentUseCases } from "./use-cases/appoinment-use-cases";
+import { isYearMonth } from "@/lib/utils";
 
 export class AppointmentController {
   public constructor(private readonly useCases: AppointmentUseCases) {}
@@ -57,7 +56,7 @@ export class AppointmentController {
       professional_id: professional_id ? Number(professional_id) : undefined,
       profession_id: profession_id ? Number(profession_id) : undefined,
       patient_rut: patient_rut as string,
-      type: type as ScheduleStatus,
+      type: type as AppointmentStatus,
       date_from: queryDateFrom,
       date_to: queryDateTo,
       date: queryDate

@@ -42,8 +42,8 @@ export class PatientService {
         contains: filters.email,
         mode: "insensitive"
       },
-      is_deleted: {
-        equals: filters.is_deleted
+      status: {
+        equals: filters.status
       }
     };
 
@@ -57,8 +57,7 @@ export class PatientService {
           names: true,
           last_names: true,
           phone: true,
-          address: true,
-          is_deleted: true
+          address: true
         },
         where: whereClause,
         orderBy: {
@@ -91,7 +90,9 @@ export class PatientService {
         email: patientLike.email,
         phone: patientLike.phone,
         address: patientLike.address,
-        is_deleted: patientLike.is_deleted
+        birth_date: patientLike.birth_date,
+        gender: patientLike.gender,
+        status: patientLike.status
       }
     });
   }
@@ -104,7 +105,10 @@ export class PatientService {
         last_names: patient.last_names,
         email: patient.email,
         phone: patient.phone,
-        address: patient.address
+        address: patient.address,
+        gender: patient.gender,
+        birth_date: patient.birth_date,
+        status: patient.status
       }
     });
 

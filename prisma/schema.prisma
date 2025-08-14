@@ -62,17 +62,17 @@ model users {
 }
 
 model appointments {
-  id                 BigInt           @id @default(autoincrement())
-  uid                String           @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id                 BigInt            @id @default(autoincrement())
+  uid                String            @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   user_id            BigInt
-  date               DateTime         @db.Date
+  date               DateTime          @db.Date
   time_from          String
   time_to            String
   patient_id         BigInt?
-  is_enabled         Boolean          @default(true)
-  user               users            @relation(fields: [user_id], references: [id])
-  appointment_status ApointmentStatus @default(AVAILABLE)
-  patient            patients?        @relation(fields: [patient_id], references: [id])
+  is_enabled         Boolean           @default(true)
+  user               users             @relation(fields: [user_id], references: [id])
+  appointment_status AppointmentStatus @default(AVAILABLE)
+  patient            patients?         @relation(fields: [patient_id], references: [id])
 }
 
 model patients {
@@ -101,7 +101,7 @@ enum UserStatus {
   BLOCKED  @map("blocked")
 }
 
-enum ApointmentStatus {
+enum AppointmentStatus {
   TO_CONFIRM    @map("to-confirm")
   CONFIRMED     @map("confirmed")
   CANCELLED     @map("cancelled")

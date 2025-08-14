@@ -13,25 +13,15 @@ type BdAppointmentScheduleAndProfessions = BdAppointment<{
     id: true;
     uid: true;
     appointment_status: true;
-    schedule: {
+    date: true;
+    time_from: true;
+    time_to: true;
+    user: {
       select: {
-        date: true;
-        time_from: true;
-        time_to: true;
-        professional: {
-          select: {
-            user: {
-              select: {
-                names: true;
-                last_names: true;
-              };
-            };
-            professional_profession: {
-              select: {
-                professions: true;
-              };
-            };
-          };
+        names: true;
+        last_names: true;
+        professions: {
+          select: { profession: true };
         };
       };
     };
@@ -48,12 +38,9 @@ type BdAppointmentScheduleAndProfessions = BdAppointment<{
 
 export class AppointmentMapper {
   private static _mapper(item: BdAppointmentScheduleAndProfessions): AppointmentModel {
-    const schedule = item.schedule;
     const patient = item.patient;
-    const professional = item.professional;
-    const professions = professional.professional_profession.map(
-      (p) => p.professions.name
-    );
+    const user = item.user;
+    const professions = user.professions.map((p) => p.profession.name);
 
     return {
       uid: item.uid,
@@ -62,9 +49,9 @@ export class AppointmentMapper {
       patient_rut: patient?.rut ?? null,
       patient_phone: patient?.phone ?? null,
       patient_name: patient ? `${patient.names} ${patient.last_names}` : null,
-      professional_name: `${professional.user.names} ${professional.user.last_names}`,
+      professional_name: `${user.names} ${user.last_names}`,
       date: DateFormatter.formatDate(item.date, "ymd"),
-      appointment_status: item.schedule_status,
+      appointment_status: item.appointment_status,
       professions
     };
   }

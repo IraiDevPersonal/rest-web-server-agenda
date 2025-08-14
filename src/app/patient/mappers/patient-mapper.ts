@@ -16,13 +16,9 @@ type BdAppointmentWithSchedule = BdAppointment<{
   select: {
     uid: true;
     appointment_status: true;
-    schedule: {
-      select: {
-        date: true;
-        time_from: true;
-        time_to: true;
-      };
-    };
+    date: true;
+    time_from: true;
+    time_to: true;
   };
 }>;
 
@@ -37,7 +33,9 @@ export class PatientMapper {
       email: bdPatient.email,
       phone: bdPatient.phone,
       address: bdPatient.address,
-      is_deleted: bdPatient.is_deleted,
+      status: bdPatient.status,
+      birth_date: bdPatient.birth_date,
+      gender: bdPatient.gender,
       avatar_image: null // agregar avatar para usuarios en general
     };
   }
@@ -63,10 +61,9 @@ export class PatientMapper {
     bdAppointment: BdAppointmentWithSchedule
   ): PatientHistoryForAppointmentDetailModel {
     try {
-      const schedule = bdAppointment.schedule;
-      const date = DateFormatter.formatDate(schedule.date, "dmy");
-      const timeFrom = schedule.time_from;
-      const timeTo = schedule.time_to;
+      const date = DateFormatter.formatDate(bdAppointment.date, "dmy");
+      const timeFrom = bdAppointment.time_from;
+      const timeTo = bdAppointment.time_to;
 
       const data: PatientHistoryForAppointmentDetailModel = {
         uid: bdAppointment.uid,
@@ -101,7 +98,7 @@ export class PatientMapper {
 
     return {
       ...parsedQueries,
-      is_deleted: statusQuery ? statusQuery === "inactive" : undefined
+      status: statusQuery ? "ACTIVE" : "INACTIVE"
     };
   }
 }

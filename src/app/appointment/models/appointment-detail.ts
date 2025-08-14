@@ -3,7 +3,7 @@ import {
   PatientSchema
 } from "@/app/patient/models/patient";
 import { ProfessionalForAppointmentDetailSchema } from "@/app/professional/models/professional";
-import { ScheduleStatus } from "@prisma/client";
+import { AppointmentStatus } from "@prisma/client";
 import { z } from "zod";
 
 export const AlertAppointmentDetailMapperSchema = z.object({
@@ -12,16 +12,16 @@ export const AlertAppointmentDetailMapperSchema = z.object({
 });
 
 export const AppointmentDetailSchema = z.object({
-  uid: z.string().uuid("El UID debe ser un UUID válido"),
+  uid: z.uuid("El UID debe ser un UUID válido"),
   date: z.string(),
   time_from: z.string(),
   time_to: z.string(),
   is_enabled: z.boolean(),
-  status: z.nativeEnum(ScheduleStatus),
+  status: z.enum(AppointmentStatus),
   patient_history: z.array(PatientHistoryForAppointmentDetailSchema),
   professional: ProfessionalForAppointmentDetailSchema,
   patient: PatientSchema.omit({
-    is_deleted: true
+    status: true
   }).nullable(),
   alert: AlertAppointmentDetailMapperSchema
 });

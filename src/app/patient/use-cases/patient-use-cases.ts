@@ -4,7 +4,7 @@ import { PatientMapper } from "../mappers/patient-mapper";
 import { PatientModel } from "../models/patient";
 import { PatientService } from "../service";
 import { PatientValidations } from "../validations/patient-validations";
-import { patients as Patient } from "@prisma/client";
+import { patients as Patient, UserStatus } from "@prisma/client";
 
 export class PatientUseCases {
   constructor(private readonly service: PatientService) {}
@@ -70,7 +70,7 @@ export class PatientUseCases {
 
     const createdPatient = await this.service.createPatient({
       ...payload,
-      is_deleted: false
+      status: UserStatus.ACTIVE
     });
     const patient = PatientMapper.validate(createdPatient);
 
@@ -113,7 +113,7 @@ export class PatientUseCases {
     const findedPatient = await this._getAndValidatePatient(uid);
 
     const updatedPatient = await this.service.updatePatient(findedPatient.uid, {
-      is_deleted: !findedPatient.is_deleted
+      status: findedPatient.status === "ACTIVE" ? "BLOCKED" : "ACTIVE"
     });
 
     const patient = PatientMapper.validate(updatedPatient);
@@ -121,7 +121,7 @@ export class PatientUseCases {
     return {
       data: patient,
       message: `Paciente ${patient.names} ${patient.last_names} ha sido ${
-        updatedPatient.is_deleted ? "deshabilitado(a)" : "habilitado(a)"
+        updatedPatient.status ? "deshabilitado(a)" : "habilitado(a)"
       }`
     };
   };

@@ -1,38 +1,33 @@
 import { ProfessionMapper } from "@/app/profession/mappers/profession-mapper";
 import { RoleMapper } from "@/app/role/mappers/role-mapper";
 import {
-  type ProfessionalModel,
   type ProfessionalForAppointmentDetailModel,
   ProfessionalForAppointmentDetailSchema,
+  type ProfessionalModel,
   ProfessionalSchema
 } from "../models/professional";
 
 import { CustomError } from "@/lib/custom-error";
 import { parseQuery, safeArray } from "@/lib/utils";
-import { BdProfessional } from "@/types/bd-model";
+import { BdUser } from "@/types/bd-model";
 import { Request } from "express";
 import { ProfessionalFilters } from "../models/professional-filters";
 
-type BdProfessionalWithRoleAndProfessions = BdProfessional<{
-  select: {
-    // id: true;
-    user: {
-      omit: {
-        password: true;
-        role_id: true;
-      };
-      include: {
+type BdProfessionalWithRoleAndProfessions = BdUser<{
+  omit: {
+    password: true;
+  };
+  include: {
+    roles: {
+      select: {
         role: {
-          select: {
-            name: true;
-            id: true;
-          };
+          select: { id: true; name: true };
         };
       };
     };
-    professional_profession: {
+    professions: {
       select: {
-        professions: {
+        profession: {
           select: {
             id: true;
             name: true;
@@ -45,24 +40,22 @@ type BdProfessionalWithRoleAndProfessions = BdProfessional<{
 
 export class ProfessionalMapper {
   private static _mapper(item: BdProfessionalWithRoleAndProfessions): ProfessionalModel {
-    const user = item?.user;
-
     return {
       // id: item.id,
-      user_id: user.id,
-      names: user.names,
-      uid: user.uid,
-      rut: user.rut,
-      last_names: user.last_names,
-      phone: user.phone,
-      email: user.email,
+      user_id: item.id,
+      names: item.names,
+      uid: item.uid,
+      rut: item.rut,
+      last_names: item.last_names,
+      phone: item.phone,
+      email: item.email,
       address: "direccion indeterminada...",
       avatar_image: null,
-      role: RoleMapper.validate(user.role),
+      role: RoleMapper.response(item.roles.map((r) => r.role)),
       professions: ProfessionMapper.toArray(
-        item.professional_profession.map((i) => ({
-          id: i.professions.id,
-          name: i.professions.name
+        item.professions.map((i) => ({
+          id: i.profession.id,
+          name: i.profession.name
         }))
       )
     };
@@ -89,10 +82,9 @@ export class ProfessionalMapper {
     item: BdProfessionalWithRoleAndProfessions
   ): ProfessionalForAppointmentDetailModel {
     try {
-      const user = item.user;
-      const professions = item.professional_profession.map((p) => p.professions.name);
+      const professions = item.professions.map((p) => p.profession.name);
       const data: ProfessionalForAppointmentDetailModel = {
-        fullname: `${user.names} ${user.last_names}`,
+        fullname: `${item.names} ${item.last_names}`,
         professions: professions,
         pay_methods: ["fonasa", "particular (Efectivo, Transferencia)"],
         confirm_methods: ["whatsapp", "teléfono", "correo", "presencial"]
