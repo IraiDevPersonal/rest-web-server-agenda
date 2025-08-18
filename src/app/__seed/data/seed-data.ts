@@ -133,7 +133,7 @@ export const users: MakeOptional<BdUser, "id">[] = [
     last_names: "espinoza molina",
     names: "raul ignacio",
     phone: "+56948426521",
-    rut: "19.050.844-7",
+    rut: "18.524.489-k",
     uid: Uid.createV4()
   },
   {
