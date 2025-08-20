@@ -31,7 +31,10 @@ export class AppointmentService {
         },
         patient: {
           omit: {
-            id: true
+            id: true,
+            status: true,
+            gender: true,
+            birth_date: true
           },
           include: {
             appointments: {
@@ -78,7 +81,13 @@ export class AppointmentService {
             names: true,
             last_names: true,
             professions: {
-              select: { profession: true }
+              select: {
+                profession: {
+                  select: {
+                    name: true
+                  }
+                }
+              }
             }
           }
         },

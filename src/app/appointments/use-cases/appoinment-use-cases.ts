@@ -18,6 +18,6 @@ export class AppointmentUseCases {
     let bdAppoitnment = await this.service.getAppointmentDetail(uid);
     bdAppoitnment = AppointmentValidations.appointmentExists(bdAppoitnment, uid);
 
-    return AppointmentDetailMapper.response(bdAppoitnment);
+    return AppointmentDetailMapper.fromBdToDomain(bdAppoitnment);
   };
 }

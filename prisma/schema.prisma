@@ -8,6 +8,16 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator zod {
+  provider              = "zod-prisma"
+  output                = "../src/types/zod-prisma"
+  relationModel         = true
+  modelCase             = "PascalCase"
+  modelSuffix           = "Schema"
+  useDecimalJs          = false
+  prismaJsonNullability = true
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("POSTGRES_URL")

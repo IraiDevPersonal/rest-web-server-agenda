@@ -1,82 +1,62 @@
-import { PatientMapper } from "@/app/patient/mappers/patient-mapper";
-import { ProfessionalMapper } from "@/app/professional/mappers/professional-mapper";
 import { type AppointmentDetailModel } from "../models/appointment-detail-model";
-import { AppointmentDetailSchema } from "../models/appointment-detail-schema";
-import { AlertAppointmentMapper } from "./alert-appointment-mapper";
 
 import { CustomError } from "@/lib/custom-error";
 import { DateFormatter } from "@/lib/date-formatter";
-import { BdAppointment } from "@/types/bd-model";
-
-type BdAppointmentDetail = BdAppointment<{
-  include: {
-    patient: {
-      include: {
-        appointments: {
-          select: {
-            uid: true;
-            appointment_status: true;
-            date: true;
-            time_from: true;
-            time_to: true;
-          };
-        };
-      };
-    };
-    professional: {
-      include: {
-        user: {
-          include: {
-            role: true;
-          };
-        };
-        professional_profession: {
-          select: {
-            professions: {
-              select: {
-                id: true;
-                name: true;
-              };
-            };
-          };
-        };
-      };
-    };
-  };
-}>;
+import { BdAppointmentDetailSchema } from "../schemas/appointment-detail-schema";
 
 export class AppointmentDetailMapper {
-  private static _mapper(item: BdAppointmentDetail): AppointmentDetailModel {
-    const patient = item.patient;
+  static map = (raw: unknown): AppointmentDetailModel => {
+    const { success, data, error } = BdAppointmentDetailSchema.safeParse(raw);
 
-    return {
-      uid: item.uid,
-      date: DateFormatter.formatDate(item.date, "ymd"),
-      time_from: item.time_from,
-      time_to: item.time_to,
-      is_enabled: item.is_enabled,
-      status: item.appointment_status,
-      professional: ProfessionalMapper.validateProfessionalForAppointmentDetail(
-        item.professional
-      ),
-      patient_history: PatientMapper.patientHistoryToArray(patient?.appointments ?? []),
-      patient: patient ? PatientMapper.validate(patient) : null,
-      alert: AlertAppointmentMapper.validate(undefined)
-    };
-  }
-
-  static validate(item: any): AppointmentDetailModel {
-    try {
-      const data = AppointmentDetailMapper._mapper(item);
-      return AppointmentDetailSchema.parse(data);
-    } catch (error) {
+    if (!success) {
       throw CustomError.internalServer(
-        CustomError.getErrorMessage(error, "appointment-detail-mapper.ts: (validate)")
+        CustomError.getErrorMessage(error, "appointment-detail-mapper.ts: (map)")
       );
     }
-  }
 
-  static response(object: any): AppointmentDetailModel {
-    return AppointmentDetailMapper.validate(object);
-  }
+    const patient = data.patient;
+    const professional = data.user;
+
+    return {
+      uid: data.uid,
+      time_to: data.time_to,
+      time_from: data.time_from,
+      is_enabled: data.is_enabled,
+      status: data.appointment_status,
+      date: DateFormatter.formatDate(data.date, "ymd"),
+      professional: {
+        pay_methods: ["Fonasa", "Particular"],
+        confirm_methods: ["Whatsapp", "Correo", "Teléfono"],
+        fullname: `${professional.names} ${professional.last_names}`,
+        professions: professional.professions.map((p) => p.profession.name)
+      },
+      alert: {
+        message: "Profesional requiere bono para confirmar cita",
+        is_required: !!patient?.rut.endsWith("9") // FIXME: corregir cuando se maneje la alerta de forma correcta
+      },
+      patient: patient
+        ? {
+            uid: patient.uid,
+            rut: patient.rut,
+            names: patient.names,
+            phone: patient.phone,
+            email: patient.email,
+            address: patient.address,
+            last_names: patient.last_names,
+            avatar_image: patient.avatar_image
+          }
+        : null,
+      patient_history: patient
+        ? patient.appointments.map((appointment) => ({
+            uid: appointment.uid,
+            status: appointment.appointment_status,
+            date_time: `${DateFormatter.formatDate(appointment.date, "dmy")} ${appointment.time_from}-${appointment.time_to}`
+          }))
+        : []
+    };
+  };
+
+  static fromBdToDomain = (raw: unknown): AppointmentDetailModel => {
+    return this.map(raw);
+  };
 }

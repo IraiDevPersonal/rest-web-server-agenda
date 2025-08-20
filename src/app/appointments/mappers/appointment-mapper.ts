@@ -1,56 +1,33 @@
 import { type AppointmentModel } from "../models/appointment-model";
-import { AppointmentSchema } from "../schemas/appointment-schema";
 
 import { CustomError } from "@/lib/custom-error";
 import { DateFormatter } from "@/lib/date-formatter";
-import { isYearMonth, parseQuery, safeArray } from "@/lib/utils";
-import { BdAppointment } from "@/types/bd-model";
+import { isYearMonth, parseQuery } from "@/lib/utils";
+import { AppointmentStatus } from "@prisma/client";
 import { Request } from "express";
 import { AppointmentFilters } from "../models/appointment-filters-model";
-import { AppointmentStatus } from "@prisma/client";
-
-type AppointmentWithProfessionalAndPatient = BdAppointment<{
-  select: {
-    id: true;
-    uid: true;
-    appointment_status: true;
-    date: true;
-    time_from: true;
-    time_to: true;
-    user: {
-      select: {
-        names: true;
-        last_names: true;
-        professions: {
-          select: { profession: true };
-        };
-      };
-    };
-    patient: {
-      select: {
-        names: true;
-        last_names: true;
-        rut: true;
-        phone: true;
-      };
-    };
-  };
-}>;
+import { RelatedBdAppointmentSchema } from "../schemas/appointment-schema";
 
 export class AppointmentMapper {
-  private static map(
-    bdAppointment: AppointmentWithProfessionalAndPatient
-  ): AppointmentModel {
-    const patient = bdAppointment.patient;
-    const professional = bdAppointment.user;
+  static map = (raw: unknown): AppointmentModel => {
+    const { success, data, error } = RelatedBdAppointmentSchema.safeParse(raw);
+
+    if (!success) {
+      throw CustomError.internalServer(
+        "AppointmentMapper.map: " + CustomError.getError(error).message
+      );
+    }
+
+    const patient = data.patient;
+    const professional = data.user;
     const professions = professional.professions.map((p) => p.profession.name);
 
     return {
-      uid: bdAppointment.uid,
-      time_to: bdAppointment.time_to,
-      time_from: bdAppointment.time_from,
-      appointment_status: bdAppointment.appointment_status,
-      date: DateFormatter.formatDate(bdAppointment.date, "ymd"),
+      uid: data.uid,
+      time_to: data.time_to,
+      time_from: data.time_from,
+      appointment_status: data.appointment_status,
+      date: DateFormatter.formatDate(data.date, "ymd"),
       professional: {
         full_name: `${professional.names} ${professional.last_names}`,
         professions: professions
@@ -63,26 +40,19 @@ export class AppointmentMapper {
           }
         : null
     };
-  }
+  };
 
-  static validate(item: AppointmentWithProfessionalAndPatient): AppointmentModel {
-    try {
-      const data = AppointmentMapper.map(item);
-      return AppointmentSchema.parse(data);
-    } catch (error) {
+  static fromBdToDomain = (raw: unknown): AppointmentModel[] => {
+    const { success, data, error } = RelatedBdAppointmentSchema.array().safeParse(raw);
+
+    if (!success) {
       throw CustomError.internalServer(
-        CustomError.getErrorMessage(error, "appointment-mapper.ts: (validate)")
+        "AppointmentMapper.fromBdToDomain: " + CustomError.getError(error).message
       );
     }
-  }
 
-  static fromBdToDomain(
-    data: AppointmentWithProfessionalAndPatient[]
-  ): AppointmentModel[] {
-    return safeArray(data, {
-      errorMessage: "appointment-mapper.ts (response): se eperaba un array"
-    }).map(AppointmentMapper.validate);
-  }
+    return data.map(this.map);
+  };
 
   static getFilters(
     query: Request["query"],

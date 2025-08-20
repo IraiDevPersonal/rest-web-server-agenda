@@ -1,6 +1,6 @@
-import { z } from "zod";
-import { UpsertAppointmentSchema } from "../schemas/upsert-appointment-schema";
 import { AppointmentStatus } from "@prisma/client";
+import { PatientForAppointment } from "../../patient/models/patient-for-appointment";
+import { ProfessionalForAppointment } from "../../professional/models/professional-for-appointment";
 
 export type AppointmentModel = {
   uid: string;
@@ -10,16 +10,4 @@ export type AppointmentModel = {
   appointment_status: AppointmentStatus;
   patient: PatientForAppointment | null;
   professional: ProfessionalForAppointment;
-};
-export type UpsertAppointmentValues = z.infer<typeof UpsertAppointmentSchema>;
-
-export type ProfessionalForAppointment = {
-  professions: string[];
-  full_name: string;
-};
-
-export type PatientForAppointment = {
-  full_name: string;
-  rut: string;
-  phone: string;
 };

@@ -1,23 +1,33 @@
 import { AppointmentStatus } from "@prisma/client";
 import { z } from "zod";
 
-export const AppointmentSchema = z.object({
-  uid: z.uuid("El UID debe ser un UUID válido"),
-  date: z.string(),
-  time_from: z.string(),
+export const BdAppointmentSchema = z.object({
+  uid: z.uuid(),
+  id: z.bigint(),
+  date: z.date(),
   time_to: z.string(),
-  professional: z.object({
-    full_name: z.string(),
-    professions: z.array(z.string())
+  time_from: z.string(),
+  appointment_status: z.enum(AppointmentStatus)
+});
+
+export const RelatedBdAppointmentSchema = BdAppointmentSchema.extend({
+  user: z.object({
+    names: z.string(),
+    last_names: z.string(),
+    professions: z.array(
+      z.object({
+        profession: z.object({
+          name: z.string()
+        })
+      })
+    )
   }),
   patient: z
     .object({
-      full_name: z.string(),
-      rut: z.string(),
-      phone: z
-        .string()
-        .regex(/^\+?[1-9]\d{8,14}$/, "El teléfono debe ser un número válido")
+      names: z.string(),
+      last_names: z.string(),
+      phone: z.string(),
+      rut: z.string()
     })
-    .nullable(),
-  appointment_status: z.enum(AppointmentStatus)
+    .nullable()
 });

@@ -3,7 +3,7 @@ import { UserStatus } from "@prisma/client";
 import { Gender } from "@prisma/client";
 import { RoleSchema } from "@/app/role/models/role";
 import { ProfessionSchema } from "@/app/profession/models/profession";
-import { AppointmentSchema } from "@/app/appointments/schemas/appointment-schema";
+import { BdAppointmentSchema } from "@/app/appointments/schemas/appointment-schema";
 import { RutManager } from "@/lib/rut-manager";
 
 export const UserSchema = z.object({
@@ -25,7 +25,7 @@ export const UserSchema = z.object({
   gender: z.enum(Gender),
   roles: z.optional(RoleSchema.array()),
   professions: z.optional(ProfessionSchema.array()),
-  appointments: z.optional(AppointmentSchema.array())
+  appointments: z.optional(BdAppointmentSchema.array())
 });
 
 export type UserModel = z.infer<typeof UserSchema>;
