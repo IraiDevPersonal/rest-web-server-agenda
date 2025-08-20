@@ -70,6 +70,8 @@ export class PatientService {
 
     const totalPages = Math.ceil(total / limit);
 
+    console.log("getPatients", patients);
+
     return { data: patients, total, page, pages: totalPages, limit };
   }
 

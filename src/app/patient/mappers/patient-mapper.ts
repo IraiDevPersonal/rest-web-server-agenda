@@ -11,6 +11,7 @@ import { parseQuery, safeArray } from "@/lib/utils";
 import { BdAppointment, BdPatient } from "@/types/bd-model";
 import { PatientFilters } from "../models/patient-filters";
 import { Request } from "express";
+import { UserStatus } from "@prisma/client";
 
 type BdAppointmentWithSchedule = BdAppointment<{
   select: {
@@ -98,7 +99,7 @@ export class PatientMapper {
 
     return {
       ...parsedQueries,
-      status: statusQuery ? "ACTIVE" : "INACTIVE"
+      status: statusQuery as UserStatus | undefined
     };
   }
 }

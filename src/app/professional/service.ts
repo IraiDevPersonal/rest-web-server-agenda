@@ -34,6 +34,16 @@ export class ProfessionalService {
         select: {
           // id: true,
           password: true,
+          address: true,
+          names: true,
+          uid: true,
+          status: true,
+          rut: true,
+          phone: true,
+          last_names: true,
+          id: true,
+          gender: true,
+          email: true,
           roles: {
             select: {
               role: {
@@ -70,7 +80,17 @@ export class ProfessionalService {
     return await this.db.users.findFirst({
       select: {
         // id: true;
+        address: true,
+        names: true,
+        uid: true,
+        status: true,
+        rut: true,
+        phone: true,
         password: true,
+        last_names: true,
+        id: true,
+        gender: true,
+        email: true,
         roles: {
           select: {
             role: {

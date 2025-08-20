@@ -18,6 +18,7 @@ export class PatientUseCases {
     query: Request["query"]
   ): Promise<ResponseWithPagination<PatientModel>> => {
     const filters = PatientMapper.getFilters(query);
+
     const { data: bdPatients, ...pagination } = await this.service.getPatients(filters);
     const patients = PatientMapper.response(bdPatients);
 

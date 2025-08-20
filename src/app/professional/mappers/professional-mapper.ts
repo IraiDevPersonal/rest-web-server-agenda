@@ -14,6 +14,18 @@ import { Request } from "express";
 import { ProfessionalFilters } from "../models/professional-filters";
 
 type BdProfessionalWithRoleAndProfessions = BdUser<{
+  select: {
+    address: true;
+    names: true;
+    uid: true;
+    status: true;
+    rut: true;
+    phone: true;
+    last_names: true;
+    id: true;
+    gender: true;
+    email: true;
+  };
   omit: {
     password: true;
   };

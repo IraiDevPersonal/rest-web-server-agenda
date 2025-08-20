@@ -96,9 +96,9 @@ enum Gender {
 }
 
 enum UserStatus {
-  ACTIVE   @map("active")
-  INACTIVE @map("inactive")
-  BLOCKED  @map("blocked")
+  ACTIVE   @map("ACTIVE")
+  INACTIVE @map("INACTIVE")
+  BLOCKED  @map("BLOQUED")
 }
 
 enum AppointmentStatus {
