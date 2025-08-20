@@ -57,7 +57,11 @@ export class PatientService {
           names: true,
           last_names: true,
           phone: true,
-          address: true
+          address: true,
+          status: true,
+          birth_date: true,
+          gender: true,
+          id: true
         },
         where: whereClause,
         orderBy: {

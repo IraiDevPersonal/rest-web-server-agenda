@@ -43,6 +43,7 @@ export class PatientMapper {
 
   static validate(item: BdPatient): PatientModel {
     try {
+      console.log("PatientMapper.validate", item);
       const data = PatientMapper._mapper(item);
       return PatientSchema.parse(data);
     } catch (error) {
