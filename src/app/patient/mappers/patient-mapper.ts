@@ -1,93 +1,55 @@
+import { PatientWithPaginationModel, type PatientModel } from "../models/patient";
 import {
-  PatientHistoryForAppointmentDetailSchema,
-  PatientSchema,
-  type PatientHistoryForAppointmentDetailModel,
-  type PatientModel
-} from "../models/patient";
+  BdPatientSchema,
+  BdPatientWithPaginationSchema
+} from "../schemas/bd/patient-schema";
 
 import { CustomError } from "@/lib/custom-error";
-import { DateFormatter } from "@/lib/date-formatter";
-import { parseQuery, safeArray } from "@/lib/utils";
-import { BdAppointment, BdPatient } from "@/types/bd-model";
-import { PatientFilters } from "../models/patient-filters";
-import { Request } from "express";
+import { parseQuery } from "@/lib/utils";
 import { UserStatus } from "@prisma/client";
-
-type BdAppointmentWithSchedule = BdAppointment<{
-  select: {
-    uid: true;
-    appointment_status: true;
-    date: true;
-    time_from: true;
-    time_to: true;
-  };
-}>;
+import { Request } from "express";
+import { PatientFilters } from "../models/patient-filters";
 
 export class PatientMapper {
-  private static _mapper(bdPatient: BdPatient): PatientModel {
+  static map(raw: unknown): PatientModel {
+    const { success, data, error } = BdPatientSchema.safeParse(raw);
+
+    if (!success) {
+      throw CustomError.internalServer(
+        CustomError.getErrorMessage(error, "patient-mapper.ts: (map)")
+      );
+    }
+
     return {
-      id: bdPatient.id,
-      uid: bdPatient.uid,
-      rut: bdPatient.rut,
-      names: bdPatient.names,
-      last_names: bdPatient.last_names,
-      email: bdPatient.email,
-      phone: bdPatient.phone,
-      address: bdPatient.address,
-      status: bdPatient.status,
-      birth_date: bdPatient.birth_date,
-      gender: bdPatient.gender,
-      avatar_image: null // agregar avatar para usuarios en general
+      uid: data.uid,
+      rut: data.rut,
+      names: data.names,
+      email: data.email,
+      phone: data.phone,
+      status: data.status,
+      gender: data.gender,
+      address: data.address,
+      birth_date: data.birth_date,
+      last_names: data.last_names,
+      avatar_image: data.avatar_image ?? null
     };
   }
 
-  static validate(item: BdPatient): PatientModel {
-    try {
-      console.log("PatientMapper.validate", item);
-      const data = PatientMapper._mapper(item);
-      return PatientSchema.parse(data);
-    } catch (error) {
+  static fromBdToDomain(raw: unknown): PatientWithPaginationModel {
+    const { success, data, error } = BdPatientWithPaginationSchema.safeParse(raw);
+
+    if (!success) {
       throw CustomError.internalServer(
-        CustomError.getErrorMessage(error, "patient-mapper.ts: (validate)")
+        CustomError.getErrorMessage(error, "patient-mapper.ts: (fromBdToDomain)")
       );
     }
-  }
-
-  static response(item: BdPatient[]): PatientModel[] {
-    return safeArray(item, {
-      errorMessage: "patient-mapper.ts (response): se espera un array"
-    }).map(PatientMapper.validate);
-  }
-
-  static validatePatientHistoryForAppointmentDetail(
-    bdAppointment: BdAppointmentWithSchedule
-  ): PatientHistoryForAppointmentDetailModel {
-    try {
-      const date = DateFormatter.formatDate(bdAppointment.date, "dmy");
-      const timeFrom = bdAppointment.time_from;
-      const timeTo = bdAppointment.time_to;
-
-      const data: PatientHistoryForAppointmentDetailModel = {
-        uid: bdAppointment.uid,
-        date_time: `${date} ${timeFrom}-${timeTo}`,
-        status: bdAppointment.appointment_status
-      };
-
-      return PatientHistoryForAppointmentDetailSchema.parse(data);
-    } catch (error) {
-      throw CustomError.internalServer(
-        CustomError.getErrorMessage(
-          error,
-          "patient-mapper.ts: (validatePatientHistoryForAppointmentDetail)"
-        )
-      );
-    }
-  }
-
-  static patientHistoryToArray(
-    data: BdAppointmentWithSchedule[]
-  ): PatientHistoryForAppointmentDetailModel[] {
-    return safeArray(data).map(PatientMapper.validatePatientHistoryForAppointmentDetail);
+    return {
+      page: data.page,
+      limit: data.limit,
+      total: data.total,
+      pages: data.pages,
+      data: data.data.map(this.map)
+    };
   }
 
   static getFilters(query: Request["query"]): PatientFilters {

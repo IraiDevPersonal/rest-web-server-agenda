@@ -1,7 +1,7 @@
 import { CustomError } from "@/lib/custom-error";
 import { RutManager } from "@/lib/rut-manager";
 import { ExpandPatientTypes } from "../models";
-import { PatientSchema } from "../models/patient";
+import { BdPatientSchema } from "../schemas/bd/patient-schema";
 import { Request } from "express";
 
 export class PatientValidations {
@@ -10,20 +10,16 @@ export class PatientValidations {
   }
 
   static insertValidation(body: any) {
-    const { rut, names, last_names, email, phone, address } = body;
-
-    return PatientSchema.parse({
-      rut: RutManager.format(rut, { dots: true }),
-      names,
-      last_names,
-      email,
-      phone,
-      address
+    // FIXME: usar un schema propio para esto
+    return BdPatientSchema.parse({
+      rut: RutManager.format(body.rut, { dots: true }),
+      ...body
     });
   }
 
   static updateValidation(body: any) {
-    return PatientSchema.partial().parse(body);
+    // FIXME: usar un schema propio para esto
+    return BdPatientSchema.partial().parse(body);
   }
 
   static exists<T>(bdPatient: T, uid: string): NonNullable<T> {

@@ -18,14 +18,9 @@ export class PatientUseCases {
     query: Request["query"]
   ): Promise<ResponseWithPagination<PatientModel>> => {
     const filters = PatientMapper.getFilters(query);
+    const result = await this.service.getPatients(filters);
 
-    const { data: bdPatients, ...pagination } = await this.service.getPatients(filters);
-    const patients = PatientMapper.response(bdPatients);
-
-    return {
-      ...pagination,
-      data: patients
-    };
+    return PatientMapper.fromBdToDomain(result);
   };
 
   getPatientDetail = async (
@@ -36,7 +31,7 @@ export class PatientUseCases {
     data: PatientModel;
   }> => {
     const result = await this._getAndValidatePatient(uid);
-    const patient = PatientMapper.validate(result);
+    const patient = PatientMapper.map(result);
     let appointment_history: any[] | undefined = undefined;
 
     // 1. Se valida si el query pide el historial
@@ -73,7 +68,7 @@ export class PatientUseCases {
       ...payload,
       status: UserStatus.ACTIVE
     });
-    const patient = PatientMapper.validate(createdPatient);
+    const patient = PatientMapper.map(createdPatient);
 
     return {
       message: `Paciente ${patient.names} ${patient.last_names} creado(a)`,
@@ -102,7 +97,7 @@ export class PatientUseCases {
     }
 
     const updatedPatient = await this.service.updatePatient(findedPatient.uid, payload);
-    const patient = PatientMapper.validate(updatedPatient);
+    const patient = PatientMapper.map(updatedPatient);
 
     return {
       message: `Paciente ${patient.names} ${patient.last_names} actualizado(a)`,
@@ -117,7 +112,7 @@ export class PatientUseCases {
       status: findedPatient.status === "ACTIVE" ? "BLOCKED" : "ACTIVE"
     });
 
-    const patient = PatientMapper.validate(updatedPatient);
+    const patient = PatientMapper.map(updatedPatient);
 
     return {
       data: patient,

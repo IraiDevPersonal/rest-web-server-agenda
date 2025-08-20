@@ -1,4 +1,3 @@
-import { ResponseWithPagination } from "@/types/global";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { DefaultArgs } from "@prisma/client/runtime/library";
 import { PatientModel } from "./models/patient";
@@ -11,11 +10,7 @@ export class PatientService {
     this.db = new PrismaClient();
   }
 
-  async getPatients({
-    page = 1,
-    limit = 10,
-    ...filters
-  }: PatientFilters): Promise<ResponseWithPagination<any>> {
+  async getPatients({ page = 1, limit = 10, ...filters }: PatientFilters) {
     const skip = (page - 1) * limit;
 
     const whereClause: any = {
@@ -47,7 +42,7 @@ export class PatientService {
       }
     };
 
-    const [total, patients] = await this.db.$transaction([
+    const [total, data] = await this.db.$transaction([
       this.db.patients.count({ where: whereClause }),
       this.db.patients.findMany({
         select: {
@@ -72,11 +67,9 @@ export class PatientService {
       })
     ]);
 
-    const totalPages = Math.ceil(total / limit);
+    const pages = Math.ceil(total / limit) || undefined;
 
-    console.log("getPatients", patients);
-
-    return { data: patients, total, page, pages: totalPages, limit };
+    return { data, total, page, pages, limit };
   }
 
   async getPatientDetail(uid: string, options?: Prisma.patientsDefaultArgs<DefaultArgs>) {

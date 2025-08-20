@@ -1,4 +1,4 @@
-import { PatientHistoryForAppointmentDetailModel } from "@/app/patient/models/patient";
+import { PatientHistoryForAppointmentDetailModel } from "@/app/patient/models/patient-history-for-appointment-detail";
 import { PatientForAppointmentDetailModel } from "@/app/patient/models/patient-for-appointment-detail";
 import { ProfessionalForAppointmentDetailModel } from "@/app/professional/models/professional-for-appointment-detail";
 
