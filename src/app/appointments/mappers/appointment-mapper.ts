@@ -9,7 +9,7 @@ import { Request } from "express";
 import { AppointmentFilters } from "../models/appointment-filters-model";
 import { AppointmentStatus } from "@prisma/client";
 
-type BdAppointmentScheduleAndProfessions = BdAppointment<{
+type AppointmentWithProfessionalAndPatient = BdAppointment<{
   select: {
     id: true;
     uid: true;
@@ -38,28 +38,36 @@ type BdAppointmentScheduleAndProfessions = BdAppointment<{
 }>;
 
 export class AppointmentMapper {
-  private static _mapper(item: BdAppointmentScheduleAndProfessions): AppointmentModel {
-    const patient = item.patient;
-    const user = item.user;
-    const professions = user.professions.map((p) => p.profession.name);
+  private static map(
+    bdAppointment: AppointmentWithProfessionalAndPatient
+  ): AppointmentModel {
+    const patient = bdAppointment.patient;
+    const professional = bdAppointment.user;
+    const professions = professional.professions.map((p) => p.profession.name);
 
     return {
-      uid: item.uid,
-      time_from: item.time_from,
-      time_to: item.time_to,
-      patient_rut: patient?.rut ?? null,
-      patient_phone: patient?.phone ?? null,
-      patient_name: patient ? `${patient.names} ${patient.last_names}` : null,
-      professional_name: `${user.names} ${user.last_names}`,
-      date: DateFormatter.formatDate(item.date, "ymd"),
-      appointment_status: item.appointment_status,
-      professions
+      uid: bdAppointment.uid,
+      time_to: bdAppointment.time_to,
+      time_from: bdAppointment.time_from,
+      appointment_status: bdAppointment.appointment_status,
+      date: DateFormatter.formatDate(bdAppointment.date, "ymd"),
+      professional: {
+        full_name: `${professional.names} ${professional.last_names}`,
+        professions: professions
+      },
+      patient: patient
+        ? {
+            full_name: `${patient.names} ${patient.last_names}`,
+            phone: patient.phone,
+            rut: patient.rut
+          }
+        : null
     };
   }
 
-  static validate(item: BdAppointmentScheduleAndProfessions): AppointmentModel {
+  static validate(item: AppointmentWithProfessionalAndPatient): AppointmentModel {
     try {
-      const data = AppointmentMapper._mapper(item);
+      const data = AppointmentMapper.map(item);
       return AppointmentSchema.parse(data);
     } catch (error) {
       throw CustomError.internalServer(
@@ -68,7 +76,9 @@ export class AppointmentMapper {
     }
   }
 
-  static response(data: BdAppointmentScheduleAndProfessions[]): AppointmentModel[] {
+  static fromBdToDomain(
+    data: AppointmentWithProfessionalAndPatient[]
+  ): AppointmentModel[] {
     return safeArray(data, {
       errorMessage: "appointment-mapper.ts (response): se eperaba un array"
     }).map(AppointmentMapper.validate);

@@ -11,7 +11,7 @@ export class AppointmentUseCases {
   getAppointments = async (query: Request["query"]): Promise<AppointmentModel[]> => {
     const filters = AppointmentMapper.getFilters(query);
     const bdAppointments = await this.service.getAppointments(filters);
-    return AppointmentMapper.response(bdAppointments);
+    return AppointmentMapper.fromBdToDomain(bdAppointments);
   };
 
   getAppointmentDetail = async (uid: string) => {
