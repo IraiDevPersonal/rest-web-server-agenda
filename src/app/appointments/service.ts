@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { AppointmentFilters } from "./models/appointment-filters";
+import { AppointmentFilters } from "./models/appointment-filters-model";
 
 export class AppointmentService {
   private readonly db: PrismaClient;

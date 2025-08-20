@@ -1,7 +1,7 @@
 import { Request } from "express";
 import { AppointmentDetailMapper } from "../mappers/appointment-detail-mapper";
 import { AppointmentMapper } from "../mappers/appointment-mapper";
-import { AppointmentModel } from "../models/appointment";
+import { AppointmentModel } from "../models/appointment-model";
 import { AppointmentService } from "../service";
 import { AppointmentValidations } from "../validations/appointment-validations";
 

@@ -1,9 +1,7 @@
 import { PatientMapper } from "@/app/patient/mappers/patient-mapper";
 import { ProfessionalMapper } from "@/app/professional/mappers/professional-mapper";
-import {
-  type AppointmentDetailModel,
-  AppointmentDetailSchema
-} from "../models/appointment-detail";
+import { type AppointmentDetailModel } from "../models/appointment-detail-model";
+import { AppointmentDetailSchema } from "../models/appointment-detail-schema";
 import { AlertAppointmentMapper } from "./alert-appointment-mapper";
 
 import { CustomError } from "@/lib/custom-error";

@@ -3,7 +3,7 @@ import { UserStatus } from "@prisma/client";
 import { Gender } from "@prisma/client";
 import { RoleSchema } from "@/app/role/models/role";
 import { ProfessionSchema } from "@/app/profession/models/profession";
-import { AppointmentSchema } from "@/app/appointment/models/appointment";
+import { AppointmentSchema } from "@/app/appointments/schemas/appointment-schema";
 import { RutManager } from "@/lib/rut-manager";
 
 export const UserSchema = z.object({

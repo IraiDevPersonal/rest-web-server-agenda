@@ -1,11 +1,12 @@
-import { type AppointmentModel, AppointmentSchema } from "../models/appointment";
+import { type AppointmentModel } from "../models/appointment-model";
+import { AppointmentSchema } from "../schemas/appointment-schema";
 
 import { CustomError } from "@/lib/custom-error";
 import { DateFormatter } from "@/lib/date-formatter";
 import { isYearMonth, parseQuery, safeArray } from "@/lib/utils";
 import { BdAppointment } from "@/types/bd-model";
 import { Request } from "express";
-import { AppointmentFilters } from "../models/appointment-filters";
+import { AppointmentFilters } from "../models/appointment-filters-model";
 import { AppointmentStatus } from "@prisma/client";
 
 type BdAppointmentScheduleAndProfessions = BdAppointment<{

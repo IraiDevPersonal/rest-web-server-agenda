@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { AppointmentRoutes } from "./appointment/routes";
+import { AppointmentRoutes } from "./appointments/routes";
 import { ProfessionRoutes } from "./profession/routes";
 import { ProfessionalRoutes } from "./professional/routes";
 import { PatientRoutes } from "./patient/routes";

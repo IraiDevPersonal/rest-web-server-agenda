@@ -5,11 +5,7 @@ import {
 import { ProfessionalForAppointmentDetailSchema } from "@/app/professional/models/professional";
 import { AppointmentStatus } from "@prisma/client";
 import { z } from "zod";
-
-export const AlertAppointmentDetailMapperSchema = z.object({
-  message: z.string(),
-  is_required: z.boolean()
-});
+import { AlertAppointmentDetailSchema } from "../schemas/alert-appointment-detail-schema";
 
 export const AppointmentDetailSchema = z.object({
   uid: z.uuid("El UID debe ser un UUID válido"),
@@ -23,11 +19,5 @@ export const AppointmentDetailSchema = z.object({
   patient: PatientSchema.omit({
     status: true
   }).nullable(),
-  alert: AlertAppointmentDetailMapperSchema
+  alert: AlertAppointmentDetailSchema
 });
-
-export type AlertAppointmentDetailModel = z.infer<
-  typeof AlertAppointmentDetailMapperSchema
->;
-
-export type AppointmentDetailModel = z.infer<typeof AppointmentDetailSchema>;
