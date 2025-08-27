@@ -1,9 +1,9 @@
 import { Router } from "express";
 
 import { AppointmentRoutes } from "./appointments/routes";
-import { ProfessionRoutes } from "./profession/routes";
-import { ProfessionalRoutes } from "./professional/routes";
-import { PatientRoutes } from "./patient/routes";
+import { ProfessionRoutes } from "./professions/routes";
+import { ProfessionalRoutes } from "./professionals/routes";
+import { PatientRoutes } from "./patients/routes";
 import { SeedRoutes } from "./__seed/routes";
 
 export class Routes {

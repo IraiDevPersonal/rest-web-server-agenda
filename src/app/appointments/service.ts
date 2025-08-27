@@ -1,62 +1,97 @@
 import { PrismaClient } from "@prisma/client";
-import { AppointmentFilters } from "./models/appointment-filters-model";
+import { AppointmentFilters } from "./models/appointment-filters.model";
+import { BdAppointment } from "@/types/bd-model";
 
-export class AppointmentService {
+type Appointment = BdAppointment<{
+  select: {
+    uid: true;
+    appointment_status: true;
+    date: true;
+    time_from: true;
+    time_to: true;
+    is_enabled: true;
+    user: {
+      select: {
+        names: true;
+        last_names: true;
+        rut: true;
+        professions: {
+          select: {
+            profession: { select: { name: true } };
+          };
+        };
+      };
+    };
+    patient: {
+      omit: {
+        id: true;
+        status: true;
+        gender: true;
+        birth_date: true;
+      };
+      include: {
+        appointments: {
+          orderBy: {
+            date: "desc";
+          };
+          take: 4;
+          select: {
+            uid: true;
+            appointment_status: true;
+            date: true;
+            time_from: true;
+            time_to: true;
+          };
+        };
+      };
+    };
+  };
+}>;
+
+type Appointments = BdAppointment<{
+  select: {
+    id: true;
+    uid: true;
+    appointment_status: true;
+    date: true;
+    time_from: true;
+    time_to: true;
+    user: {
+      select: {
+        names: true;
+        last_names: true;
+        professions: {
+          select: {
+            profession: {
+              select: {
+                name: true;
+              };
+            };
+          };
+        };
+      };
+    };
+    patient: {
+      select: {
+        names: true;
+        last_names: true;
+        rut: true;
+        phone: true;
+      };
+    };
+  };
+}>[];
+
+export type AppointmentServiceImpl = {
+  getAppointmentByUid: (uid: string) => Promise<Appointment | null>;
+  getAppointments: (filters: AppointmentFilters) => Promise<Appointments>;
+};
+
+export class AppointmentService implements AppointmentServiceImpl {
   private readonly db: PrismaClient;
 
   constructor() {
     this.db = new PrismaClient();
-  }
-
-  async getAppointmentDetail(appointment_uid: string) {
-    return await this.db.appointments.findFirst({
-      select: {
-        uid: true,
-        appointment_status: true,
-        date: true,
-        time_from: true,
-        time_to: true,
-        is_enabled: true,
-        user: {
-          select: {
-            names: true,
-            last_names: true,
-            rut: true,
-            professions: {
-              select: {
-                profession: { select: { name: true } }
-              }
-            }
-          }
-        },
-        patient: {
-          omit: {
-            id: true,
-            status: true,
-            gender: true,
-            birth_date: true
-          },
-          include: {
-            appointments: {
-              orderBy: {
-                date: "desc"
-              },
-              take: 4,
-              select: {
-                uid: true,
-                appointment_status: true,
-                date: true,
-                time_from: true,
-                time_to: true
-              }
-            }
-          }
-        }
-      },
-      where: {
-        uid: appointment_uid
-      }
-    });
   }
 
   async getAppointments({
@@ -126,6 +161,57 @@ export class AppointmentService {
           time_from: "asc"
         }
       ]
+    });
+  }
+
+  async getAppointmentByUid(uid: string) {
+    return await this.db.appointments.findFirst({
+      select: {
+        uid: true,
+        appointment_status: true,
+        date: true,
+        time_from: true,
+        time_to: true,
+        is_enabled: true,
+        user: {
+          select: {
+            names: true,
+            last_names: true,
+            rut: true,
+            professions: {
+              select: {
+                profession: { select: { name: true } }
+              }
+            }
+          }
+        },
+        patient: {
+          omit: {
+            id: true,
+            status: true,
+            gender: true,
+            birth_date: true
+          },
+          include: {
+            appointments: {
+              orderBy: {
+                date: "desc"
+              },
+              take: 4,
+              select: {
+                uid: true,
+                appointment_status: true,
+                date: true,
+                time_from: true,
+                time_to: true
+              }
+            }
+          }
+        }
+      },
+      where: {
+        uid: uid
+      }
     });
   }
 }

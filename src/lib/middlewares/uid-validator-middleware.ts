@@ -13,9 +13,7 @@ export class UidValidatorMiddleware {
       }
 
       if (!Uid.isValid(uid)) {
-        throw CustomError.badRequest(
-          "Necesitas enviar un identificador valido"
-        );
+        throw CustomError.badRequest("Necesitas enviar un uid valido");
       }
 
       next();

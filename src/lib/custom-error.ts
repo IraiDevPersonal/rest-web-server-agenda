@@ -38,16 +38,13 @@ export class CustomError extends Error {
 
   static getErrorMessage(error: unknown, fileName?: string) {
     console.log({ fileName });
-    // El orden es importante: las clases de error más específicas deben comprobarse primero.
     if (error instanceof CustomError) {
       return error.message;
     }
 
     if (error instanceof ZodError) {
-      const issues = error.issues.map(
-        (issue) => `[${issue.path.join(".")}] ${issue.message}`
-      );
-      return `Error de validación: ${issues.join("; ")}`;
+      const issues = error.issues.map((issue) => `[${String(issue.path.at(-1))}: ${issue.message}]`);
+      return issues.join(", ");
     }
 
     if (error instanceof Error) {

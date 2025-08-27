@@ -4,12 +4,10 @@ import { AppointmentController } from "./controller";
 import { AppointmentService } from "./service";
 
 import { UidValidatorMiddleware } from "@/lib/middlewares/uid-validator-middleware";
-import { AppointmentUseCases } from "./use-cases/appoinment-use-cases";
 
 export class AppointmentRoutes {
   private static readonly service = new AppointmentService();
-  private static readonly useCases = new AppointmentUseCases(this.service);
-  private static readonly controller = new AppointmentController(this.useCases);
+  private static readonly controller = new AppointmentController(this.service);
 
   static get routes(): Router {
     const router = Router();
@@ -19,7 +17,7 @@ export class AppointmentRoutes {
     router.get(
       "/:uid",
       [UidValidatorMiddleware.validate],
-      controller.getAppointmentDetail
+      controller.getAppointmentByUid
     );
 
     return router;
