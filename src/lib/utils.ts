@@ -8,24 +8,6 @@ export function isYearMonth(value: string | undefined): value is YearMonth {
   return /^\d{4}-(0[1-9]|1[0-2])$/.test(value);
 }
 
-export function safeArray<T = any>(
-  data: any,
-  options?: { throwErrors?: boolean; errorMessage?: string }
-): T[] {
-  const errorMessage = options?.errorMessage || "Se esperaba un array";
-
-  if (Array.isArray(data)) {
-    return data as T[];
-  }
-
-  if (options?.throwErrors) {
-    throw new Error(errorMessage);
-  }
-
-  console.error(errorMessage);
-  return [] as T[];
-}
-
 export function queryParser<T extends object>(value: T, defaultValues?: Partial<T>) {
   const stringifyQuery = queryString.stringify(
     { ...value, ...defaultValues },
