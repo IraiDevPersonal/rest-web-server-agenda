@@ -1,32 +1,37 @@
 import { CustomError } from "@/lib/custom-error";
 import { RutManager } from "@/lib/rut-manager";
-import { ExpandPatientTypes } from "../models/shared";
-import { PatientBdSchema } from "../schemas/bd/patient-schema";
-import { Request } from "express";
+import { UpsertPatientApiSchema } from "../schemas/api/upsert-patient.schema";
 
 export class PatientValidation {
-  private static getExpandQuery(query: Request["query"]) {
-    return query.expand as ExpandPatientTypes[] | undefined;
-  }
-
   static validateInsert(body: any) {
-    // FIXME: usar un schema propio para esto
-    return PatientBdSchema.parse({
-      rut: RutManager.format(body.rut, { dots: true }),
-      ...body
+    return UpsertPatientApiSchema.omit({ status: true }).parse({
+      ...body,
+      rut: RutManager.format(body.rut, { dots: true })
     });
   }
 
   static validateUpdate(body: any) {
-    // FIXME: usar un schema propio para esto
-    return PatientBdSchema.partial().parse(body);
+    return UpsertPatientApiSchema.omit({ status: true })
+      .partial()
+      .parse({
+        ...body,
+        rut: body.rut ? RutManager.format(body.rut, { dots: true }) : undefined
+      });
   }
 
-  static exists<T>(bdPatient: T, uid: string): NonNullable<T> {
-    if (!bdPatient) {
+  static validateUpdateStatus(body: any) {
+    return UpsertPatientApiSchema.pick({ status: true }).partial().parse(body);
+  }
+
+  static found<T>(value: T, uid: string): NonNullable<T> {
+    if (!value) {
       throw CustomError.badRequest(`No se ha encontrado al paciente UID: ${uid}`);
     }
-    return bdPatient!;
+    return value;
+  }
+
+  static exist(value: unknown): boolean {
+    return Boolean(value);
   }
 
   static rutInUse(rut: string | undefined) {
@@ -39,13 +44,5 @@ export class PatientValidation {
     if (email) {
       throw CustomError.badRequest(`Correo ${email} ya esta resgistrado`);
     }
-  }
-
-  static withHistory(query: Request["query"]) {
-    return this.getExpandQuery(query)?.includes("appointment_history") ? [] : undefined;
-  }
-
-  static withId(query: Request["query"]) {
-    return !this.getExpandQuery(query)?.includes("id");
   }
 }

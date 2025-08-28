@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 import { CustomError } from "@/lib/custom-error";
 import { PatientServiceImpl } from "./service";
-import { TogglePatientStatusUseCase } from "./use-cases/toggle-patient-status.use-case";
+import { UpdatePatientStatusUseCase } from "./use-cases/update-patient-status.use-case";
 import { CreatePatientUseCase } from "./use-cases/create-patient.use-case";
 import { UpdatePatientUseCase } from "./use-cases/update-patient.use-case";
 import { PatientListUseCase } from "./use-cases/patient-list.use-case";
@@ -13,14 +13,14 @@ export class PatientController {
   private patientDetailUseCase: PatientDetailUseCase;
   private createPatientUseCase: CreatePatientUseCase;
   private updatePatientUseCase: UpdatePatientUseCase;
-  private togglePatientStatusUseCase: TogglePatientStatusUseCase;
+  private togglePatientStatusUseCase: UpdatePatientStatusUseCase;
 
   constructor(service: PatientServiceImpl) {
     this.patientListUseCase = new PatientListUseCase(service);
     this.patientDetailUseCase = new PatientDetailUseCase(service);
     this.createPatientUseCase = new CreatePatientUseCase(service);
     this.updatePatientUseCase = new UpdatePatientUseCase(service);
-    this.togglePatientStatusUseCase = new TogglePatientStatusUseCase(service);
+    this.togglePatientStatusUseCase = new UpdatePatientStatusUseCase(service);
   }
 
   getPatients = async (req: Request, res: Response) => {
@@ -62,10 +62,10 @@ export class PatientController {
     }
   };
 
-  togglePatientStatus = async (req: Request, res: Response) => {
+  updatePatientStatus = async (req: Request, res: Response) => {
     try {
       const uid = req.params.uid;
-      const data = await this.togglePatientStatusUseCase.toggleStatus(uid);
+      const data = await this.togglePatientStatusUseCase.updateStatus(uid, req.body);
       return res.status(200).json(data);
     } catch (error) {
       return CustomError.handleError(error, res);

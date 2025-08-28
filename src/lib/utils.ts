@@ -24,3 +24,9 @@ export function queryParser<T extends object>(value: T, defaultValues?: Partial<
     parseNumbers: true
   }) as Record<keyof T, any>;
 }
+
+export function capitalize(value: string) {
+  const splited = value.split(" ");
+
+  return splited.map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
+}

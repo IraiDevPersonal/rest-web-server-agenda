@@ -1,4 +1,6 @@
 import { UserStatus } from "@prisma/client";
+import { RoleMapper } from "../../roles/mappers/role.mapper";
+import { ProfessionModel } from "@/app/professions/models/profession.model";
 
 export type ProfessionalModel = {
   uid: string;
@@ -9,7 +11,7 @@ export type ProfessionalModel = {
   address: string;
   last_names: string;
   status: UserStatus;
+  roles: RoleMapper[];
   avatar_image: string | null;
-  roles: { id: number; name: string }[];
-  professions: { id: number; name: string }[];
+  professions: ProfessionModel[];
 };

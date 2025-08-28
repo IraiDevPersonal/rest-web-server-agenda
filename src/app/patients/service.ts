@@ -3,24 +3,19 @@ import { DefaultArgs } from "@prisma/client/runtime/library";
 import { PatientModel } from "./models/patient.model";
 import { PatientFilters } from "./models/patient-filters.model";
 import { BdPatient } from "@/types/bd-model";
+import { ResponseWithPagination } from "@/types/global";
 
 export type PatientServiceImpl = {
-  getPatients: (filters: PatientFilters) => Promise<{
-    data: unknown[];
-    total: number;
-    page: number;
-    pages?: number;
-    limit: number;
-  }>;
+  getPatients: (filters: PatientFilters) => Promise<ResponseWithPagination<BdPatient>>;
   getPatientByUid: (
     uid: string,
     options?: Prisma.patientsDefaultArgs<DefaultArgs>
   ) => Promise<BdPatient | null>;
-  createPatient: (patient: PatientModel) => Promise<unknown>;
+  createPatient: (patient: Omit<PatientModel, "uid">) => Promise<unknown>;
   updatePatient: (uid: string, patientLike: Partial<PatientModel>) => Promise<BdPatient>;
   findPatientByRutOrEmail: (
-    props: Partial<{ rut: string; email: string; id: bigint }>
-  ) => Promise<Partial<{ rut: string; email: string; id: bigint }> | null>;
+    props: Partial<{ rut: string; email: string; uid: string }>
+  ) => Promise<(Partial<{ rut: string; email: string }> & { uid: string }) | null>;
 };
 
 export class PatientService implements PatientServiceImpl {
@@ -87,58 +82,35 @@ export class PatientService implements PatientServiceImpl {
       })
     ]);
 
-    const pages = Math.ceil(total / limit) || undefined;
+    const pages = Math.ceil(total / limit);
 
     return { data, total, page, pages, limit };
   }
 
   async getPatientByUid(uid: string, options?: Prisma.patientsDefaultArgs<DefaultArgs>) {
     return await this.db.patients.findUnique({
-      ...options,
-      where: { uid: uid }
+      where: { uid: uid },
+      ...options
     });
   }
 
   async updatePatient(uid: string, patientLike: Partial<PatientModel>) {
     return await this.db.patients.update({
       where: { uid: uid },
-      data: {
-        rut: patientLike.rut,
-        names: patientLike.names,
-        last_names: patientLike.last_names,
-        email: patientLike.email,
-        phone: patientLike.phone,
-        address: patientLike.address,
-        birth_date: patientLike.birth_date,
-        gender: patientLike.gender,
-        status: patientLike.status
-      }
+      data: patientLike
     });
   }
 
-  async createPatient(patient: PatientModel) {
-    const patientCreated = await this.db.patients.create({
-      data: {
-        rut: patient.rut,
-        names: patient.names,
-        last_names: patient.last_names,
-        email: patient.email,
-        phone: patient.phone,
-        address: patient.address,
-        gender: patient.gender,
-        birth_date: patient.birth_date,
-        status: patient.status
-      }
+  async createPatient(patient: Omit<PatientModel, "uid">) {
+    return await this.db.patients.create({
+      data: patient
     });
-
-    // console.log(patientCreated);
-    return patientCreated;
   }
 
-  async findPatientByRutOrEmail({ email, rut, id }: Partial<{ rut: string; email: string; id: bigint }>) {
+  async findPatientByRutOrEmail({ email, rut, uid }: Partial<{ rut: string; email: string; uid: string }>) {
     return await this.db.patients.findFirst({
-      select: { id: !!id, rut: !!rut, email: !!email },
-      where: { OR: [{ rut: rut }, { email: email }], NOT: { id: id } }
+      select: { rut: !!rut, email: !!email, uid: true },
+      where: { OR: [{ rut: rut }, { email: email }], NOT: { uid: uid } }
     });
   }
 }

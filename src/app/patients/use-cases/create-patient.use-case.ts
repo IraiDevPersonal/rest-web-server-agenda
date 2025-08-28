@@ -4,6 +4,7 @@ import { PatientMapper } from "../mappers/patient.mapper";
 import { PatientModel } from "../models/patient.model";
 import { PatientServiceImpl } from "../service";
 import { PatientValidation } from "../validations/patient.validation";
+import { capitalize } from "@/lib/utils";
 
 export class CreatePatientUseCase {
   private readonly service: PatientServiceImpl;
@@ -34,7 +35,7 @@ export class CreatePatientUseCase {
     const patient = PatientMapper.map(createdPatient);
 
     return {
-      message: `Paciente ${patient.names} ${patient.last_names} creado(a)`,
+      message: `Paciente ${capitalize(patient.names)} ${capitalize(patient.last_names)} creado(a)`,
       data: patient
     };
   };

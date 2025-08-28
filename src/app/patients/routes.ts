@@ -25,7 +25,7 @@ export class PatientRoutes {
 
     router.put("/:uid", [UidValidatorMiddleware.validate], controller.updatePatient);
 
-    router.patch("/:uid", [UidValidatorMiddleware.validate], controller.togglePatientStatus);
+    router.patch("/:uid", [UidValidatorMiddleware.validate], controller.updatePatientStatus);
 
     return router;
   }

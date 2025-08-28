@@ -1,7 +1,7 @@
 import { AppointmentStatus } from "@prisma/client";
 import { z } from "zod";
 
-export const BdAppointmentSchema = z.object({
+export const AppointmentBdSchema = z.object({
   uid: z.uuid(),
   id: z.bigint(),
   date: z.date(),
@@ -10,7 +10,7 @@ export const BdAppointmentSchema = z.object({
   appointment_status: z.enum(AppointmentStatus)
 });
 
-export const RelatedBdAppointmentSchema = BdAppointmentSchema.extend({
+export const RelatedBdAppointmentSchema = AppointmentBdSchema.extend({
   user: z.object({
     names: z.string(),
     last_names: z.string(),

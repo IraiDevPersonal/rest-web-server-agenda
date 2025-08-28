@@ -3,6 +3,7 @@ import { PatientDetailMapper } from "../mappers/patient-detail.mapper";
 import { PatientModel } from "../models/patient.model";
 import { PatientServiceImpl } from "../service";
 import { PatientValidation } from "../validations/patient.validation";
+import { ExpandPatientTypes } from "../models/shared";
 
 export class PatientDetailUseCase {
   private readonly service: PatientServiceImpl;
@@ -19,12 +20,12 @@ export class PatientDetailUseCase {
     data: PatientModel;
   }> => {
     let appointment_history: any[] | undefined = undefined;
-    const bdPatient = await this.service.getPatientByUid(uid);
-    const validPatient = PatientValidation.exists(bdPatient, uid);
+    const result = await this.service.getPatientByUid(uid);
+    const validPatient = PatientValidation.found(result, uid);
     const patient = PatientDetailMapper.fromBdToDomain(validPatient);
 
     // 1. Se valida si el query pide el historial
-    if (PatientValidation.withHistory(query)) {
+    if (this.includeHistory(query)) {
       // 2. Si lo pide, se llama al servicio para obtenerlo (lógica de ejemplo)
       // appointment_history = await this.service.getAppointmentHistory(bdPatient.id);
       appointment_history = []; // Placeholder
@@ -34,5 +35,17 @@ export class PatientDetailUseCase {
       data: patient,
       appointment_history
     };
+  };
+
+  private includeHistory = (query: Request["query"]) => {
+    return this.getExpandQuery(query)?.includes("appointment_history") ? [] : undefined;
+  };
+
+  private includeId = (query: Request["query"]) => {
+    return !this.getExpandQuery(query)?.includes("id");
+  };
+
+  private getExpandQuery = (query: Request["query"]) => {
+    return query.expand as ExpandPatientTypes[] | undefined;
   };
 }

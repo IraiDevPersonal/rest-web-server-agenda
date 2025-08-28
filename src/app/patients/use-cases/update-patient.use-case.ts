@@ -13,23 +13,26 @@ export class UpdatePatientUseCase {
 
   update = async (uid: string, body: unknown): Promise<UpsertResponse<PatientModel>> => {
     const payload = PatientValidation.validateUpdate(body);
-    const found = await this.service.getPatientByUid(uid);
-    const validPatient = PatientValidation.exists(found, uid);
 
     const existingPatientWithData = await this.service.findPatientByRutOrEmail({
       rut: payload.rut,
       email: payload.email,
-      id: validPatient.id // Excluir al paciente actual de la búsqueda
+      uid: uid // Excluir al paciente actual de la búsqueda
+      // TODO: revisar bien esto, para saber si el usuario existe o no antes de actualizar
     });
 
-    if (existingPatientWithData?.rut === payload.rut) PatientValidation.rutInUse(payload.rut);
-    if (existingPatientWithData?.email === payload.email) PatientValidation.emailInUse(payload.email);
+    if (existingPatientWithData?.rut === payload.rut) {
+      PatientValidation.rutInUse(payload.rut);
+    }
+    if (existingPatientWithData?.email === payload.email) {
+      PatientValidation.emailInUse(payload.email);
+    }
 
-    const updatedPatient = await this.service.updatePatient(validPatient.uid, payload);
+    const updatedPatient = await this.service.updatePatient(uid, payload);
     const patient = PatientMapper.map(updatedPatient);
 
     return {
-      message: `Paciente ${patient.names} ${patient.last_names} actualizado(a)`,
+      message: `Paciente actualizado(a)`,
       data: patient
     };
   };
