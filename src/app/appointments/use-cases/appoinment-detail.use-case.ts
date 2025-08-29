@@ -11,7 +11,7 @@ export class AppointmentDetailUseCase {
 
   getDetail = async (uid: string) => {
     const bdAppoitnment = await this.service.getAppointmentByUid(uid);
-    const validAppointment = AppointmentValidation.appointmentExists(bdAppoitnment, uid);
+    const validAppointment = AppointmentValidation.exist(bdAppoitnment, uid);
 
     return AppointmentDetailMapper.fromBdToDomain(validAppointment);
   };

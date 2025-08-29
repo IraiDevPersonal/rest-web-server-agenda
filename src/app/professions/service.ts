@@ -1,16 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import { ProfessionFilters } from "./models/profession-filters.model";
-import { BdProfession } from "@/types/bd-model";
-
-type Professions = BdProfession<{
-  select: {
-    id: true;
-    name: true;
-  };
-}>[];
 
 export type ProfessionServiceImpl = {
-  getProfessions: (filters?: ProfessionFilters) => Promise<Professions>;
+  getProfessions: (filters?: ProfessionFilters) => Promise<unknown>;
 };
 
 export class ProfessionService implements ProfessionServiceImpl {
