@@ -4,6 +4,7 @@ import { ProfessionalForFiltersMapper } from "../mappers/professional-for-filter
 import { ProfessionalMapper } from "../mappers/professional.mapper";
 import { ProfessionalFilters } from "../models/professional-filters.model";
 import { ProfessionalServiceImpl } from "../service";
+import { Pagination } from "@/lib/pagination";
 
 export class ProfessionalListUseCase {
   private readonly service: ProfessionalServiceImpl;
@@ -13,16 +14,25 @@ export class ProfessionalListUseCase {
   }
 
   list = async (query: Request["query"]) => {
-    const filters = this.buildFilters(query);
-    const response = await this.service.getProfessionals(filters);
-    const data = ProfessionalMapper.fromBdToDomain(response);
+    const { page, limit, ...filters } = this.buildFilters(query);
+    const pagination = new Pagination({ page, limit });
 
-    return data;
+    const { data, total } = await this.service.getProfessionals(pagination.withFilters(filters));
+
+    return ProfessionalMapper.fromBdToDomain({
+      data,
+      total,
+      page: pagination.page,
+      limit: pagination.limit,
+      pages: pagination.getTotalPages(total)
+    });
   };
 
   listForFilters = async (query: Request["query"]) => {
     const filters = this.buildFilters(query);
-    const bdProfessionals = await this.service.getProfessionalsForFilters(filters);
+    const bdProfessionals = await this.service.getProfessionalsForFilters({
+      profession_id: filters.profession_id
+    });
 
     return ProfessionalForFiltersMapper.fromBdToDomain(bdProfessionals);
   };

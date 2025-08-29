@@ -7,7 +7,7 @@ import { ProfessionModel } from "../models/profession.model";
 import { ProfessionOptionModel } from "../models/professional-for-filters.model";
 import { ProfessionServiceImpl } from "../service";
 
-export class ProfessionListUseCase {
+export class ProfessionListUseCases {
   private readonly service: ProfessionServiceImpl;
 
   constructor(service: ProfessionServiceImpl) {
@@ -20,9 +20,8 @@ export class ProfessionListUseCase {
     return ProfessionMapper.fromBdToDomain(bdProfessions);
   };
 
-  listForFilters = async (query: Request["query"]): Promise<ProfessionOptionModel[]> => {
-    const filters = this.buildFilters(query);
-    const bdProfessions = await this.service.getProfessions(filters);
+  listForFilters = async (): Promise<ProfessionOptionModel[]> => {
+    const bdProfessions = await this.service.getProfessions();
     return ProfessionForFiltersMapper.fromBdToDomain(bdProfessions);
   };
 

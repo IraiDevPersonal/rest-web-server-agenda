@@ -10,7 +10,7 @@ type Professions = BdProfession<{
 }>[];
 
 export type ProfessionServiceImpl = {
-  getProfessions: (filters: ProfessionFilters) => Promise<Professions>;
+  getProfessions: (filters?: ProfessionFilters) => Promise<Professions>;
 };
 
 export class ProfessionService implements ProfessionServiceImpl {
@@ -20,14 +20,14 @@ export class ProfessionService implements ProfessionServiceImpl {
     this.db = new PrismaClient();
   }
 
-  async getProfessions({ id }: ProfessionFilters) {
+  async getProfessions(filters?: ProfessionFilters) {
     return await this.db.professions.findMany({
       select: {
         id: true,
         name: true
       },
       where: {
-        id: id
+        id: filters?.id
       }
     });
   }

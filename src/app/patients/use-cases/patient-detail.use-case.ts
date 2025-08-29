@@ -21,7 +21,7 @@ export class PatientDetailUseCase {
   }> => {
     let appointment_history: any[] | undefined = undefined;
     const result = await this.service.getPatientByUid(uid);
-    const validPatient = PatientValidation.found(result, uid);
+    const validPatient = PatientValidation.exist(result, uid);
     const patient = PatientDetailMapper.fromBdToDomain(validPatient);
 
     // 1. Se valida si el query pide el historial

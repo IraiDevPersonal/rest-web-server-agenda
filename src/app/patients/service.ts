@@ -1,21 +1,18 @@
+import { MakeRequired, PaginatedQuery, PaginatedResult } from "@/types/global";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { DefaultArgs } from "@prisma/client/runtime/library";
-import { PatientModel } from "./models/patient.model";
 import { PatientFilters } from "./models/patient-filters.model";
-import { BdPatient } from "@/types/bd-model";
-import { ResponseWithPagination } from "@/types/global";
+import { PatientModel } from "./models/patient.model";
+
+type FindPatientProps = Partial<{ rut: string; email: string; uid: string }>;
+type Filters = PaginatedQuery<Omit<PatientFilters, "page" | "limit">>;
 
 export type PatientServiceImpl = {
-  getPatients: (filters: PatientFilters) => Promise<ResponseWithPagination<BdPatient>>;
-  getPatientByUid: (
-    uid: string,
-    options?: Prisma.patientsDefaultArgs<DefaultArgs>
-  ) => Promise<BdPatient | null>;
+  getPatientByUid: (uid: string) => Promise<unknown | null>;
+  getPatients: (filters: Filters) => Promise<PaginatedResult>;
   createPatient: (patient: Omit<PatientModel, "uid">) => Promise<unknown>;
-  updatePatient: (uid: string, patientLike: Partial<PatientModel>) => Promise<BdPatient>;
-  findPatientByRutOrEmail: (
-    props: Partial<{ rut: string; email: string; uid: string }>
-  ) => Promise<(Partial<{ rut: string; email: string }> & { uid: string }) | null>;
+  updatePatient: (uid: string, patientLike: Partial<PatientModel>) => Promise<unknown>;
+  findPatientByRutOrEmail: (props: FindPatientProps) => Promise<MakeRequired<FindPatientProps, "uid"> | null>;
 };
 
 export class PatientService implements PatientServiceImpl {
@@ -25,9 +22,7 @@ export class PatientService implements PatientServiceImpl {
     this.db = new PrismaClient();
   }
 
-  async getPatients({ page = 1, limit = 10, ...filters }: PatientFilters) {
-    const skip = (page - 1) * limit;
-
+  async getPatients({ skip, take, ...filters }: Filters) {
     const whereClause: any = {
       rut: {
         equals: filters.rut,
@@ -60,6 +55,12 @@ export class PatientService implements PatientServiceImpl {
     const [total, data] = await this.db.$transaction([
       this.db.patients.count({ where: whereClause }),
       this.db.patients.findMany({
+        where: whereClause,
+        orderBy: {
+          last_names: "asc"
+        },
+        take,
+        skip,
         select: {
           uid: true,
           email: true,
@@ -72,19 +73,11 @@ export class PatientService implements PatientServiceImpl {
           birth_date: true,
           gender: true,
           id: true
-        },
-        where: whereClause,
-        orderBy: {
-          last_names: "asc"
-        },
-        take: limit,
-        skip
+        }
       })
     ]);
 
-    const pages = Math.ceil(total / limit);
-
-    return { data, total, page, pages, limit };
+    return { data, total };
   }
 
   async getPatientByUid(uid: string, options?: Prisma.patientsDefaultArgs<DefaultArgs>) {
@@ -107,7 +100,7 @@ export class PatientService implements PatientServiceImpl {
     });
   }
 
-  async findPatientByRutOrEmail({ email, rut, uid }: Partial<{ rut: string; email: string; uid: string }>) {
+  async findPatientByRutOrEmail({ email, rut, uid }: FindPatientProps) {
     return await this.db.patients.findFirst({
       select: { rut: !!rut, email: !!email, uid: true },
       where: { OR: [{ rut: rut }, { email: email }], NOT: { uid: uid } }

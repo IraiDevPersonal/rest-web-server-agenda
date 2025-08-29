@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
 
 import { CustomError } from "@/lib/custom-error";
-import { ProfessionListUseCase } from "./use-cases/profession-list.use-case";
+import { ProfessionListUseCases } from "./use-cases/profession-list.use-case";
 import { ProfessionServiceImpl } from "./service";
 
 export class ProfessionController {
-  private professionalListUseCases: ProfessionListUseCase;
+  private professionalListUseCases: ProfessionListUseCases;
 
   public constructor(service: ProfessionServiceImpl) {
-    this.professionalListUseCases = new ProfessionListUseCase(service);
+    this.professionalListUseCases = new ProfessionListUseCases(service);
   }
 
   public getProfessions = async (req: Request, res: Response) => {
@@ -22,7 +22,7 @@ export class ProfessionController {
 
   public getProfessionsForFilters = async (req: Request, res: Response) => {
     try {
-      const professions = await this.professionalListUseCases.listForFilters(req.query);
+      const professions = await this.professionalListUseCases.listForFilters();
       return res.status(200).json(professions);
     } catch (error) {
       return CustomError.handleError(error, res);

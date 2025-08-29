@@ -23,15 +23,11 @@ export class PatientValidation {
     return UpsertPatientApiSchema.pick({ status: true }).partial().parse(body);
   }
 
-  static found<T>(value: T, uid: string): NonNullable<T> {
-    if (!value) {
-      throw CustomError.badRequest(`No se ha encontrado al paciente UID: ${uid}`);
+  static exist<T>(patient: T, uid: string): NonNullable<T> {
+    if (!patient) {
+      throw CustomError.badRequest(`No se ha encontrado al paciente uid: ${uid}`);
     }
-    return value;
-  }
-
-  static exist(value: unknown): boolean {
-    return Boolean(value);
+    return patient;
   }
 
   static rutInUse(rut: string | undefined) {

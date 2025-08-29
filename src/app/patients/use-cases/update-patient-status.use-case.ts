@@ -19,12 +19,16 @@ export class UpdatePatientStatusUseCase {
   }
 
   updateStatus = async (uid: string, body: unknown): Promise<UpsertResponse<PatientModel>> => {
-    const found = await this.service.getPatientByUid(uid);
-    const validPatient = PatientValidation.found(found, uid);
     const { status } = PatientValidation.validateUpdateStatus(body);
+    const bgPatient = await this.service.getPatientByUid(uid);
+    const validPatient = PatientMapper.map(PatientValidation.exist(bgPatient, uid));
 
-    const updatedPatient = await this.service.updatePatient(validPatient.uid, {
-      status: status ? status : validPatient.status === "ACTIVE" ? "INACTIVE" : "ACTIVE"
+    const updatedPatient = await this.service.updatePatient(uid, {
+      status: status
+        ? status
+        : validPatient.status === UserStatus.ACTIVE
+          ? UserStatus.INACTIVE
+          : UserStatus.ACTIVE
     });
     const patient = PatientMapper.map(updatedPatient);
 

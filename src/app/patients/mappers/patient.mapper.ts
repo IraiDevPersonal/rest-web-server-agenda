@@ -1,3 +1,4 @@
+import { ResponseWithPagination } from "@/types/global";
 import { PatientWithPaginationModel, type PatientModel } from "../models/patient.model";
 import { PatientBdSchema, PatientBdWithPaginationSchema } from "../schemas/bd/patient.schema";
 
@@ -26,7 +27,7 @@ export class PatientMapper {
     };
   }
 
-  static fromBdToDomain(raw: unknown): PatientWithPaginationModel {
+  static fromBdToDomain(raw: ResponseWithPagination<unknown>): PatientWithPaginationModel {
     const { success, data, error } = PatientBdWithPaginationSchema.safeParse(raw);
 
     if (!success) {

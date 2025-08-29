@@ -1,6 +1,7 @@
 import { UserStatus } from "@prisma/client";
 import { RoleMapper } from "../../roles/mappers/role.mapper";
 import { ProfessionModel } from "@/app/professions/models/profession.model";
+import { ResponseWithPagination } from "@/types/global";
 
 export type ProfessionalModel = {
   uid: string;
@@ -15,3 +16,5 @@ export type ProfessionalModel = {
   avatar_image: string | null;
   professions: ProfessionModel[];
 };
+
+export type ProfessionalWithPaginationModel = ResponseWithPagination<ProfessionalModel>;

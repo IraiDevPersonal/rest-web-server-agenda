@@ -1,10 +1,9 @@
 import { RoleMapper } from "@/app/roles/mappers/role.mapper";
-import { type ProfessionalModel } from "../models/professional.model";
-import { ProfessionalSchema } from "../schemas/bd/professional.schema";
+import { ProfessionalWithPaginationModel, type ProfessionalModel } from "../models/professional.model";
+import { ProfessionalBdWithPaginationSchema, ProfessionalSchema } from "../schemas/bd/professional.schema";
 
-import { CustomError } from "@/lib/custom-error";
 import { ProfessionMapper } from "@/app/professions/mappers/profession.mapper";
-import { ResponseWithPaginationSchema } from "@/lib/schemas/global";
+import { CustomError } from "@/lib/custom-error";
 import { ResponseWithPagination } from "@/types/global";
 
 export class ProfessionalMapper {
@@ -30,8 +29,8 @@ export class ProfessionalMapper {
     };
   };
 
-  static fromBdToDomain = (raw: unknown): ResponseWithPagination<ProfessionalModel> => {
-    const { success, error, data } = ResponseWithPaginationSchema(ProfessionalSchema).safeParse(raw);
+  static fromBdToDomain = (raw: ResponseWithPagination<unknown>): ProfessionalWithPaginationModel => {
+    const { success, error, data } = ProfessionalBdWithPaginationSchema.safeParse(raw);
 
     if (!success) {
       throw CustomError.internalServer(
@@ -40,11 +39,11 @@ export class ProfessionalMapper {
     }
 
     return {
-      data: data.data.map(this.map),
+      page: data.page,
       limit: data.limit,
       total: data.total,
       pages: data.pages,
-      page: data.page
+      data: data.data.map(this.map)
     };
   };
 }

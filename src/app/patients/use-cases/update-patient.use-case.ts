@@ -14,17 +14,17 @@ export class UpdatePatientUseCase {
   update = async (uid: string, body: unknown): Promise<UpsertResponse<PatientModel>> => {
     const payload = PatientValidation.validateUpdate(body);
 
-    const existingPatientWithData = await this.service.findPatientByRutOrEmail({
+    const existingPatient = await this.service.findPatientByRutOrEmail({
       rut: payload.rut,
       email: payload.email,
       uid: uid // Excluir al paciente actual de la búsqueda
       // TODO: revisar bien esto, para saber si el usuario existe o no antes de actualizar
     });
 
-    if (existingPatientWithData?.rut === payload.rut) {
+    if (existingPatient?.rut === payload.rut) {
       PatientValidation.rutInUse(payload.rut);
     }
-    if (existingPatientWithData?.email === payload.email) {
+    if (existingPatient?.email === payload.email) {
       PatientValidation.emailInUse(payload.email);
     }
 

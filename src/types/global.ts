@@ -1,4 +1,4 @@
-export type ResponseWithPagination<T extends object> = {
+export type ResponseWithPagination<T> = {
   total: number;
   page: number;
   pages: number;
@@ -6,7 +6,7 @@ export type ResponseWithPagination<T extends object> = {
   data: T[];
 };
 
-export type UpsertResponse<T extends object> = {
+export type UpsertResponse<T> = {
   data?: T;
   message: string;
 };
@@ -18,4 +18,11 @@ export type MakeRequired<T, K extends keyof T> = Partial<Omit<T, K>> & Required<
 export type Option<T extends object = object> = {
   value: string;
   label: string;
+} & T;
+
+export type PaginatedResult = { data: unknown[]; total: number };
+
+export type PaginatedQuery<T extends object = object> = {
+  skip: number;
+  take: number;
 } & T;

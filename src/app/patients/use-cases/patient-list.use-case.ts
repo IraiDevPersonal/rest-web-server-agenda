@@ -1,24 +1,31 @@
-import { ResponseWithPagination } from "@/types/global";
+import { queryParser } from "@/lib/utils";
+import { UserStatus } from "@prisma/client";
 import { Request } from "express";
 import { PatientMapper } from "../mappers/patient.mapper";
-import { PatientModel } from "../models/patient.model";
-import { PatientServiceImpl } from "../service";
 import { PatientFilters } from "../models/patient-filters.model";
-import { UserStatus } from "@prisma/client";
-import { queryParser } from "@/lib/utils";
+import { PatientServiceImpl } from "../service";
+import { Pagination } from "@/lib/pagination";
 
-export class PatientListUseCase {
+export class PatientListUseCases {
   private readonly service: PatientServiceImpl;
 
   constructor(service: PatientServiceImpl) {
     this.service = service;
   }
 
-  list = async (query: Request["query"]): Promise<ResponseWithPagination<PatientModel>> => {
-    const filters = this.buildFilters(query);
-    const result = await this.service.getPatients(filters);
+  list = async (query: Request["query"]) => {
+    const { page, limit, ...filters } = this.buildFilters(query);
+    const pagination = new Pagination({ page, limit });
 
-    return PatientMapper.fromBdToDomain(result);
+    const { data, total } = await this.service.getPatients(pagination.withFilters(filters));
+
+    return PatientMapper.fromBdToDomain({
+      data,
+      total,
+      page: pagination.page,
+      limit: pagination.limit,
+      pages: pagination.getTotalPages(total)
+    });
   };
 
   private buildFilters(query: Request["query"]): PatientFilters {

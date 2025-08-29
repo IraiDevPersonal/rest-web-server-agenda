@@ -1,6 +1,7 @@
 import { ProfessionSchema } from "@/app/professions/schemas/bd/profession.schema";
 import { RoleSchema } from "@/app/roles/schemas/bd/role.schema";
 import { RutManager } from "@/lib/rut-manager";
+import { ResponseWithPaginationSchema } from "@/lib/schemas/global";
 import { UserStatus } from "@prisma/client";
 import { z } from "zod";
 
@@ -18,3 +19,5 @@ export const ProfessionalSchema = z.object({
   professions: z.object({ profession: ProfessionSchema }).array(),
   rut: z.string().refine(RutManager.validate, { error: "invalid rut" })
 });
+
+export const ProfessionalBdWithPaginationSchema = ResponseWithPaginationSchema(ProfessionalSchema);
