@@ -3,7 +3,7 @@ import { UserStatus } from "@prisma/client";
 import { PatientMapper } from "../mappers/patient.mapper";
 import { PatientModel } from "../models/patient.model";
 import { PatientServiceImpl } from "../service";
-import { PatientValidation } from "../validations/patient.validation";
+import { PatientValidations } from "../validations";
 import { capitalize } from "@/lib/utils";
 
 export class CreatePatientUseCase {
@@ -14,18 +14,18 @@ export class CreatePatientUseCase {
   }
 
   create = async (body: unknown): Promise<UpsertResponse<PatientModel>> => {
-    const payload = PatientValidation.validateInsert(body);
+    const payload = PatientValidations.validateInsert(body);
 
-    const existingPatient = await this.service.findPatientByRutOrEmail({
+    const existingPatient = await this.service.findPatientRutAndEmail({
       rut: payload.rut,
       email: payload.email
     });
 
     if (existingPatient?.rut === payload.rut) {
-      PatientValidation.rutInUse(payload.rut);
+      PatientValidations.ensureRutNotInUse(payload.rut);
     }
     if (existingPatient?.email === payload.email) {
-      PatientValidation.emailInUse(payload.email);
+      PatientValidations.ensureEmailNotInUse(payload.email);
     }
 
     const createdPatient = await this.service.createPatient({

@@ -1,22 +1,35 @@
-import { MakeRequired, PaginatedQuery, PaginatedResult } from "@/types/global";
-import { Prisma, PrismaClient } from "@prisma/client";
-import { DefaultArgs } from "@prisma/client/runtime/library";
+import { FindRutAndEmailQuery, MakeRequired, PaginatedQuery, PaginatedResult } from "@/types/global";
+import { PrismaClient } from "@prisma/client";
 import { PatientFilters } from "./models/patient-filters.model";
 import { PatientModel } from "./models/patient.model";
 
-type FindPatientProps = Partial<{ rut: string; email: string; uid: string }>;
 type Filters = PaginatedQuery<Omit<PatientFilters, "page" | "limit">>;
 
 export type PatientServiceImpl = {
   getPatientByUid: (uid: string) => Promise<unknown | null>;
   getPatients: (filters: Filters) => Promise<PaginatedResult>;
-  createPatient: (patient: Omit<PatientModel, "uid">) => Promise<unknown>;
-  updatePatient: (uid: string, patientLike: Partial<PatientModel>) => Promise<unknown>;
-  findPatientByRutOrEmail: (props: FindPatientProps) => Promise<MakeRequired<FindPatientProps, "uid"> | null>;
+  createPatient: (payload: Omit<PatientModel, "uid">) => Promise<unknown>;
+  updatePatient: (uid: string, payload: Partial<PatientModel>) => Promise<unknown>;
+  findPatientRutAndEmail: (
+    props: FindRutAndEmailQuery
+  ) => Promise<MakeRequired<FindRutAndEmailQuery, "uid"> | null>;
 };
 
 export class PatientService implements PatientServiceImpl {
   private readonly db: PrismaClient;
+  private readonly SELECT = {
+    uid: true,
+    email: true,
+    rut: true,
+    names: true,
+    last_names: true,
+    phone: true,
+    address: true,
+    status: true,
+    birth_date: true,
+    gender: true,
+    id: true
+  };
 
   constructor() {
     this.db = new PrismaClient();
@@ -55,52 +68,40 @@ export class PatientService implements PatientServiceImpl {
     const [total, data] = await this.db.$transaction([
       this.db.patients.count({ where: whereClause }),
       this.db.patients.findMany({
+        orderBy: { last_names: "asc" },
+        select: this.SELECT,
         where: whereClause,
-        orderBy: {
-          last_names: "asc"
-        },
         take,
-        skip,
-        select: {
-          uid: true,
-          email: true,
-          rut: true,
-          names: true,
-          last_names: true,
-          phone: true,
-          address: true,
-          status: true,
-          birth_date: true,
-          gender: true,
-          id: true
-        }
+        skip
       })
     ]);
 
     return { data, total };
   }
 
-  async getPatientByUid(uid: string, options?: Prisma.patientsDefaultArgs<DefaultArgs>) {
+  async getPatientByUid(uid: string) {
     return await this.db.patients.findUnique({
       where: { uid: uid },
-      ...options
+      select: this.SELECT
     });
   }
 
-  async updatePatient(uid: string, patientLike: Partial<PatientModel>) {
+  async updatePatient(uid: string, payload: Partial<PatientModel>) {
     return await this.db.patients.update({
       where: { uid: uid },
-      data: patientLike
+      data: payload,
+      select: this.SELECT
     });
   }
 
-  async createPatient(patient: Omit<PatientModel, "uid">) {
+  async createPatient(payload: Omit<PatientModel, "uid">) {
     return await this.db.patients.create({
-      data: patient
+      data: payload,
+      select: this.SELECT
     });
   }
 
-  async findPatientByRutOrEmail({ email, rut, uid }: FindPatientProps) {
+  async findPatientRutAndEmail({ email, rut, uid }: FindRutAndEmailQuery) {
     return await this.db.patients.findFirst({
       select: { rut: !!rut, email: !!email, uid: true },
       where: { OR: [{ rut: rut }, { email: email }], NOT: { uid: uid } }

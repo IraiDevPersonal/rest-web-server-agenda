@@ -1,7 +1,7 @@
-import { ProfessionalMapper } from "../mappers/professional.mapper";
+import { ProfessionalDetailMapper } from "../mappers/professional-detail.mapper";
 import { ProfessionalModel } from "../models/professional.model";
 import { ProfessionalServiceImpl } from "../service";
-import { ProfessionalValidations } from "../validations/professional-validations";
+import { ProfessionalValidations } from "../validations";
 
 export class ProfessionalDetailUseCase {
   private readonly service: ProfessionalServiceImpl;
@@ -17,8 +17,8 @@ export class ProfessionalDetailUseCase {
     blocks: any[];
   }> => {
     const bdProfessional = await this.service.getProfessionalByUid(uid);
-    const validProfessional = ProfessionalValidations.exists(bdProfessional, uid);
-    const professional = ProfessionalMapper.map(validProfessional);
+    const validProfessional = ProfessionalValidations.requireExists(bdProfessional);
+    const professional = ProfessionalDetailMapper.map(validProfessional);
 
     return {
       data: professional,

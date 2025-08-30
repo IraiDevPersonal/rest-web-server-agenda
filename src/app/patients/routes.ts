@@ -4,7 +4,7 @@ import { PatientController } from "./controller";
 import { PatientService } from "./service";
 
 import { UidValidatorMiddleware } from "@/lib/middlewares/uid-validator-middleware";
-import { PatientMiddleware } from "./middlewares/patient.middleware";
+import { PatientExpandQueryMiddleware } from "./middlewares/patient-expand-query.middleware";
 
 export class PatientRoutes {
   private static readonly service = new PatientService();
@@ -17,7 +17,7 @@ export class PatientRoutes {
     router.get("/", [], controller.getPatients);
     router.get(
       "/:uid",
-      [UidValidatorMiddleware.validate, PatientMiddleware.validateExpandQuery],
+      [UidValidatorMiddleware.validate, PatientExpandQueryMiddleware.validate],
       controller.getPatientDetail
     );
 

@@ -2,7 +2,7 @@ import { UpsertResponse } from "@/types/global";
 import { PatientMapper } from "../mappers/patient.mapper";
 import { PatientModel } from "../models/patient.model";
 import { PatientServiceImpl } from "../service";
-import { PatientValidation } from "../validations/patient.validation";
+import { PatientValidations } from "../validations";
 import { UserStatus } from "@prisma/client";
 import { capitalize } from "@/lib/utils";
 
@@ -19,9 +19,9 @@ export class UpdatePatientStatusUseCase {
   }
 
   updateStatus = async (uid: string, body: unknown): Promise<UpsertResponse<PatientModel>> => {
-    const { status } = PatientValidation.validateUpdateStatus(body);
+    const { status } = PatientValidations.validateUpdateStatus(body);
     const bgPatient = await this.service.getPatientByUid(uid);
-    const validPatient = PatientMapper.map(PatientValidation.exist(bgPatient, uid));
+    const validPatient = PatientMapper.map(PatientValidations.requireExists(bgPatient));
 
     const updatedPatient = await this.service.updatePatient(uid, {
       status: status

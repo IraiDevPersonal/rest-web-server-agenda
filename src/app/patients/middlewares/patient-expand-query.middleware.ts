@@ -3,8 +3,8 @@ import { NextFunction, Request, Response } from "express";
 import { CustomError } from "@/lib/custom-error";
 import { ExpandPatientTypes } from "../models/shared";
 
-export class PatientMiddleware {
-  static validateExpandQuery(req: Request, res: Response, next: NextFunction) {
+export class PatientExpandQueryMiddleware {
+  static validate(req: Request, res: Response, next: NextFunction) {
     try {
       const expand = req.query.expand;
 

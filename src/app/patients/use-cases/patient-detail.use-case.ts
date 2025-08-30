@@ -2,7 +2,7 @@ import { Request } from "express";
 import { PatientDetailMapper } from "../mappers/patient-detail.mapper";
 import { PatientModel } from "../models/patient.model";
 import { PatientServiceImpl } from "../service";
-import { PatientValidation } from "../validations/patient.validation";
+import { PatientValidations } from "../validations";
 import { ExpandPatientTypes } from "../models/shared";
 
 export class PatientDetailUseCase {
@@ -20,8 +20,8 @@ export class PatientDetailUseCase {
     data: PatientModel;
   }> => {
     let appointment_history: any[] | undefined = undefined;
-    const result = await this.service.getPatientByUid(uid);
-    const validPatient = PatientValidation.exist(result, uid);
+    const bdPatient = await this.service.getPatientByUid(uid);
+    const validPatient = PatientValidations.requireExists(bdPatient);
     const patient = PatientDetailMapper.fromBdToDomain(validPatient);
 
     // 1. Se valida si el query pide el historial

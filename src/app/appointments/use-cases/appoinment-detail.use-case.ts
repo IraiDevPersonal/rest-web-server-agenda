@@ -1,6 +1,6 @@
 import { AppointmentDetailMapper } from "../mappers/appointment-detail.mapper";
 import { AppointmentServiceImpl } from "../service";
-import { AppointmentValidation } from "../validations/appointment.validation";
+import { AppointmentValidations } from "../validations";
 
 export class AppointmentDetailUseCase {
   private readonly service: AppointmentServiceImpl;
@@ -11,7 +11,7 @@ export class AppointmentDetailUseCase {
 
   getDetail = async (uid: string) => {
     const bdAppoitnment = await this.service.getAppointmentByUid(uid);
-    const validAppointment = AppointmentValidation.exist(bdAppoitnment, uid);
+    const validAppointment = AppointmentValidations.requireExists(bdAppoitnment);
 
     return AppointmentDetailMapper.fromBdToDomain(validAppointment);
   };

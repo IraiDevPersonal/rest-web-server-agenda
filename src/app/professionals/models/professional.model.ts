@@ -1,7 +1,7 @@
-import { UserStatus } from "@prisma/client";
-import { RoleMapper } from "../../roles/mappers/role.mapper";
 import { ProfessionModel } from "@/app/professions/models/profession.model";
 import { ResponseWithPagination } from "@/types/global";
+import { UserStatus } from "@prisma/client";
+import { RoleMapper } from "../../roles/mappers/role.mapper";
 
 export type ProfessionalModel = {
   uid: string;
