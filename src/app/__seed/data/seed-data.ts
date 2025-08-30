@@ -22,10 +22,7 @@ export const professionalProfession: BdProfessionalProfession[] = [
   { user_id: BigInt(2), profession_id: 2 }
 ];
 
-export const roles: MakeRequired<BdRole, "name">[] = [
-  { name: "admin" },
-  { name: "professional" }
-];
+export const roles: MakeRequired<BdRole, "name">[] = [{ name: "admin" }, { name: "professional" }];
 
 export const usersRoles: MakeRequired<BdUserRoles, "role_id" | "user_id">[] = [
   { role_id: 1, user_id: BigInt(1) },
@@ -73,7 +70,7 @@ export const patients: MakeOptional<BdPatient, "id">[] = [
     email: "cosme_fulano_4@gmail.com",
     last_names: "fulano 4",
     names: "cosme 4",
-    phone: "+569444444444",
+    phone: "+56944444444",
     rut: "11.111.111-1",
     address: "calle falsa 123",
     birth_date: new Date("1990-01-01"),
@@ -85,7 +82,7 @@ export const patients: MakeOptional<BdPatient, "id">[] = [
     email: "cosme_fulano_5@gmail.com",
     last_names: "fulano 5",
     names: "cosme 5",
-    phone: "+569555555555",
+    phone: "+56955555555",
     rut: "15.953.693-9",
     address: "calle falsa 123",
     birth_date: new Date("1994-01-01"),
@@ -119,7 +116,7 @@ export const users: MakeOptional<BdUser, "id">[] = [
     last_names: "espinoza molina",
     names: "raul ignacio",
     phone: "+56948426521",
-    rut: "19.051.146-7",
+    rut: "18.524.489-k",
     uid: Uid.createV4()
   },
   {
