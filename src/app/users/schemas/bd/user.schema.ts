@@ -16,8 +16,8 @@ export const UserSchema = z.object({
   last_names: z.string().min(1),
   avatar_image: z.url().nullable(),
   roles: z.object({ role: RoleSchema }).array(),
-  professions: z.object({ profession: ProfessionSchema }).array(),
-  rut: z.string().refine(RutManager.validate, { error: "invalid rut" })
+  rut: z.string().refine(RutManager.validate, { error: "invalid rut" }),
+  professions: z.object({ profession: ProfessionSchema }).array().optional()
 });
 
 export const UserBdWithPaginationSchema = ResponseWithPaginationSchema(UserSchema);

@@ -10,19 +10,13 @@ export class UserDetailUseCase {
     this.service = service;
   }
 
-  getDetail = async (
-    uid: string
-  ): Promise<{
-    data: UserModel;
-    blocks: any[];
-  }> => {
+  getDetail = async (uid: string): Promise<{ data: UserModel }> => {
     const bdUser = await this.service.getUserByUid(uid);
     const validUser = UserValidations.requireExists(bdUser);
     const user = UserDetailMapper.map(validUser);
 
     return {
-      data: user,
-      blocks: []
+      data: user
     };
   };
 }

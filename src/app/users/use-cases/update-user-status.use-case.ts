@@ -21,9 +21,7 @@ export class UpdateUserStatusUseCase {
   updateStatus = async (uid: string, body: unknown): Promise<UpsertResponse<UserModel>> => {
     const { status } = UserValidations.validateUpdateStatus(body);
     const bgUser = await this.service.getUserByUid(uid);
-    const validUser = UserDetailMapper.fromBdToDomain(
-      UserValidations.requireExists(bgUser)
-    );
+    const validUser = UserDetailMapper.fromBdToDomain(UserValidations.requireExists(bgUser));
 
     const updatedUser = await this.service.updateUser(uid, {
       status: status
@@ -36,7 +34,7 @@ export class UpdateUserStatusUseCase {
 
     return {
       data: user,
-      message: `User ${capitalize(user.names)} ${capitalize(user.last_names)} ha sido ${this.HASH_STATUS[user.status]}`
+      message: `Usuario ${capitalize(user.names)} ${capitalize(user.last_names)} ha sido ${this.HASH_STATUS[user.status]}`
     };
   };
 }

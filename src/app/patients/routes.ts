@@ -20,11 +20,8 @@ export class PatientRoutes {
       [UidValidatorMiddleware.validate, PatientExpandQueryMiddleware.validate],
       controller.getPatientDetail
     );
-
     router.post("/", [], controller.createPatient);
-
     router.put("/:uid", [UidValidatorMiddleware.validate], controller.updatePatient);
-
     router.patch("/:uid", [UidValidatorMiddleware.validate], controller.updatePatientStatus);
 
     return router;

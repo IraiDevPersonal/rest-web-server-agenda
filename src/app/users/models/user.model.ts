@@ -14,7 +14,7 @@ export type UserModel = {
   status: UserStatus;
   roles: RoleMapper[];
   avatar_image: string | null;
-  professions: ProfessionModel[];
+  professions?: ProfessionModel[];
 };
 
 export type UserWithPaginationModel = ResponseWithPagination<UserModel>;

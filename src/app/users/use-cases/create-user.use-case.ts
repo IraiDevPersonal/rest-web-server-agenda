@@ -35,7 +35,7 @@ export class CreateUserUseCase {
     const user = UserDetailMapper.fromBdToDomain(createdUser);
 
     return {
-      message: `User ${capitalize(user.names)} ${capitalize(user.last_names)} creado(a)`,
+      message: `Usuario ${capitalize(user.names)} ${capitalize(user.last_names)} creado(a)`,
       data: user
     };
   };

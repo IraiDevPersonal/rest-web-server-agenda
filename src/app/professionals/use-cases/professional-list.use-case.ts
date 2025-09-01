@@ -1,15 +1,15 @@
 import { queryParser } from "@/lib/utils";
 import { Request } from "express";
-import { UserForFiltersMapper } from "../mappers/user-for-filters.mapper";
-import { UserMapper } from "../mappers/user.mapper";
-import { UserFilters } from "../models/user-filters.model";
-import { UserServiceImpl } from "../service";
 import { Pagination } from "@/lib/pagination";
+import { ProfessionalServiceImpl } from "../services";
+import { UserMapper } from "@/app/users/mappers/user.mapper";
+import { UserForFiltersMapper } from "@/app/users/mappers/user-for-filters.mapper";
+import { UserFilters } from "@/app/users/models/user-filters.model";
 
-export class UserListUseCase {
-  private readonly service: UserServiceImpl;
+export class ProfessionalListUseCase {
+  private readonly service: ProfessionalServiceImpl;
 
-  constructor(service: UserServiceImpl) {
+  constructor(service: ProfessionalServiceImpl) {
     this.service = service;
   }
 
@@ -17,7 +17,7 @@ export class UserListUseCase {
     const { page, limit, ...filters } = this.buildFilters(query);
     const pagination = new Pagination({ page, limit });
 
-    const { data, total } = await this.service.getUsers(pagination.withFilters(filters));
+    const { data, total } = await this.service.getProfessionals(pagination.withFilters(filters));
 
     return UserMapper.fromBdToDomain({
       data,
@@ -28,10 +28,13 @@ export class UserListUseCase {
     });
   };
 
-  listForFilters = async () => {
-    const bdUsers = await this.service.getUsersForFilters();
+  listForFilters = async (query: Request["query"]) => {
+    const filters = this.buildFilters(query);
+    const bdProfessionals = await this.service.getProfessionalsForFilters({
+      profession_id: filters.profession_id
+    });
 
-    return UserForFiltersMapper.fromBdToDomain(bdUsers);
+    return UserForFiltersMapper.fromBdToDomain(bdProfessionals);
   };
 
   private buildFilters = (query: Request["query"]): UserFilters => {

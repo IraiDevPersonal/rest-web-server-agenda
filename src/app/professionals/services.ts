@@ -1,22 +1,23 @@
 import { FindRutAndEmailQuery, MakeRequired, PaginatedQuery, PaginatedResult } from "@/types/global";
+import { UserFilters } from "../users/models/user-filters.model";
+import { UserPayload } from "../users/models/user-payload.model";
 import { PrismaClient } from "@prisma/client";
-import type { UserFilters } from "./models/user-filters.model";
-import { UserPayload } from "./models/user-payload.model";
+import { PROFESSIONAL_ROLE_ID } from "./utils/constants";
 
 type Filters = PaginatedQuery<Omit<UserFilters, "page" | "limit">>;
 
-export type UserServiceImpl = {
-  getUserByUid: (uid: string) => Promise<unknown | null>;
-  getUsers: (filters: Filters) => Promise<PaginatedResult>;
-  getUsersForFilters: () => Promise<unknown[]>;
-  createUser: (payload: UserPayload) => Promise<unknown>;
-  updateUser: (uid: string, payload: Partial<UserPayload>) => Promise<unknown>;
-  findUserRutAndEmail: (
-    props: FindRutAndEmailQuery
+export type ProfessionalServiceImpl = {
+  getProfessionalByUid: (uid: string) => Promise<unknown | null>;
+  createProfessional: (payload: UserPayload) => Promise<unknown>;
+  getProfessionals: (filters: Filters) => Promise<PaginatedResult>;
+  getProfessionalsForFilters: (filters: UserFilters) => Promise<unknown[]>;
+  updateProfessional: (uid: string, payload: Partial<UserPayload>) => Promise<unknown>;
+  findProfessionalRutAndEmail: (
+    arg: FindRutAndEmailQuery
   ) => Promise<MakeRequired<FindRutAndEmailQuery, "uid"> | null>;
 };
 
-export class UserService implements UserServiceImpl {
+export class ProfessionalService implements ProfessionalServiceImpl {
   private readonly db: PrismaClient;
   private readonly DETAIL_SELECTOR = {
     avatar_image: true,
@@ -40,29 +41,37 @@ export class UserService implements UserServiceImpl {
         }
       }
     },
-    professions: false
-    // professions: {
-    //   select: {
-    //     profession: {
-    //       select: {
-    //         id: true,
-    //         name: true
-    //       }
-    //     }
-    //   }
-    // }
+    professions: {
+      select: {
+        profession: {
+          select: {
+            id: true,
+            name: true
+          }
+        }
+      }
+    }
+  };
+  private readonly WHERE_ROLE_PROFESSIONAL = {
+    some: {
+      role_id: {
+        equals: 2
+      }
+    }
   };
 
   constructor() {
     this.db = new PrismaClient();
   }
 
-  async createUser({ roles, professions, ...payload }: UserPayload) {
+  async createProfessional({ professions, roles, ...payload }: UserPayload) {
+    const rolesWithProfessionalRole = [...roles, PROFESSIONAL_ROLE_ID];
+
     return await this.db.users.create({
       data: {
         ...payload,
         roles: {
-          create: roles.map((role_id) => ({
+          create: rolesWithProfessionalRole.map((role_id) => ({
             role_id
           }))
         },
@@ -76,11 +85,14 @@ export class UserService implements UserServiceImpl {
     });
   }
 
-  async updateUser(uid: string, { professions, roles, ...payload }: Partial<UserPayload>) {
+  async updateProfessional(uid: string, { professions, roles, ...payload }: Partial<UserPayload>) {
+    const whereClause = { uid, roles: this.WHERE_ROLE_PROFESSIONAL };
+    const rolesWithProfessionalRole = [...(roles ?? []), PROFESSIONAL_ROLE_ID];
+
     // Si no hay roles ni profesiones que actualizar, solo actualizar campos básicos
     if (!roles && !professions) {
       return await this.db.users.update({
-        where: { uid },
+        where: whereClause,
         data: payload,
         select: this.DETAIL_SELECTOR
       });
@@ -90,12 +102,12 @@ export class UserService implements UserServiceImpl {
     return await this.db.$transaction(async (tx) => {
       // 1. Actualizar campos básicos del usuario
       const updatedUser = await tx.users.update({
-        where: { uid },
+        where: whereClause,
         data: payload
       });
 
       // 2. Actualizar roles si se proporcionan
-      if (roles && roles.length > 0) {
+      if (rolesWithProfessionalRole && rolesWithProfessionalRole.length > 0) {
         // Eliminar roles existentes
         await tx.users_roles.deleteMany({
           where: { user_id: updatedUser.id }
@@ -103,7 +115,7 @@ export class UserService implements UserServiceImpl {
 
         // Crear nuevos roles
         await tx.users_roles.createMany({
-          data: roles.map((roleId) => ({
+          data: rolesWithProfessionalRole.map((roleId) => ({
             user_id: updatedUser.id,
             role_id: roleId
           }))
@@ -128,32 +140,33 @@ export class UserService implements UserServiceImpl {
 
       // 4. Retornar usuario actualizado con relaciones
       return await tx.users.findUnique({
-        where: { uid },
+        where: whereClause,
         select: this.DETAIL_SELECTOR
       });
     });
   }
 
-  async findUserRutAndEmail({ email, rut, uid }: FindRutAndEmailQuery) {
+  async findProfessionalRutAndEmail({ email, rut, uid }: FindRutAndEmailQuery) {
     return await this.db.users.findFirst({
       select: { rut: !!rut, email: !!email, uid: true },
-      where: { OR: [{ rut: rut }, { email: email }], NOT: { uid: uid } }
+      where: { OR: [{ rut: rut }, { email: email }], NOT: { uid: uid }, roles: this.WHERE_ROLE_PROFESSIONAL }
     });
   }
 
-  async getUsers({ skip, take, ...filters }: Filters) {
+  async getProfessionals({ skip, take, ...filters }: Filters) {
     const whereClause: any = {
       id: filters?.id,
       names: { contains: filters?.names, mode: "insensitive" },
       last_names: { contains: filters?.last_names, mode: "insensitive" },
-      rut: { equals: filters?.rut, mode: "insensitive" }
-      // ...(filters.profession_id && {
-      //   professions: {
-      //     some: {
-      //       profession_id: filters?.profession_id
-      //     }
-      //   }
-      // })
+      rut: { equals: filters?.rut, mode: "insensitive" },
+      ...(filters.profession_id && {
+        professions: {
+          some: {
+            profession_id: filters?.profession_id
+          }
+        }
+      }),
+      roles: this.WHERE_ROLE_PROFESSIONAL
     };
 
     const [total, data] = await this.db.$transaction([
@@ -184,17 +197,16 @@ export class UserService implements UserServiceImpl {
               }
             }
           },
-          professions: false
-          // professions: {
-          //   select: {
-          //     profession: {
-          //       select: {
-          //         id: true,
-          //         name: true
-          //       }
-          //     }
-          //   }
-          // }
+          professions: {
+            select: {
+              profession: {
+                select: {
+                  id: true,
+                  name: true
+                }
+              }
+            }
+          }
         }
       })
     ]);
@@ -202,39 +214,40 @@ export class UserService implements UserServiceImpl {
     return { data, total };
   }
 
-  async getUserByUid(uid: string) {
+  async getProfessionalByUid(uid: string) {
     return await this.db.users.findFirst({
       select: this.DETAIL_SELECTOR,
       where: {
-        uid: uid
+        uid: uid,
+        roles: this.WHERE_ROLE_PROFESSIONAL
       }
     });
   }
 
-  async getUsersForFilters() {
+  async getProfessionalsForFilters(filters: UserFilters) {
     return await this.db.users.findMany({
       select: {
         id: true,
         names: true,
         last_names: true,
-        professions: false
-        // professions: {
-        //   select: {
-        //     profession: {
-        //       select: {
-        //         id: true
-        //       }
-        //     }
-        //   }
-        // }
+        professions: {
+          select: {
+            profession: {
+              select: {
+                id: true
+              }
+            }
+          }
+        }
+      },
+      where: {
+        roles: this.WHERE_ROLE_PROFESSIONAL,
+        professions: {
+          some: {
+            profession_id: filters?.profession_id
+          }
+        }
       }
-      // where: {
-      //   professions: {
-      //     some: {
-      //       profession_id: filters?.profession_id
-      //     }
-      //   }
-      // }
     });
   }
 }

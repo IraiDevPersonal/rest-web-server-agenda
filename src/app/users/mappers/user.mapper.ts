@@ -25,7 +25,9 @@ export class UserMapper {
       last_names: data.last_names,
       avatar_image: data.avatar_image,
       roles: data.roles.map(({ role }) => RoleMapper.map(role)),
-      professions: data.professions.map(({ profession }) => ProfessionMapper.map(profession))
+      professions: data.professions
+        ? data.professions.map(({ profession }) => ProfessionMapper.map(profession))
+        : undefined
     };
   };
 
@@ -33,9 +35,7 @@ export class UserMapper {
     const { success, error, data } = UserBdWithPaginationSchema.safeParse(raw);
 
     if (!success) {
-      throw CustomError.internalServer(
-        "UserMapper.fromBdToDomain: " + CustomError.getError(error).message
-      );
+      throw CustomError.internalServer("UserMapper.fromBdToDomain: " + CustomError.getError(error).message);
     }
 
     return {

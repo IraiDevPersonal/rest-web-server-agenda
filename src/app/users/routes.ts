@@ -12,8 +12,11 @@ export class UserRoutes {
     const controller = this.controller;
 
     router.get("/", [], controller.getUsers);
-    router.get("/for-filter", [], controller.getUsersForFilters);
+    // router.get("/for-filter", [], controller.getUsersForFilters); TODO: deshabilitada de momento
     router.get("/:uid", [UidValidatorMiddleware.validate], controller.getUserDetail);
+    router.post("/", [], controller.createUser);
+    router.put("/:uid", [UidValidatorMiddleware.validate], controller.updateUser);
+    router.patch("/:uid", [UidValidatorMiddleware.validate], controller.updateUserStatus);
 
     return router;
   }

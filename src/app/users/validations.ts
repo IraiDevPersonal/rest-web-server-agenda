@@ -23,7 +23,7 @@ export class UserValidations extends ExistenceValidation {
     return UpsertUserSchema.pick({ status: true }).partial().parse(body);
   }
 
-  static requireExists<T>(value: T) {
-    return super.requireExists(value, "User no encontrado");
+  static requireExists<T>(value: T, errorMessage?: string) {
+    return super.requireExists(value, errorMessage ?? "Usuario no encontrado");
   }
 }

@@ -32,7 +32,7 @@ export class UpdateUserUseCase {
     const user = UserDetailMapper.map(updatedUser);
 
     return {
-      message: `User actualizado(a)`,
+      message: `Usuario actualizado(a)`,
       data: user
     };
   };
