@@ -35,11 +35,8 @@ export class UserListUseCase {
   };
 
   private buildFilters = (query: Request["query"]): UserFilters => {
-    const { id, names, last_names, profession_id, rut, page, limit } = query;
+    const { id, names, last_names, rut, page, limit } = query;
 
-    return queryParser(
-      { id, names, last_names, profession_id, rut, page, limit },
-      { limit: "10", page: "1" }
-    );
+    return queryParser({ id, names, last_names, rut, page, limit }, { limit: "10", page: "1" });
   };
 }

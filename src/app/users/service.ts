@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import type { UserFilters } from "./models/user-filters.model";
 import { UserPayload } from "./models/user-payload.model";
 
-type Filters = PaginatedQuery<Omit<UserFilters, "page" | "limit">>;
+type Filters = PaginatedQuery<Omit<UserFilters, "page" | "limit" | "profession_id">>;
 
 export type UserServiceImpl = {
   getUserByUid: (uid: string) => Promise<unknown | null>;
