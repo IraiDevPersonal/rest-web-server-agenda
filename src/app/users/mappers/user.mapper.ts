@@ -1,17 +1,17 @@
 import { RoleMapper } from "@/app/roles/mappers/role.mapper";
-import { ProfessionalWithPaginationModel, type ProfessionalModel } from "../models/professional.model";
-import { ProfessionalBdWithPaginationSchema, ProfessionalSchema } from "../schemas/bd/professional.schema";
+import { UserWithPaginationModel, type UserModel } from "../models/user.model";
+import { UserBdWithPaginationSchema, UserSchema } from "../schemas/bd/user.schema";
 
 import { ProfessionMapper } from "@/app/professions/mappers/profession.mapper";
 import { CustomError } from "@/lib/custom-error";
 import { ResponseWithPagination } from "@/types/global";
 
-export class ProfessionalMapper {
-  static map = (raw: unknown): ProfessionalModel => {
-    const { success, error, data } = ProfessionalSchema.safeParse(raw);
+export class UserMapper {
+  static map = (raw: unknown): UserModel => {
+    const { success, error, data } = UserSchema.safeParse(raw);
 
     if (!success) {
-      throw CustomError.internalServer("ProfessionalMapper.map: " + CustomError.getError(error).message);
+      throw CustomError.internalServer("UserMapper.map: " + CustomError.getError(error).message);
     }
 
     return {
@@ -29,12 +29,12 @@ export class ProfessionalMapper {
     };
   };
 
-  static fromBdToDomain = (raw: ResponseWithPagination<unknown>): ProfessionalWithPaginationModel => {
-    const { success, error, data } = ProfessionalBdWithPaginationSchema.safeParse(raw);
+  static fromBdToDomain = (raw: ResponseWithPagination<unknown>): UserWithPaginationModel => {
+    const { success, error, data } = UserBdWithPaginationSchema.safeParse(raw);
 
     if (!success) {
       throw CustomError.internalServer(
-        "ProfessionalMapper.fromBdToDomain: " + CustomError.getError(error).message
+        "UserMapper.fromBdToDomain: " + CustomError.getError(error).message
       );
     }
 

@@ -5,7 +5,7 @@ import { ResponseWithPaginationSchema } from "@/lib/schemas/global";
 import { UserStatus } from "@prisma/client";
 import { z } from "zod";
 
-export const ProfessionalSchema = z.object({
+export const UserSchema = z.object({
   uid: z.uuid(),
   email: z.email().min(1),
   phone: z.string().min(1),
@@ -20,4 +20,4 @@ export const ProfessionalSchema = z.object({
   rut: z.string().refine(RutManager.validate, { error: "invalid rut" })
 });
 
-export const ProfessionalBdWithPaginationSchema = ResponseWithPaginationSchema(ProfessionalSchema);
+export const UserBdWithPaginationSchema = ResponseWithPaginationSchema(UserSchema);

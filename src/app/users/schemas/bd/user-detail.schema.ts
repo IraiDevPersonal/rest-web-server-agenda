@@ -1,8 +1,8 @@
 import z from "zod";
-import { ProfessionalSchema } from "./professional.schema";
+import { UserSchema } from "./user.schema";
 import { Gender } from "@prisma/client";
 
-export const ProfessionalDetailSchema = ProfessionalSchema.extend({
+export const UserDetailSchema = UserSchema.extend({
   gender: z.enum(Gender, { error: "invalid gender" }),
   birth_date: z.date().optional()
 });

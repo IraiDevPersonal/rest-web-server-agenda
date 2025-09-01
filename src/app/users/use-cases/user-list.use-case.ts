@@ -1,15 +1,15 @@
 import { queryParser } from "@/lib/utils";
 import { Request } from "express";
-import { ProfessionalForFiltersMapper } from "../mappers/professional-for-filters.mapper";
-import { ProfessionalMapper } from "../mappers/professional.mapper";
-import { ProfessionalFilters } from "../models/professional-filters.model";
-import { ProfessionalServiceImpl } from "../service";
+import { UserForFiltersMapper } from "../mappers/user-for-filters.mapper";
+import { UserMapper } from "../mappers/user.mapper";
+import { UserFilters } from "../models/user-filters.model";
+import { UserServiceImpl } from "../service";
 import { Pagination } from "@/lib/pagination";
 
-export class ProfessionalListUseCase {
-  private readonly service: ProfessionalServiceImpl;
+export class UserListUseCase {
+  private readonly service: UserServiceImpl;
 
-  constructor(service: ProfessionalServiceImpl) {
+  constructor(service: UserServiceImpl) {
     this.service = service;
   }
 
@@ -17,9 +17,9 @@ export class ProfessionalListUseCase {
     const { page, limit, ...filters } = this.buildFilters(query);
     const pagination = new Pagination({ page, limit });
 
-    const { data, total } = await this.service.getProfessionals(pagination.withFilters(filters));
+    const { data, total } = await this.service.getUsers(pagination.withFilters(filters));
 
-    return ProfessionalMapper.fromBdToDomain({
+    return UserMapper.fromBdToDomain({
       data,
       total,
       page: pagination.page,
@@ -30,14 +30,14 @@ export class ProfessionalListUseCase {
 
   listForFilters = async (query: Request["query"]) => {
     const filters = this.buildFilters(query);
-    const bdProfessionals = await this.service.getProfessionalsForFilters({
+    const bdUsers = await this.service.getUsersForFilters({
       profession_id: filters.profession_id
     });
 
-    return ProfessionalForFiltersMapper.fromBdToDomain(bdProfessionals);
+    return UserForFiltersMapper.fromBdToDomain(bdUsers);
   };
 
-  private buildFilters = (query: Request["query"]): ProfessionalFilters => {
+  private buildFilters = (query: Request["query"]): UserFilters => {
     const { id, names, last_names, profession_id, rut, page, limit } = query;
 
     return queryParser(

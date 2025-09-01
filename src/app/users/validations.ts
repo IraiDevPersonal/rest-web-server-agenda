@@ -1,17 +1,17 @@
 import { RutManager } from "@/lib/rut-manager";
 import { ExistenceValidation } from "@/lib/validations/existence.validation";
-import { UpserProfessionalSchema } from "./schemas/api/upsert-professional.schema";
+import { UpsertUserSchema } from "./schemas/api/upsert-user.schema";
 
-export class ProfessionalValidations extends ExistenceValidation {
+export class UserValidations extends ExistenceValidation {
   static validateInsert(body: any) {
-    return UpserProfessionalSchema.omit({ status: true }).parse({
+    return UpsertUserSchema.omit({ status: true }).parse({
       ...body,
       rut: RutManager.format(body.rut, { dots: true })
     });
   }
 
   static validateUpdate(body: any) {
-    return UpserProfessionalSchema.omit({ status: true })
+    return UpsertUserSchema.omit({ status: true })
       .partial()
       .parse({
         ...body,
@@ -20,10 +20,10 @@ export class ProfessionalValidations extends ExistenceValidation {
   }
 
   static validateUpdateStatus(body: any) {
-    return UpserProfessionalSchema.pick({ status: true }).partial().parse(body);
+    return UpsertUserSchema.pick({ status: true }).partial().parse(body);
   }
 
   static requireExists<T>(value: T) {
-    return super.requireExists(value, "Professional no encontrado");
+    return super.requireExists(value, "User no encontrado");
   }
 }

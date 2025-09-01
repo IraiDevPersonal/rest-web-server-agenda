@@ -2,7 +2,7 @@ import { RutManager } from "@/lib/rut-manager";
 import { Gender, UserStatus } from "@prisma/client";
 import z from "zod";
 
-export const UpserProfessionalSchema = z.object({
+export const UpsertUserSchema = z.object({
   email: z.email(),
   birth_date: z.date(),
   names: z.string().min(3),

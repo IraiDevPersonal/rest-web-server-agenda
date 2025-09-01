@@ -3,7 +3,7 @@ import { ResponseWithPagination } from "@/types/global";
 import { UserStatus } from "@prisma/client";
 import { RoleMapper } from "../../roles/mappers/role.mapper";
 
-export type ProfessionalModel = {
+export type UserModel = {
   uid: string;
   rut: string;
   email: string;
@@ -17,4 +17,4 @@ export type ProfessionalModel = {
   professions: ProfessionModel[];
 };
 
-export type ProfessionalWithPaginationModel = ResponseWithPagination<ProfessionalModel>;
+export type UserWithPaginationModel = ResponseWithPagination<UserModel>;

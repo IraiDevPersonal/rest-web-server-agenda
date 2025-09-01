@@ -1,4 +1,4 @@
-export type ProfessionalForAppointmentDetailModel = {
+export type UserForAppointmentDetailModel = {
   fullname: string;
   professions: string[];
   pay_methods: string[];

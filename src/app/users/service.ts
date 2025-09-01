@@ -1,22 +1,22 @@
 import { FindRutAndEmailQuery, MakeRequired, PaginatedQuery, PaginatedResult } from "@/types/global";
 import { PrismaClient } from "@prisma/client";
-import type { ProfessionalFilters } from "./models/professional-filters.model";
-import { ProfessionaPayload } from "./models/professional-payload.model";
+import type { UserFilters } from "./models/user-filters.model";
+import { UserPayload } from "./models/user-payload.model";
 
-type Filters = PaginatedQuery<Omit<ProfessionalFilters, "page" | "limit">>;
+type Filters = PaginatedQuery<Omit<UserFilters, "page" | "limit">>;
 
-export type ProfessionalServiceImpl = {
-  getProfessionalByUid: (uid: string) => Promise<unknown | null>;
-  getProfessionals: (filters: Filters) => Promise<PaginatedResult>;
-  getProfessionalsForFilters: (filters: ProfessionalFilters) => Promise<unknown[]>;
-  createProfessional: (payload: ProfessionaPayload) => Promise<unknown>;
-  updateProfessional: (uid: string, payload: Partial<ProfessionaPayload>) => Promise<unknown>;
-  findProfessionalRutAndEmail: (
+export type UserServiceImpl = {
+  getUserByUid: (uid: string) => Promise<unknown | null>;
+  getUsers: (filters: Filters) => Promise<PaginatedResult>;
+  getUsersForFilters: (filters: UserFilters) => Promise<unknown[]>;
+  createUser: (payload: UserPayload) => Promise<unknown>;
+  updateUser: (uid: string, payload: Partial<UserPayload>) => Promise<unknown>;
+  findUserRutAndEmail: (
     props: FindRutAndEmailQuery
   ) => Promise<MakeRequired<FindRutAndEmailQuery, "uid"> | null>;
 };
 
-export class ProfessionalService implements ProfessionalServiceImpl {
+export class UserService implements UserServiceImpl {
   private readonly db: PrismaClient;
   private readonly DETAIL_SELECTOR = {
     avatar_image: true,
@@ -56,7 +56,7 @@ export class ProfessionalService implements ProfessionalServiceImpl {
     this.db = new PrismaClient();
   }
 
-  async createProfessional({ roles, professions, ...payload }: ProfessionaPayload) {
+  async createUser({ roles, professions, ...payload }: UserPayload) {
     return await this.db.users.create({
       data: {
         ...payload,
@@ -75,7 +75,7 @@ export class ProfessionalService implements ProfessionalServiceImpl {
     });
   }
 
-  async updateProfessional(uid: string, { professions, roles, ...payload }: Partial<ProfessionaPayload>) {
+  async updateUser(uid: string, { professions, roles, ...payload }: Partial<UserPayload>) {
     // Si no hay roles ni profesiones que actualizar, solo actualizar campos básicos
     if (!roles && !professions) {
       return await this.db.users.update({
@@ -133,14 +133,14 @@ export class ProfessionalService implements ProfessionalServiceImpl {
     });
   }
 
-  async findProfessionalRutAndEmail({ email, rut, uid }: FindRutAndEmailQuery) {
+  async findUserRutAndEmail({ email, rut, uid }: FindRutAndEmailQuery) {
     return await this.db.users.findFirst({
       select: { rut: !!rut, email: !!email, uid: true },
       where: { OR: [{ rut: rut }, { email: email }], NOT: { uid: uid } }
     });
   }
 
-  async getProfessionals({ skip, take, ...filters }: Filters) {
+  async getUsers({ skip, take, ...filters }: Filters) {
     const whereClause: any = {
       id: filters?.id,
       names: { contains: filters?.names, mode: "insensitive" },
@@ -198,7 +198,7 @@ export class ProfessionalService implements ProfessionalServiceImpl {
     return { data, total };
   }
 
-  async getProfessionalByUid(uid: string) {
+  async getUserByUid(uid: string) {
     return await this.db.users.findFirst({
       select: this.DETAIL_SELECTOR,
       where: {
@@ -207,7 +207,7 @@ export class ProfessionalService implements ProfessionalServiceImpl {
     });
   }
 
-  async getProfessionalsForFilters(filters: ProfessionalFilters) {
+  async getUsersForFilters(filters: UserFilters) {
     return await this.db.users.findMany({
       select: {
         id: true,

@@ -9,9 +9,7 @@ export class AppointmentDetailMapper {
     const { success, data, error } = AppointmentDetailBdSchema.safeParse(raw);
 
     if (!success) {
-      throw CustomError.internalServer(
-        CustomError.getErrorMessage(error, "appointment-detail-mapper.ts: (map)")
-      );
+      throw CustomError.internalServer(CustomError.getErrorMessage(error, "AppointmentDetailMapper.map"));
     }
 
     const patient = data.patient;
@@ -46,13 +44,11 @@ export class AppointmentDetailMapper {
             avatar_image: patient.avatar_image
           }
         : null,
-      patient_history: patient
-        ? patient.appointments.map((appointment) => ({
-            uid: appointment.uid,
-            status: appointment.appointment_status,
-            date_time: `${DateFormatter.formatDate(appointment.date, "dmy")} ${appointment.time_from}-${appointment.time_to}`
-          }))
-        : []
+      patient_history: (patient?.appointments ?? []).map((appointment) => ({
+        uid: appointment.uid,
+        status: appointment.appointment_status,
+        date_time: `${DateFormatter.formatDate(appointment.date, "dmy")} ${appointment.time_from}-${appointment.time_to}`
+      }))
     };
   };
 
