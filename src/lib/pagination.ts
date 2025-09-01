@@ -15,9 +15,7 @@ export class Pagination {
     const { success, error, data } = PaginationSchema.safeParse({ page, limit });
 
     if (!success) {
-      throw CustomError.internalServer(
-        "An error occurred in pagination: " + CustomError.getError(error).message
-      );
+      throw CustomError.genericError(error, "Error al validar los datos de la paginación");
     }
 
     this.page = data.page;

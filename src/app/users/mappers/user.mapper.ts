@@ -11,7 +11,7 @@ export class UserMapper {
     const { success, error, data } = UserSchema.safeParse(raw);
 
     if (!success) {
-      throw CustomError.internalServer("UserMapper.map: " + CustomError.getError(error).message);
+      throw CustomError.mapperError(error, "UserMapper.map");
     }
 
     return {
@@ -35,7 +35,7 @@ export class UserMapper {
     const { success, error, data } = UserBdWithPaginationSchema.safeParse(raw);
 
     if (!success) {
-      throw CustomError.internalServer("UserMapper.fromBdToDomain: " + CustomError.getError(error).message);
+      throw CustomError.mapperError(error, "UserMapper.fromBdToDomain");
     }
 
     return {

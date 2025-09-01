@@ -9,7 +9,7 @@ export class AppointmentMapper {
     const { success, data, error } = RelatedBdAppointmentSchema.safeParse(raw);
 
     if (!success) {
-      throw CustomError.internalServer("AppointmentMapper.map: " + CustomError.getError(error).message);
+      throw CustomError.mapperError(error, "AppointmentMapper.map");
     }
 
     const patient = data.patient;
@@ -40,9 +40,7 @@ export class AppointmentMapper {
     const { success, data, error } = RelatedBdAppointmentSchema.array().safeParse(raw);
 
     if (!success) {
-      throw CustomError.internalServer(
-        "AppointmentMapper.fromBdToDomain: " + CustomError.getError(error).message
-      );
+      throw CustomError.mapperError(error, "AppointmentMapper.fromBdToDomain");
     }
 
     return data.map(this.map);

@@ -9,7 +9,7 @@ export class PatientMapper {
     const { success, data, error } = PatientBdSchema.safeParse(raw);
 
     if (!success) {
-      throw CustomError.internalServer(CustomError.getErrorMessage(error, "patient-mapper.ts: (map)"));
+      throw CustomError.mapperError(error, "PatientMapper.map");
     }
 
     return {
@@ -31,9 +31,7 @@ export class PatientMapper {
     const { success, data, error } = PatientBdWithPaginationSchema.safeParse(raw);
 
     if (!success) {
-      throw CustomError.internalServer(
-        CustomError.getErrorMessage(error, "patient-mapper.ts: (fromBdToDomain)")
-      );
+      throw CustomError.mapperError(error, "PatientMapper.fromBdToDomain");
     }
     return {
       page: data.page,

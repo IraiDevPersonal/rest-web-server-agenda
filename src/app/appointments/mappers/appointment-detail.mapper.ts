@@ -9,7 +9,7 @@ export class AppointmentDetailMapper {
     const { success, data, error } = AppointmentDetailBdSchema.safeParse(raw);
 
     if (!success) {
-      throw CustomError.internalServer(CustomError.getErrorMessage(error, "AppointmentDetailMapper.map"));
+      throw CustomError.mapperError(error, "AppointmentDetailMapper.map");
     }
 
     const patient = data.patient;

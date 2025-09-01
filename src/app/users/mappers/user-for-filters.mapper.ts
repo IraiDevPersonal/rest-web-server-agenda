@@ -8,7 +8,7 @@ export class UserForFiltersMapper {
     const { success, error, data } = UserForFiltersSchema.safeParse(raw);
 
     if (!success) {
-      throw CustomError.internalServer("UserForFiltersMapper.map: " + CustomError.getError(error).message);
+      throw CustomError.mapperError(error, "UserForFiltersMapper.map");
     }
 
     return {
@@ -22,9 +22,7 @@ export class UserForFiltersMapper {
     const { success, error, data } = UserForFiltersSchema.array().safeParse(raw);
 
     if (!success) {
-      throw CustomError.internalServer(
-        "UserForFiltersMapper.fromBdToDomain: " + CustomError.getError(error).message
-      );
+      throw CustomError.mapperError(error, "UserForFiltersMapper.fromBdToDomain");
     }
 
     return data.map(this.map);

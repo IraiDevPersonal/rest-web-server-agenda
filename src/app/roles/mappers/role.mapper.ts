@@ -8,7 +8,7 @@ export class RoleMapper {
     const { success, error, data } = RoleSchema.safeParse(raw);
 
     if (!success) {
-      throw CustomError.internalServer("RoleMapper.map: " + CustomError.getError(error).message);
+      throw CustomError.mapperError(error, "RoleMapper.map");
     }
 
     return {
@@ -22,7 +22,7 @@ export class RoleMapper {
     const { success, error, data } = RoleSchema.array().safeParse(raw);
 
     if (!success) {
-      throw CustomError.internalServer("RoleMapper.toArray: " + CustomError.getError(error).message);
+      throw CustomError.mapperError(error, "RoleMapper.fromBdToDomain");
     }
 
     return data.map(this.map);

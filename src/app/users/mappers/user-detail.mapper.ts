@@ -8,9 +8,7 @@ export class UserDetailMapper {
     const { success, error, data } = UserDetailSchema.safeParse(raw);
 
     if (!success) {
-      throw CustomError.internalServer(
-        "UserDetailMapper.map: " + CustomError.getError(error).message
-      );
+      throw CustomError.mapperError(error, "UserDetailMapper.map");
     }
 
     return {
