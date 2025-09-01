@@ -3,12 +3,10 @@ import {
   appointments,
   patients,
   professionalProfession,
-  professionals,
   professions,
   roles,
-  schedules,
-  serviceProvider,
-  users
+  users,
+  usersRoles
 } from "./data/seed-data";
 
 export class SeedService {
@@ -20,35 +18,22 @@ export class SeedService {
 
   async createSeed(): Promise<void> {
     await this.db.$executeRawUnsafe(
-      `TRUNCATE TABLE "schedules" RESTART IDENTITY CASCADE;`
+      `TRUNCATE TABLE "appointments" RESTART IDENTITY CASCADE;`
     );
-    await this.db.$executeRawUnsafe(
-      `TRUNCATE TABLE "appointment" RESTART IDENTITY CASCADE;`
-    );
+
     await this.db.$executeRawUnsafe(
       `TRUNCATE TABLE "professional_professions" RESTART IDENTITY CASCADE;`
     );
-    await this.db.$executeRawUnsafe(
-      `TRUNCATE TABLE "professionals" RESTART IDENTITY CASCADE;`
-    );
-    await this.db.$executeRawUnsafe(
-      `TRUNCATE TABLE "users" RESTART IDENTITY CASCADE;`
-    );
+    await this.db.$executeRawUnsafe(`TRUNCATE TABLE "users" RESTART IDENTITY CASCADE;`);
     await this.db.$executeRawUnsafe(
       `TRUNCATE TABLE "patients" RESTART IDENTITY CASCADE;`
     );
     await this.db.$executeRawUnsafe(
-      `TRUNCATE TABLE "service_providers" RESTART IDENTITY CASCADE;`
-    );
-    await this.db.$executeRawUnsafe(
-      `TRUNCATE TABLE "service_provider_codes" RESTART IDENTITY CASCADE;`
-    );
-
-    await this.db.$executeRawUnsafe(
       `TRUNCATE TABLE "professions" RESTART IDENTITY CASCADE;`
     );
+    await this.db.$executeRawUnsafe(`TRUNCATE TABLE "roles" RESTART IDENTITY CASCADE;`);
     await this.db.$executeRawUnsafe(
-      `TRUNCATE TABLE "roles" RESTART IDENTITY CASCADE;`
+      `TRUNCATE TABLE "users_roles" RESTART IDENTITY CASCADE;`
     );
 
     await this.db.roles.createMany({
@@ -62,24 +47,8 @@ export class SeedService {
       data: users
     });
 
-    for (const sp of serviceProvider) {
-      await this.db.service_providers.create({
-        data: {
-          name: sp.name,
-          rut: sp.rut,
-          service_provider_codes: {
-            create:
-              sp.service_provider_codes?.map((spc) => ({
-                title: spc.title,
-                code: spc.code
-              })) ?? []
-          }
-        }
-      });
-    }
-
-    await this.db.professionals.createMany({
-      data: professionals
+    await this.db.users_roles.createMany({
+      data: usersRoles
     });
 
     await this.db.professional_professions.createMany({
@@ -89,10 +58,7 @@ export class SeedService {
     await this.db.patients.createMany({
       data: patients
     });
-    await this.db.schedules.createMany({
-      data: schedules
-    });
-    await this.db.appointment.createMany({
+    await this.db.appointments.createMany({
       data: appointments
     });
   }

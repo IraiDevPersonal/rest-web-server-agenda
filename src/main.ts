@@ -1,15 +1,12 @@
-import { app } from '@/app';
-
-declare global {
-  interface BigInt {
-    toJSON(): string;
-  }
-}
-
-BigInt.prototype.toJSON = function () {
-  return this.toString();
-};
+import { Routes } from "./app/routes";
+import { Server } from "./app/server";
+import { ENVS } from "./config/envs";
 
 (async () => {
-  app();
+  const server = new Server({
+    port: ENVS.PORT,
+    routes: Routes.routes
+  });
+
+  server.start();
 })();

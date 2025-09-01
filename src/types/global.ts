@@ -1,4 +1,4 @@
-export type ResponseWithPagination<T extends object> = {
+export type ResponseWithPagination<T> = {
   total: number;
   page: number;
   pages: number;
@@ -6,25 +6,25 @@ export type ResponseWithPagination<T extends object> = {
   data: T[];
 };
 
-export type UpsertResponse<T extends object> = {
+export type UpsertResponse<T> = {
   data?: T;
   message: string;
 };
 
-export type StrictRequired<T> = {
-  [P in keyof T]-?: Exclude<T[P], undefined>;
-};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
-export type StringifyObject<T> = {
-  [K in keyof T]: string;
-};
+export type MakeRequired<T, K extends keyof T> = Partial<Omit<T, K>> & Required<Pick<T, K>>;
 
-export type UndefinedObject<T> = {
-  [K in keyof T]: T[K] | undefined;
-};
+export type Option<T extends object = object> = {
+  value: string;
+  label: string;
+} & T;
 
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
-  Partial<Pick<T, K>>;
+export type PaginatedResult = { data: unknown[]; total: number };
 
-export type MakeRequired<T, K extends keyof T> = Partial<Omit<T, K>> &
-  Required<Pick<T, K>>;
+export type PaginatedQuery<T extends object = object> = {
+  skip: number;
+  take: number;
+} & T;
+
+export type FindRutAndEmailQuery = Partial<{ rut: string; email: string; uid: string }>;

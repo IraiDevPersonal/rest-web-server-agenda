@@ -29,35 +29,30 @@ export class CustomError extends Error {
     return new CustomError(500, message);
   }
 
+  static mapperError(error: unknown, name: string) {
+    const errorMessage = this.getErrorMessage(error);
+
+    return CustomError.internalServer(`${name}: ${errorMessage}`);
+  }
+
+  static genericError(error: unknown, message: string, showLog: boolean = true) {
+    const errorMessage = this.getErrorMessage(error);
+
+    if (showLog) {
+      console.log(errorMessage);
+    }
+
+    return CustomError.internalServer(message);
+  }
+
   static handleError = (error: unknown, res: Response) => {
-    const { message, statusCode } = CustomError.getError(error);
-    console.log("catch ", message);
+    const { message, statusCode } = CustomError.getErrorData(error);
+    console.log("ERROR: ", message);
 
     return res.status(statusCode).json({ error: message });
   };
 
-  static getErrorMessage(error: unknown, fileName?: string) {
-    console.log({ fileName });
-    // El orden es importante: las clases de error más específicas deben comprobarse primero.
-    if (error instanceof CustomError) {
-      return error.message;
-    }
-
-    if (error instanceof ZodError) {
-      const issues = error.errors.map(
-        (issue) => `[${issue.path.join(".")}] ${issue.message}`
-      );
-      return `Error de validación: ${issues.join("; ")}`;
-    }
-
-    if (error instanceof Error) {
-      return error.message;
-    }
-
-    return "Error inesperado...";
-  }
-
-  static getError(error: unknown): { statusCode: number; message: string } {
+  private static getErrorData(error: unknown): { statusCode: number; message: string } {
     const errorMessage = CustomError.getErrorMessage(error);
 
     if (error instanceof CustomError) {
@@ -73,5 +68,22 @@ export class CustomError extends Error {
     }
 
     return { message: errorMessage, statusCode: 500 };
+  }
+
+  private static getErrorMessage(error: unknown) {
+    if (error instanceof CustomError) {
+      return error.message;
+    }
+
+    if (error instanceof ZodError) {
+      const issues = error.issues.map((issue) => `[${String(issue.path.at(-1))}: ${issue.message}]`);
+      return issues.join(", ");
+    }
+
+    if (error instanceof Error) {
+      return error.message;
+    }
+
+    return "Error inesperado...";
   }
 }
