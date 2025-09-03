@@ -26,10 +26,11 @@ export class AppointmentService implements AppointmentServiceImpl {
       select: {
         id: true,
         uid: true,
-        appointment_status: true,
         date: true,
-        time_from: true,
         time_to: true,
+        time_from: true,
+        is_enabled: true,
+        appointment_status: true,
         user: {
           select: {
             names: true,

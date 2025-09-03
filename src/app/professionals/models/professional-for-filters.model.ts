@@ -1,5 +1,5 @@
 import { Option } from "@/types/global";
 
-export type UserForFiltersModel = Option<{
+export type ProfessionalForFiltersModel = Option<{
   professions: string[];
 }>;

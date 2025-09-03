@@ -7,6 +7,7 @@ export const AppointmentBdSchema = z.object({
   date: z.date(),
   time_to: z.string(),
   time_from: z.string(),
+  is_enabled: z.boolean(),
   appointment_status: z.enum(AppointmentStatus)
 });
 

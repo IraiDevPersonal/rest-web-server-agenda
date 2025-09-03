@@ -8,7 +8,6 @@ type Filters = PaginatedQuery<Omit<UserFilters, "page" | "limit" | "profession_i
 export type UserServiceImpl = {
   getUserByUid: (uid: string) => Promise<unknown | null>;
   getUsers: (filters: Filters) => Promise<PaginatedResult>;
-  getUsersForFilters: () => Promise<unknown[]>;
   createUser: (payload: UserPayload) => Promise<unknown>;
   updateUser: (uid: string, payload: Partial<UserPayload>) => Promise<unknown>;
   findUserRutAndEmail: (
@@ -208,33 +207,6 @@ export class UserService implements UserServiceImpl {
       where: {
         uid: uid
       }
-    });
-  }
-
-  async getUsersForFilters() {
-    return await this.db.users.findMany({
-      select: {
-        id: true,
-        names: true,
-        last_names: true,
-        professions: false
-        // professions: {
-        //   select: {
-        //     profession: {
-        //       select: {
-        //         id: true
-        //       }
-        //     }
-        //   }
-        // }
-      }
-      // where: {
-      //   professions: {
-      //     some: {
-      //       profession_id: filters?.profession_id
-      //     }
-      //   }
-      // }
     });
   }
 }

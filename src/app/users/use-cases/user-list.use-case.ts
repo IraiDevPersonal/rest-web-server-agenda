@@ -1,6 +1,5 @@
 import { queryParser } from "@/lib/utils";
 import { Request } from "express";
-import { UserForFiltersMapper } from "../mappers/user-for-filters.mapper";
 import { UserMapper } from "../mappers/user.mapper";
 import { UserFilters } from "../models/user-filters.model";
 import { UserServiceImpl } from "../service";
@@ -26,12 +25,6 @@ export class UserListUseCase {
       limit: pagination.limit,
       pages: pagination.getTotalPages(total)
     });
-  };
-
-  listForFilters = async () => {
-    const bdUsers = await this.service.getUsersForFilters();
-
-    return UserForFiltersMapper.fromBdToDomain(bdUsers);
   };
 
   private buildFilters = (query: Request["query"]): UserFilters => {

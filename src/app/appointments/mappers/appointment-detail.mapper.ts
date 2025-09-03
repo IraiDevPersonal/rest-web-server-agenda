@@ -14,6 +14,7 @@ export class AppointmentDetailMapper {
 
     const patient = data.patient;
     const professional = data.user;
+    const patientHistory = patient?.appointments ?? [];
 
     return {
       uid: data.uid,
@@ -25,7 +26,7 @@ export class AppointmentDetailMapper {
       professional: {
         pay_methods: ["Fonasa", "Particular"],
         confirm_methods: ["Whatsapp", "Correo", "Teléfono"],
-        fullname: `${professional.names} ${professional.last_names}`,
+        full_name: `${professional.names} ${professional.last_names}`,
         professions: professional.professions.map((p) => p.profession.name)
       },
       alert: {
@@ -36,19 +37,18 @@ export class AppointmentDetailMapper {
         ? {
             uid: patient.uid,
             rut: patient.rut,
-            names: patient.names,
             phone: patient.phone,
             email: patient.email,
             address: patient.address,
-            last_names: patient.last_names,
-            avatar_image: patient.avatar_image
+            avatar_image: patient.avatar_image,
+            full_name: `${patient.names} ${patient.last_names}`,
+            history: patientHistory.map((appointment) => ({
+              uid: appointment.uid,
+              status: appointment.appointment_status,
+              date_time: `${DateFormatter.formatDate(appointment.date, "dmy")} ${appointment.time_from}-${appointment.time_to}`
+            }))
           }
-        : null,
-      patient_history: (patient?.appointments ?? []).map((appointment) => ({
-        uid: appointment.uid,
-        status: appointment.appointment_status,
-        date_time: `${DateFormatter.formatDate(appointment.date, "dmy")} ${appointment.time_from}-${appointment.time_to}`
-      }))
+        : null
     };
   };
 

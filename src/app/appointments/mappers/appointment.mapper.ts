@@ -20,7 +20,8 @@ export class AppointmentMapper {
       uid: data.uid,
       time_to: data.time_to,
       time_from: data.time_from,
-      appointment_status: data.appointment_status,
+      is_enabled: data.is_enabled,
+      status: data.appointment_status,
       date: DateFormatter.formatDate(data.date, "ymd"),
       professional: {
         full_name: `${professional.names} ${professional.last_names}`,

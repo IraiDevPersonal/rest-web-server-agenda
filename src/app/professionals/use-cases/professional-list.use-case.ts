@@ -1,10 +1,10 @@
+import { UserMapper } from "@/app/users/mappers/user.mapper";
+import { UserFilters } from "@/app/users/models/user-filters.model";
+import { Pagination } from "@/lib/pagination";
 import { queryParser } from "@/lib/utils";
 import { Request } from "express";
-import { Pagination } from "@/lib/pagination";
+import { ProfessionalForFiltersMapper } from "../mappers/professional-for-filters.mapper";
 import { ProfessionalServiceImpl } from "../services";
-import { UserMapper } from "@/app/users/mappers/user.mapper";
-import { UserForFiltersMapper } from "@/app/users/mappers/user-for-filters.mapper";
-import { UserFilters } from "@/app/users/models/user-filters.model";
 
 export class ProfessionalListUseCase {
   private readonly service: ProfessionalServiceImpl;
@@ -34,7 +34,7 @@ export class ProfessionalListUseCase {
       profession_id: filters.profession_id
     });
 
-    return UserForFiltersMapper.fromBdToDomain(bdProfessionals);
+    return ProfessionalForFiltersMapper.fromBdToDomain(bdProfessionals);
   };
 
   private buildFilters = (query: Request["query"]): UserFilters => {

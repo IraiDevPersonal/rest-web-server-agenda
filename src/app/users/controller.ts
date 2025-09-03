@@ -9,14 +9,14 @@ import { UpdateUserUseCase } from "./use-cases/update-user.use-case";
 import { UpdateUserStatusUseCase } from "./use-cases/update-user-status.use-case";
 
 export class UserController {
-  private readonly userListUseCases: UserListUseCase;
+  private readonly userListUseCase: UserListUseCase;
   private readonly userDetailUseCase: UserDetailUseCase;
   private readonly createUserUseCase: CreateUserUseCase;
   private readonly updateUserUseCase: UpdateUserUseCase;
   private readonly updateUserStatusUseCase: UpdateUserStatusUseCase;
 
   constructor(service: UserServiceImpl) {
-    this.userListUseCases = new UserListUseCase(service);
+    this.userListUseCase = new UserListUseCase(service);
     this.userDetailUseCase = new UserDetailUseCase(service);
     this.createUserUseCase = new CreateUserUseCase(service);
     this.updateUserUseCase = new UpdateUserUseCase(service);
@@ -25,7 +25,7 @@ export class UserController {
 
   getUsers = async (req: Request, res: Response) => {
     try {
-      const data = await this.userListUseCases.list(req.query);
+      const data = await this.userListUseCase.list(req.query);
       return res.status(200).json(data);
     } catch (error) {
       return CustomError.handleError(error, res);
@@ -36,15 +36,6 @@ export class UserController {
     try {
       const uid = req.params.uid;
       const data = await this.userDetailUseCase.getDetail(uid);
-      return res.status(200).json(data);
-    } catch (error) {
-      return CustomError.handleError(error, res);
-    }
-  };
-
-  getUsersForFilters = async (req: Request, res: Response) => {
-    try {
-      const data = await this.userListUseCases.listForFilters();
       return res.status(200).json(data);
     } catch (error) {
       return CustomError.handleError(error, res);
