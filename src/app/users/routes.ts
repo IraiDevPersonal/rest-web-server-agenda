@@ -11,11 +11,13 @@ export class UserRoutes {
     const router = Router();
     const controller = this.controller;
 
-    router.get("/", [], controller.getUsers);
-    router.get("/:uid", [UidValidatorMiddleware.validate], controller.getUserDetail);
-    router.post("/", [], controller.createUser);
-    router.put("/:uid", [UidValidatorMiddleware.validate], controller.updateUser);
-    router.patch("/:uid", [UidValidatorMiddleware.validate], controller.updateUserStatus);
+    router.get("/", [], controller.getAll);
+    router.get("/:uid", [UidValidatorMiddleware.validate], controller.getDetail);
+    router.post("/", [], controller.create);
+    router.put("/:uid", [UidValidatorMiddleware.validate], controller.update);
+    router.patch("/:uid/status", [UidValidatorMiddleware.validate], controller.updateStatus);
+    router.patch("/:uid/roles", [UidValidatorMiddleware.validate], controller.updateRoles);
+    router.patch("/:uid/professions", [UidValidatorMiddleware.validate], controller.updateProfessions);
 
     return router;
   }
