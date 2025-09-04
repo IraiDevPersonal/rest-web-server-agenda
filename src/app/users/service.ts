@@ -1,17 +1,15 @@
-import { PaginatedQuery, RutOrEmailQuery } from "@/types/global";
+import { RutOrEmailQuery } from "@/types/global";
 import { PrismaClient } from "@prisma/client";
-import type { UserFilters } from "./models/user-filters.model";
+import type { PaginatedUserQueryFilters } from "./models/user-filters.model";
 import { UpsertUserPayload } from "./models/user-payload.model";
 import { UserServiceRepository } from "./repository";
 import { ROLE_ID } from "./utils/constants";
-
-type Filters = PaginatedQuery<Omit<UserFilters, "page" | "limit">>;
 
 type UserServiceOptions = {
   includeProfessions?: boolean;
 };
 
-export class UserService implements UserServiceRepository<Filters> {
+export class UserService implements UserServiceRepository {
   protected readonly db: PrismaClient;
   protected shouldIncludeProfessions: boolean;
 
@@ -62,7 +60,7 @@ export class UserService implements UserServiceRepository<Filters> {
     };
   };
 
-  protected appliedFilters = (filters: Partial<Filters>) => {
+  protected appliedFilters = (filters: Partial<PaginatedUserQueryFilters>) => {
     return {
       id: filters?.id,
       names: { contains: filters?.names, mode: "insensitive" },
@@ -145,7 +143,7 @@ export class UserService implements UserServiceRepository<Filters> {
     });
   };
 
-  getAll = async ({ skip, take, ...filters }: Filters) => {
+  getAll = async ({ skip, take, ...filters }: PaginatedUserQueryFilters) => {
     const whereClause: any = {
       ...this.appliedFilters(filters),
       roles: this.getProfessionalRoleFilter()
