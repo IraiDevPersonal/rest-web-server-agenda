@@ -12,7 +12,7 @@ export class UpdatePatientUseCase {
   }
 
   update = async (uid: string, body: unknown): Promise<UpsertResponse<PatientModel>> => {
-    const payload = PatientValidations.validateUpdate(body);
+    const payload = PatientValidations.validateUpdatePayload(body);
 
     const existingPatient = await this.service.findPatientRutAndEmail({
       rut: payload.rut,
@@ -32,7 +32,6 @@ export class UpdatePatientUseCase {
     const patient = PatientMapper.map(updatedPatient);
 
     return {
-      message: `Paciente actualizado(a)`,
       data: patient
     };
   };

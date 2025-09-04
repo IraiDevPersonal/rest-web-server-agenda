@@ -1,10 +1,9 @@
-import { capitalize } from "@/lib/utils";
 import { UpsertResponse } from "@/types/global";
 import { UserStatus } from "@prisma/client";
+import { UserDetailMapper } from "../mappers/user-detail.mapper";
+import { UserModel } from "../models/user.model";
 import { UserServiceRepository } from "../repository";
 import { UserValidations } from "../validations";
-import { UserModel } from "../models/user.model";
-import { UserDetailMapper } from "../mappers/user-detail.mapper";
 
 export class CreateUserUseCase {
   private readonly service: UserServiceRepository;
@@ -14,7 +13,7 @@ export class CreateUserUseCase {
   }
 
   create = async (body: unknown): Promise<UpsertResponse<UserModel>> => {
-    const payload = UserValidations.validateInsert(body);
+    const payload = UserValidations.validateInsertPayload(body);
 
     const existingUser = await this.service.findByRutOrEmail({
       rut: payload.rut,
@@ -35,7 +34,6 @@ export class CreateUserUseCase {
     const user = UserDetailMapper.fromBdToDomain(createdUser);
 
     return {
-      message: `Usuario ${capitalize(user.names)} ${capitalize(user.last_names)} creado(a)`,
       data: user
     };
   };

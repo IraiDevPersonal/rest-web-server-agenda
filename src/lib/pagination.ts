@@ -15,7 +15,10 @@ export class Pagination {
     const { success, error, data } = PaginationSchema.safeParse({ page, limit });
 
     if (!success) {
-      throw CustomError.genericError(error, "Error al validar los datos de la paginación");
+      throw CustomError.genericError(
+        error,
+        "Pagination validation error: page must be >= 1 and limit must be between 1-100"
+      );
     }
 
     this.page = data.page;

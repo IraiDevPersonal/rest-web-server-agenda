@@ -3,14 +3,14 @@ import { ExistenceValidation } from "@/lib/validations/existence.validation";
 import { UpsertUserSchema } from "./schemas/api/upsert-user.schema";
 
 export class UserValidations extends ExistenceValidation {
-  static validateInsert(body: any) {
+  static validateInsertPayload(body: any) {
     return UpsertUserSchema.omit({ status: true }).parse({
       ...body,
       rut: RutManager.format(body.rut, { dots: true })
     });
   }
 
-  static validateUpdate(body: any) {
+  static validateUpdatePayload(body: any) {
     return UpsertUserSchema.omit({ status: true })
       .partial()
       .parse({
@@ -19,11 +19,7 @@ export class UserValidations extends ExistenceValidation {
       });
   }
 
-  static validateUpdateStatus(body: any) {
+  static validateUpdateStatusPayload(body: any) {
     return UpsertUserSchema.pick({ status: true }).partial().parse(body);
-  }
-
-  static requireExists<T>(value: T, errorMessage?: string) {
-    return super.requireExists(value, errorMessage ?? "Usuario no encontrado");
   }
 }

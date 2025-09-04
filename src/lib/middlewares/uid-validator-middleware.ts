@@ -9,11 +9,11 @@ export class UidValidatorMiddleware {
       const uid = req.params.uid;
 
       if (!uid) {
-        throw CustomError.badRequest("Necesitas enviar el uid");
+        throw CustomError.badRequest("UID parameter is required");
       }
 
       if (!Uid.isValid(uid)) {
-        throw CustomError.badRequest("Necesitas enviar un uid valido");
+        throw CustomError.badRequest("Invalid UID format");
       }
 
       next();

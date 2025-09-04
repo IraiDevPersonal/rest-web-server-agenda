@@ -1,8 +1,8 @@
 import { UpsertResponse } from "@/types/global";
+import { UserDetailMapper } from "../mappers/user-detail.mapper";
+import { UserModel } from "../models/user.model";
 import { UserServiceRepository } from "../repository";
 import { UserValidations } from "../validations";
-import { UserModel } from "../models/user.model";
-import { UserDetailMapper } from "../mappers/user-detail.mapper";
 
 export class UpdateUserUseCase {
   private readonly service: UserServiceRepository;
@@ -12,7 +12,7 @@ export class UpdateUserUseCase {
   }
 
   update = async (uid: string, body: unknown): Promise<UpsertResponse<UserModel>> => {
-    const payload = UserValidations.validateUpdate(body);
+    const payload = UserValidations.validateUpdatePayload(body);
 
     const existingUser = await this.service.findByRutOrEmail({
       rut: payload.rut,
@@ -32,7 +32,6 @@ export class UpdateUserUseCase {
     const user = UserDetailMapper.map(updatedUser);
 
     return {
-      message: `Usuario actualizado(a)`,
       data: user
     };
   };

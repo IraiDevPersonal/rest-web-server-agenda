@@ -1,25 +1,19 @@
 import { UpsertResponse } from "@/types/global";
+import { UserStatus } from "@prisma/client";
 import { PatientMapper } from "../mappers/patient.mapper";
 import { PatientModel } from "../models/patient.model";
 import { PatientServiceRepository } from "../repository";
 import { PatientValidations } from "../validations";
-import { UserStatus } from "@prisma/client";
-import { capitalize } from "@/lib/utils";
 
 export class UpdatePatientStatusUseCase {
   private readonly service: PatientServiceRepository;
-  private readonly HASH_STATUS: Record<UserStatus, string> = {
-    ACTIVE: "habilitado",
-    INACTIVE: "deshabilitado",
-    BLOCKED: "bloqueado"
-  };
 
   constructor(service: PatientServiceRepository) {
     this.service = service;
   }
 
   updateStatus = async (uid: string, body: unknown): Promise<UpsertResponse<PatientModel>> => {
-    const { status } = PatientValidations.validateUpdateStatus(body);
+    const { status } = PatientValidations.validateUpdateStatusPayload(body);
     const bgPatient = await this.service.getPatientByUid(uid);
     const validPatient = PatientMapper.map(PatientValidations.requireExists(bgPatient));
 
@@ -33,8 +27,7 @@ export class UpdatePatientStatusUseCase {
     const patient = PatientMapper.map(updatedPatient);
 
     return {
-      data: patient,
-      message: `Paciente ${capitalize(patient.names)} ${capitalize(patient.last_names)} ha sido ${this.HASH_STATUS[patient.status]}`
+      data: patient
     };
   };
 }

@@ -1,10 +1,9 @@
 import { UpsertResponse } from "@/types/global";
+import { UserStatus } from "@prisma/client";
+import { UserDetailMapper } from "../mappers/user-detail.mapper";
+import { UserModel } from "../models/user.model";
 import { UserServiceRepository } from "../repository";
 import { UserValidations } from "../validations";
-import { UserStatus } from "@prisma/client";
-import { capitalize } from "@/lib/utils";
-import { UserModel } from "../models/user.model";
-import { UserDetailMapper } from "../mappers/user-detail.mapper";
 
 export class UpdateUserStatusUseCase {
   private readonly service: UserServiceRepository;
@@ -19,7 +18,7 @@ export class UpdateUserStatusUseCase {
   }
 
   updateStatus = async (uid: string, body: unknown): Promise<UpsertResponse<UserModel>> => {
-    const { status } = UserValidations.validateUpdateStatus(body);
+    const { status } = UserValidations.validateUpdateStatusPayload(body);
     const bgUser = await this.service.getByUid(uid);
     const validUser = UserDetailMapper.fromBdToDomain(UserValidations.requireExists(bgUser));
 
@@ -33,8 +32,7 @@ export class UpdateUserStatusUseCase {
     const user = UserDetailMapper.map(updatedUser);
 
     return {
-      data: user,
-      message: `Usuario ${capitalize(user.names)} ${capitalize(user.last_names)} ha sido ${this.HASH_STATUS[user.status]}`
+      data: user
     };
   };
 }

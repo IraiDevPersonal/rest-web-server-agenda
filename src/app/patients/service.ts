@@ -1,19 +1,17 @@
-import { RutOrEmailQuery, PaginatedQuery } from "@/types/global";
+import { RutOrEmailQuery } from "@/types/global";
 import { PrismaClient } from "@prisma/client";
-import { PatientFilters } from "./models/patient-filters.model";
+import { PaginatedPatientQueryFilters } from "./models/patient-filters.model";
 import { PatientModel } from "./models/patient.model";
 import { PatientServiceRepository } from "./repository";
 
-type Filters = PaginatedQuery<Omit<PatientFilters, "page" | "limit">>;
-
-export class PatientService implements PatientServiceRepository<Filters> {
+export class PatientService implements PatientServiceRepository {
   private readonly db: PrismaClient;
 
   constructor() {
     this.db = new PrismaClient();
   }
 
-  private appliedFilters = (filters: Partial<Filters>) => {
+  private appliedFilters = (filters: Partial<PaginatedPatientQueryFilters>) => {
     return {
       rut: {
         equals: filters.rut,
@@ -60,7 +58,7 @@ export class PatientService implements PatientServiceRepository<Filters> {
     };
   };
 
-  async getPatients({ skip, take, ...filters }: Filters) {
+  async getPatients({ skip, take, ...filters }: PaginatedPatientQueryFilters) {
     const [total, data] = await this.db.$transaction([
       this.db.patients.count({ where: this.appliedFilters(filters) }),
       this.db.patients.findMany({

@@ -1,3 +1,4 @@
+import { PaginatedQuery } from "@/types/global";
 import { UserStatus } from "@prisma/client";
 
 export type PatientFilters = Partial<{
@@ -8,3 +9,5 @@ export type PatientFilters = Partial<{
   limit: number;
   status: UserStatus;
 }>;
+
+export type PaginatedPatientQueryFilters = PaginatedQuery<Omit<PatientFilters, "page" | "limit">>;

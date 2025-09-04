@@ -9,19 +9,19 @@ export class CustomError extends Error {
     super(message);
   }
 
-  static badRequest(message: string) {
+  static badRequest(message: string = "bad request") {
     return new CustomError(400, message);
   }
 
-  static unautorized(message: string) {
+  static unautorized(message: string = "unautorized") {
     return new CustomError(401, message);
   }
 
-  static forbidden(message: string) {
+  static forbidden(message: string = "forbidden") {
     return new CustomError(403, message);
   }
 
-  static notFound(message: string) {
+  static notFound(message: string = "not found") {
     return new CustomError(404, message);
   }
 
@@ -84,6 +84,6 @@ export class CustomError extends Error {
       return error.message;
     }
 
-    return "Error inesperado...";
+    return "unknown error...";
   }
 }

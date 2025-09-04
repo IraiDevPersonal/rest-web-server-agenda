@@ -9,7 +9,7 @@ export class SeedController {
   public run = async (req: Request, res: Response) => {
     try {
       if (ENVS.IS_PRODUCTION) {
-        throw CustomError.badRequest("Estas en producción accion denegada!!!!");
+        throw CustomError.badRequest("Seed operation not allowed in production environment");
       }
       await this.seedService.createSeed();
       return res.json({ message: "Seed created successfully" });

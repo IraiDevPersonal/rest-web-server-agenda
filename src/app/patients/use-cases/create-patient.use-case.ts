@@ -4,7 +4,6 @@ import { PatientMapper } from "../mappers/patient.mapper";
 import { PatientModel } from "../models/patient.model";
 import { PatientServiceRepository } from "../repository";
 import { PatientValidations } from "../validations";
-import { capitalize } from "@/lib/utils";
 
 export class CreatePatientUseCase {
   private readonly service: PatientServiceRepository;
@@ -14,7 +13,7 @@ export class CreatePatientUseCase {
   }
 
   create = async (body: unknown): Promise<UpsertResponse<PatientModel>> => {
-    const payload = PatientValidations.validateInsert(body);
+    const payload = PatientValidations.validateInsertPayload(body);
 
     const existingPatient = await this.service.findPatientRutAndEmail({
       rut: payload.rut,
@@ -35,7 +34,6 @@ export class CreatePatientUseCase {
     const patient = PatientMapper.map(createdPatient);
 
     return {
-      message: `Paciente ${capitalize(patient.names)} ${capitalize(patient.last_names)} creado(a)`,
       data: patient
     };
   };
