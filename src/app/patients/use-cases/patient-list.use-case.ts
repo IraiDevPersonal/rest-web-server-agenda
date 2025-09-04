@@ -3,13 +3,13 @@ import { UserStatus } from "@prisma/client";
 import { Request } from "express";
 import { PatientMapper } from "../mappers/patient.mapper";
 import { PatientFilters } from "../models/patient-filters.model";
-import { PatientServiceImpl } from "../service";
+import { PatientServiceRepository } from "../repository";
 import { Pagination } from "@/lib/pagination";
 
 export class PatientListUseCases {
-  private readonly service: PatientServiceImpl;
+  private readonly service: PatientServiceRepository;
 
-  constructor(service: PatientServiceImpl) {
+  constructor(service: PatientServiceRepository) {
     this.service = service;
   }
 

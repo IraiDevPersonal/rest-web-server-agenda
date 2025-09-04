@@ -1,42 +1,20 @@
-import { FindRutAndEmailQuery, MakeRequired, PaginatedQuery, PaginatedResult } from "@/types/global";
+import { RutOrEmailQuery, PaginatedQuery } from "@/types/global";
 import { PrismaClient } from "@prisma/client";
 import { PatientFilters } from "./models/patient-filters.model";
 import { PatientModel } from "./models/patient.model";
+import { PatientServiceRepository } from "./repository";
 
 type Filters = PaginatedQuery<Omit<PatientFilters, "page" | "limit">>;
 
-export type PatientServiceImpl = {
-  getPatientByUid: (uid: string) => Promise<unknown | null>;
-  getPatients: (filters: Filters) => Promise<PaginatedResult>;
-  createPatient: (payload: Omit<PatientModel, "uid">) => Promise<unknown>;
-  updatePatient: (uid: string, payload: Partial<PatientModel>) => Promise<unknown>;
-  findPatientRutAndEmail: (
-    props: FindRutAndEmailQuery
-  ) => Promise<MakeRequired<FindRutAndEmailQuery, "uid"> | null>;
-};
-
-export class PatientService implements PatientServiceImpl {
+export class PatientService implements PatientServiceRepository<Filters> {
   private readonly db: PrismaClient;
-  private readonly SELECT = {
-    uid: true,
-    email: true,
-    rut: true,
-    names: true,
-    last_names: true,
-    phone: true,
-    address: true,
-    status: true,
-    birth_date: true,
-    gender: true,
-    id: true
-  };
 
   constructor() {
     this.db = new PrismaClient();
   }
 
-  async getPatients({ skip, take, ...filters }: Filters) {
-    const whereClause: any = {
+  private appliedFilters = (filters: Partial<Filters>) => {
+    return {
       rut: {
         equals: filters.rut,
         mode: "insensitive"
@@ -63,14 +41,32 @@ export class PatientService implements PatientServiceImpl {
       status: {
         equals: filters.status
       }
-    };
+    } as any;
+  };
 
+  private buildPatientFieldsSelector = () => {
+    return {
+      uid: true,
+      email: true,
+      rut: true,
+      names: true,
+      last_names: true,
+      phone: true,
+      address: true,
+      status: true,
+      birth_date: true,
+      gender: true,
+      id: true
+    };
+  };
+
+  async getPatients({ skip, take, ...filters }: Filters) {
     const [total, data] = await this.db.$transaction([
-      this.db.patients.count({ where: whereClause }),
+      this.db.patients.count({ where: this.appliedFilters(filters) }),
       this.db.patients.findMany({
+        select: this.buildPatientFieldsSelector(),
+        where: this.appliedFilters(filters),
         orderBy: { last_names: "asc" },
-        select: this.SELECT,
-        where: whereClause,
         take,
         skip
       })
@@ -81,27 +77,27 @@ export class PatientService implements PatientServiceImpl {
 
   async getPatientByUid(uid: string) {
     return await this.db.patients.findUnique({
-      where: { uid: uid },
-      select: this.SELECT
+      select: this.buildPatientFieldsSelector(),
+      where: { uid: uid }
     });
   }
 
   async updatePatient(uid: string, payload: Partial<PatientModel>) {
     return await this.db.patients.update({
+      select: this.buildPatientFieldsSelector(),
       where: { uid: uid },
-      data: payload,
-      select: this.SELECT
+      data: payload
     });
   }
 
   async createPatient(payload: Omit<PatientModel, "uid">) {
     return await this.db.patients.create({
-      data: payload,
-      select: this.SELECT
+      select: this.buildPatientFieldsSelector(),
+      data: payload
     });
   }
 
-  async findPatientRutAndEmail({ email, rut, uid }: FindRutAndEmailQuery) {
+  async findPatientRutAndEmail({ email, rut, uid }: RutOrEmailQuery) {
     return await this.db.patients.findFirst({
       select: { rut: !!rut, email: !!email, uid: true },
       where: { OR: [{ rut: rut }, { email: email }], NOT: { uid: uid } }

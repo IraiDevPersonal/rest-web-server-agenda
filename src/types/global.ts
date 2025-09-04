@@ -27,4 +27,4 @@ export type PaginatedQuery<T extends object = object> = {
   take: number;
 } & T;
 
-export type FindRutAndEmailQuery = Partial<{ rut: string; email: string; uid: string }>;
+export type RutOrEmailQuery = Partial<{ rut: string; email: string; uid: string }>;

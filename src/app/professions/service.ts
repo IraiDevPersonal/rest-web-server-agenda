@@ -1,11 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import { ProfessionFilters } from "./models/profession-filters.model";
+import { ProfessionServiceRepository } from "./repository";
 
-export type ProfessionServiceImpl = {
-  getProfessions: (filters?: ProfessionFilters) => Promise<unknown>;
-};
-
-export class ProfessionService implements ProfessionServiceImpl {
+export class ProfessionService implements ProfessionServiceRepository {
   private readonly db: PrismaClient;
 
   constructor() {

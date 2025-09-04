@@ -2,14 +2,14 @@ import { UpsertResponse } from "@/types/global";
 import { UserStatus } from "@prisma/client";
 import { PatientMapper } from "../mappers/patient.mapper";
 import { PatientModel } from "../models/patient.model";
-import { PatientServiceImpl } from "../service";
+import { PatientServiceRepository } from "../repository";
 import { PatientValidations } from "../validations";
 import { capitalize } from "@/lib/utils";
 
 export class CreatePatientUseCase {
-  private readonly service: PatientServiceImpl;
+  private readonly service: PatientServiceRepository;
 
-  constructor(service: PatientServiceImpl) {
+  constructor(service: PatientServiceRepository) {
     this.service = service;
   }
 

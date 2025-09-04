@@ -1,6 +1,6 @@
 import { Routes } from "./app/routes";
 import { Server } from "./app/server";
-import { ENVS } from "./config/envs";
+import { ENVS } from "./lib/config/envs";
 
 (async () => {
   const server = new Server({

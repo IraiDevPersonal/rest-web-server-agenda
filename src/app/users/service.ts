@@ -1,161 +1,157 @@
-import { FindRutAndEmailQuery, MakeRequired, PaginatedQuery, PaginatedResult } from "@/types/global";
+import { PaginatedQuery, RutOrEmailQuery } from "@/types/global";
 import { PrismaClient } from "@prisma/client";
 import type { UserFilters } from "./models/user-filters.model";
-import { UserPayload } from "./models/user-payload.model";
+import { UpsertUserPayload } from "./models/user-payload.model";
+import { UserServiceRepository } from "./repository";
+import { ROLE_ID } from "./utils/constants";
 
-type Filters = PaginatedQuery<Omit<UserFilters, "page" | "limit" | "profession_id">>;
+type Filters = PaginatedQuery<Omit<UserFilters, "page" | "limit">>;
 
-export type UserServiceImpl = {
-  getUserByUid: (uid: string) => Promise<unknown | null>;
-  getUsers: (filters: Filters) => Promise<PaginatedResult>;
-  createUser: (payload: UserPayload) => Promise<unknown>;
-  updateUser: (uid: string, payload: Partial<UserPayload>) => Promise<unknown>;
-  findUserRutAndEmail: (
-    props: FindRutAndEmailQuery
-  ) => Promise<MakeRequired<FindRutAndEmailQuery, "uid"> | null>;
+type UserServiceOptions = {
+  includeProfessions?: boolean;
 };
 
-export class UserService implements UserServiceImpl {
-  private readonly db: PrismaClient;
-  private readonly DETAIL_SELECTOR = {
-    avatar_image: true,
-    address: true,
-    names: true,
-    uid: true,
-    status: true,
-    rut: true,
-    phone: true,
-    password: true,
-    last_names: true,
-    email: true,
-    gender: true,
-    roles: {
-      select: {
-        role: {
-          select: {
-            id: true,
-            name: true
-          }
-        }
-      }
-    },
-    professions: false
-    // professions: {
-    //   select: {
-    //     profession: {
-    //       select: {
-    //         id: true,
-    //         name: true
-    //       }
-    //     }
-    //   }
-    // }
-  };
+export class UserService implements UserServiceRepository<Filters> {
+  protected readonly db: PrismaClient;
+  protected shouldIncludeProfessions: boolean;
 
-  constructor() {
+  constructor(options?: UserServiceOptions) {
     this.db = new PrismaClient();
+    this.shouldIncludeProfessions = options?.includeProfessions ?? false;
   }
 
-  async createUser({ roles, professions, ...payload }: UserPayload) {
+  protected buildProfessionFieldSelector = () => {
+    return this.shouldIncludeProfessions
+      ? {
+          select: {
+            profession: {
+              select: {
+                id: true,
+                name: true
+              }
+            }
+          }
+        }
+      : false;
+  };
+
+  protected buildUserDetailFieldsSelector = () => {
+    return {
+      avatar_image: true,
+      address: true,
+      names: true,
+      uid: true,
+      status: true,
+      rut: true,
+      phone: true,
+      password: true,
+      last_names: true,
+      email: true,
+      gender: true,
+      roles: {
+        select: {
+          role: {
+            select: {
+              id: true,
+              name: true
+            }
+          }
+        }
+      },
+      professions: this.buildProfessionFieldSelector()
+    };
+  };
+
+  protected appliedFilters = (filters: Partial<Filters>) => {
+    return {
+      id: filters?.id,
+      names: { contains: filters?.names, mode: "insensitive" },
+      last_names: { contains: filters?.last_names, mode: "insensitive" },
+      rut: { equals: filters?.rut, mode: "insensitive" },
+      ...(filters.profession_id &&
+        this.shouldIncludeProfessions && {
+          professions: {
+            some: {
+              profession_id: filters?.profession_id
+            }
+          }
+        })
+    };
+  };
+
+  protected getProfessionalRoleFilter = () => {
+    return this.shouldIncludeProfessions
+      ? {
+          some: {
+            role_id: ROLE_ID.PROFESSIONAL
+          }
+        }
+      : {};
+  };
+
+  create = async (payload: UpsertUserPayload) => {
     return await this.db.users.create({
+      data: payload,
+      select: this.buildUserDetailFieldsSelector()
+    });
+  };
+
+  update = async (uid: string, payload: Partial<UpsertUserPayload>) => {
+    return await this.db.users.update({
+      where: { uid },
+      data: payload,
+      select: this.buildUserDetailFieldsSelector()
+    });
+  };
+
+  updateProfessions = async (uid: string, professionIds: number[]) => {
+    if (professionIds.length === 0) return;
+
+    return this.db.users.update({
+      where: { uid },
       data: {
-        ...payload,
-        roles: {
-          create: roles.map((role_id) => ({
-            role_id
-          }))
-        },
         professions: {
-          create: professions.map((profession_id) => ({
-            profession_id
+          deleteMany: {},
+          create: professionIds.map((professionId) => ({
+            profession_id: professionId
           }))
         }
       },
-      select: this.DETAIL_SELECTOR
+      select: this.buildUserDetailFieldsSelector()
     });
-  }
+  };
 
-  async updateUser(uid: string, { professions, roles, ...payload }: Partial<UserPayload>) {
-    // Si no hay roles ni profesiones que actualizar, solo actualizar campos básicos
-    if (!roles && !professions) {
-      return await this.db.users.update({
-        where: { uid },
-        data: payload,
-        select: this.DETAIL_SELECTOR
-      });
-    }
+  updateRoles = async (uid: string, roleIds: number[]) => {
+    if (roleIds.length === 0) return;
 
-    // Si hay roles o profesiones, usar transacción para actualizar todo
-    return await this.db.$transaction(async (tx) => {
-      // 1. Actualizar campos básicos del usuario
-      const updatedUser = await tx.users.update({
-        where: { uid },
-        data: payload
-      });
-
-      // 2. Actualizar roles si se proporcionan
-      if (roles && roles.length > 0) {
-        // Eliminar roles existentes
-        await tx.users_roles.deleteMany({
-          where: { user_id: updatedUser.id }
-        });
-
-        // Crear nuevos roles
-        await tx.users_roles.createMany({
-          data: roles.map((roleId) => ({
-            user_id: updatedUser.id,
+    return this.db.users.update({
+      where: { uid },
+      data: {
+        roles: {
+          deleteMany: {},
+          create: roleIds.map((roleId) => ({
             role_id: roleId
           }))
-        });
-      }
-
-      // 3. Actualizar profesiones si se proporcionan
-      if (professions && professions.length > 0) {
-        // Eliminar profesiones existentes
-        await tx.professional_professions.deleteMany({
-          where: { user_id: updatedUser.id }
-        });
-
-        // Crear nuevas profesiones
-        await tx.professional_professions.createMany({
-          data: professions.map((professionId) => ({
-            user_id: updatedUser.id,
-            profession_id: professionId
-          }))
-        });
-      }
-
-      // 4. Retornar usuario actualizado con relaciones
-      return await tx.users.findUnique({
-        where: { uid },
-        select: this.DETAIL_SELECTOR
-      });
+        }
+      },
+      select: this.buildUserDetailFieldsSelector()
     });
-  }
+  };
 
-  async findUserRutAndEmail({ email, rut, uid }: FindRutAndEmailQuery) {
+  findByRutOrEmail = async ({ email, rut, uid }: RutOrEmailQuery) => {
     return await this.db.users.findFirst({
       select: { rut: !!rut, email: !!email, uid: true },
       where: { OR: [{ rut: rut }, { email: email }], NOT: { uid: uid } }
     });
-  }
+  };
 
-  async getUsers({ skip, take, ...filters }: Filters) {
+  getAll = async ({ skip, take, ...filters }: Filters) => {
     const whereClause: any = {
-      id: filters?.id,
-      names: { contains: filters?.names, mode: "insensitive" },
-      last_names: { contains: filters?.last_names, mode: "insensitive" },
-      rut: { equals: filters?.rut, mode: "insensitive" }
-      // ...(filters.profession_id && {
-      //   professions: {
-      //     some: {
-      //       profession_id: filters?.profession_id
-      //     }
-      //   }
-      // })
+      ...this.appliedFilters(filters),
+      roles: this.getProfessionalRoleFilter()
     };
 
-    const [total, data] = await this.db.$transaction([
+    const [totalCount, data] = await this.db.$transaction([
       this.db.users.count({ where: whereClause }),
       this.db.users.findMany({
         where: whereClause,
@@ -183,30 +179,20 @@ export class UserService implements UserServiceImpl {
               }
             }
           },
-          professions: false
-          // professions: {
-          //   select: {
-          //     profession: {
-          //       select: {
-          //         id: true,
-          //         name: true
-          //       }
-          //     }
-          //   }
-          // }
+          professions: this.buildProfessionFieldSelector()
         }
       })
     ]);
 
-    return { data, total };
-  }
+    return { data, total: totalCount };
+  };
 
-  async getUserByUid(uid: string) {
+  getByUid = async (uid: string) => {
     return await this.db.users.findFirst({
-      select: this.DETAIL_SELECTOR,
+      select: this.buildUserDetailFieldsSelector(),
       where: {
         uid: uid
       }
     });
-  }
+  };
 }

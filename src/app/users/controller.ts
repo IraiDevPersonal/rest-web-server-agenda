@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import { CustomError } from "@/lib/custom-error";
-import { UserServiceImpl } from "./service";
+import { UserServiceRepository } from "./repository";
 import { UserDetailUseCase } from "./use-cases/user-detail.use-case";
 import { UserListUseCase } from "./use-cases/user-list.use-case";
 import { CreateUserUseCase } from "./use-cases/create-user.use-case";
@@ -15,7 +15,7 @@ export class UserController {
   private readonly updateUserUseCase: UpdateUserUseCase;
   private readonly updateUserStatusUseCase: UpdateUserStatusUseCase;
 
-  constructor(service: UserServiceImpl) {
+  constructor(service: UserServiceRepository) {
     this.userListUseCase = new UserListUseCase(service);
     this.userDetailUseCase = new UserDetailUseCase(service);
     this.createUserUseCase = new CreateUserUseCase(service);

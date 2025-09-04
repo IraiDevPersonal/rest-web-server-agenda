@@ -5,12 +5,12 @@ import { ProfessionMapper } from "../mappers/profession.mapper";
 import { ProfessionFilters } from "../models/profession-filters.model";
 import { ProfessionModel } from "../models/profession.model";
 import { ProfessionOptionModel } from "../models/professional-for-filters.model";
-import { ProfessionServiceImpl } from "../service";
+import { ProfessionServiceRepository } from "../repository";
 
 export class ProfessionListUseCases {
-  private readonly service: ProfessionServiceImpl;
+  private readonly service: ProfessionServiceRepository;
 
-  constructor(service: ProfessionServiceImpl) {
+  constructor(service: ProfessionServiceRepository) {
     this.service = service;
   }
 

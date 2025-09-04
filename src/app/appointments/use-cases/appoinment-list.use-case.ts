@@ -1,16 +1,16 @@
 import { Request } from "express";
 import { AppointmentMapper } from "../mappers/appointment.mapper";
 import { AppointmentModel } from "../models/appointment.model";
-import { AppointmentServiceImpl } from "../service";
+import { AppointmentServiceRepository } from "../repository";
 import { AppointmentFilters } from "../models/appointment-filters.model";
 import { AppointmentStatus } from "@prisma/client";
 import { isYearMonth, queryParser } from "@/lib/utils";
 import { DateFormatter } from "@/lib/date-formatter";
 
 export class AppointmentListUseCase {
-  private readonly service: AppointmentServiceImpl;
+  private readonly service: AppointmentServiceRepository;
 
-  public constructor(service: AppointmentServiceImpl) {
+  public constructor(service: AppointmentServiceRepository) {
     this.service = service;
   }
 

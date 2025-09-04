@@ -1,20 +1,20 @@
 import { UpsertResponse } from "@/types/global";
 import { PatientMapper } from "../mappers/patient.mapper";
 import { PatientModel } from "../models/patient.model";
-import { PatientServiceImpl } from "../service";
+import { PatientServiceRepository } from "../repository";
 import { PatientValidations } from "../validations";
 import { UserStatus } from "@prisma/client";
 import { capitalize } from "@/lib/utils";
 
 export class UpdatePatientStatusUseCase {
-  private readonly service: PatientServiceImpl;
+  private readonly service: PatientServiceRepository;
   private readonly HASH_STATUS: Record<UserStatus, string> = {
     ACTIVE: "habilitado",
     INACTIVE: "deshabilitado",
     BLOCKED: "bloqueado"
   };
 
-  constructor(service: PatientServiceImpl) {
+  constructor(service: PatientServiceRepository) {
     this.service = service;
   }
 

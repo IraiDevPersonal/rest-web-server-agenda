@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import { CustomError } from "@/lib/custom-error";
-import { AppointmentServiceImpl } from "./service";
+import { AppointmentServiceRepository } from "./repository";
 import { AppointmentDetailUseCase } from "./use-cases/appoinment-detail.use-case";
 import { AppointmentListUseCase } from "./use-cases/appoinment-list.use-case";
 
@@ -9,7 +9,7 @@ export class AppointmentController {
   private readonly appointmentListUseCase: AppointmentListUseCase;
   private readonly appointmentDetailUseCase: AppointmentDetailUseCase;
 
-  public constructor(service: AppointmentServiceImpl) {
+  public constructor(service: AppointmentServiceRepository) {
     this.appointmentListUseCase = new AppointmentListUseCase(service);
     this.appointmentDetailUseCase = new AppointmentDetailUseCase(service);
   }

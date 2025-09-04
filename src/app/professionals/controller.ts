@@ -1,26 +1,26 @@
 import { Request, Response } from "express";
 
 import { CustomError } from "@/lib/custom-error";
-import { ProfessionalServiceImpl } from "./services";
+import { CreateUserUseCase } from "../users/use-cases/create-user.use-case";
+import { UpdateUserStatusUseCase } from "../users/use-cases/update-user-status.use-case";
+import { UpdateUserUseCase } from "../users/use-cases/update-user.use-case";
+import { UserDetailUseCase } from "../users/use-cases/user-detail.use-case";
+import { ProfessionalServiceRepository } from "./repository";
 import { ProfessionalListUseCase } from "./use-cases/professional-list.use-case";
-import { ProfessionalDetailUseCase } from "./use-cases/professional-detail.use-case";
-import { CreateProfessionalUseCase } from "./use-cases/create-professional.use-case";
-import { UpdateProfessionalUseCase } from "./use-cases/update-professional.use-case";
-import { UpdateProfessionalStatusUseCase } from "./use-cases/update-professional-status.use-case";
 
 export class ProfessionalController {
   private readonly professionalListUseCase: ProfessionalListUseCase;
-  private readonly professionalDetailUseCase: ProfessionalDetailUseCase;
-  private readonly createProfessionalUseCase: CreateProfessionalUseCase;
-  private readonly updateProfessionalUseCase: UpdateProfessionalUseCase;
-  private readonly updateProfessionalStatusUseCase: UpdateProfessionalStatusUseCase;
+  private readonly professionalDetailUseCase: UserDetailUseCase;
+  private readonly createProfessionalUseCase: CreateUserUseCase;
+  private readonly updateProfessionalUseCase: UpdateUserUseCase;
+  private readonly updateProfessionalStatusUseCase: UpdateUserStatusUseCase;
 
-  constructor(service: ProfessionalServiceImpl) {
+  constructor(service: ProfessionalServiceRepository) {
     this.professionalListUseCase = new ProfessionalListUseCase(service);
-    this.professionalDetailUseCase = new ProfessionalDetailUseCase(service);
-    this.createProfessionalUseCase = new CreateProfessionalUseCase(service);
-    this.updateProfessionalUseCase = new UpdateProfessionalUseCase(service);
-    this.updateProfessionalStatusUseCase = new UpdateProfessionalStatusUseCase(service);
+    this.professionalDetailUseCase = new UserDetailUseCase(service);
+    this.createProfessionalUseCase = new CreateUserUseCase(service);
+    this.updateProfessionalUseCase = new UpdateUserUseCase(service);
+    this.updateProfessionalStatusUseCase = new UpdateUserStatusUseCase(service);
   }
 
   getProfessionals = async (req: Request, res: Response) => {

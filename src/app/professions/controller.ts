@@ -2,12 +2,12 @@ import { Request, Response } from "express";
 
 import { CustomError } from "@/lib/custom-error";
 import { ProfessionListUseCases } from "./use-cases/profession-list.use-case";
-import { ProfessionServiceImpl } from "./service";
+import { ProfessionServiceRepository } from "./repository";
 
 export class ProfessionController {
   private professionalListUseCases: ProfessionListUseCases;
 
-  public constructor(service: ProfessionServiceImpl) {
+  public constructor(service: ProfessionServiceRepository) {
     this.professionalListUseCases = new ProfessionListUseCases(service);
   }
 

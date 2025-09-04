@@ -1,78 +1,120 @@
 import { PrismaClient } from "@prisma/client";
 import { AppointmentFilters } from "./models/appointment-filters.model";
+import { AppointmentServiceRepository } from "./repository";
 
-export type AppointmentServiceImpl = {
-  getAppointmentByUid: (uid: string) => Promise<unknown | null>;
-  getAppointments: (filters: AppointmentFilters) => Promise<unknown>;
-};
-
-export class AppointmentService implements AppointmentServiceImpl {
+export class AppointmentService implements AppointmentServiceRepository {
   private readonly db: PrismaClient;
 
   constructor() {
     this.db = new PrismaClient();
   }
 
-  async getAppointments({
-    professional_id,
-    profession_id,
-    patient_rut,
-    date_from,
-    date_to,
-    date,
-    type
-  }: AppointmentFilters) {
-    return await this.db.appointments.findMany({
-      select: {
-        id: true,
-        uid: true,
-        date: true,
-        time_to: true,
-        time_from: true,
-        is_enabled: true,
-        appointment_status: true,
-        user: {
-          select: {
-            names: true,
-            last_names: true,
-            professions: {
-              select: {
-                profession: {
-                  select: {
-                    name: true
-                  }
+  private aplliedFilters = (filters: Partial<AppointmentFilters>) => {
+    return {
+      appointment_status: filters.type,
+      date: filters.date ?? {
+        gte: filters.date_from,
+        lte: filters.date_to
+      },
+      user_id: filters.professional_id,
+      user: {
+        professions: {
+          some: { profession_id: filters.profession_id }
+        }
+      },
+      ...(filters.patient_rut && {
+        patient: {
+          rut: { contains: filters.patient_rut }
+        }
+      })
+    };
+  };
+
+  private buildAppointmentsFieldsSelector = () => {
+    return {
+      id: true,
+      uid: true,
+      date: true,
+      time_to: true,
+      time_from: true,
+      is_enabled: true,
+      appointment_status: true,
+      user: {
+        select: {
+          names: true,
+          last_names: true,
+          professions: {
+            select: {
+              profession: {
+                select: {
+                  name: true
                 }
               }
             }
           }
-        },
-        patient: {
-          select: {
-            names: true,
-            last_names: true,
-            rut: true,
-            phone: true
+        }
+      },
+      patient: {
+        select: {
+          names: true,
+          last_names: true,
+          rut: true,
+          phone: true
+        }
+      }
+    };
+  };
+
+  private buildAppointmentDetailFieldsSelector = () => {
+    return {
+      uid: true,
+      appointment_status: true,
+      date: true,
+      time_from: true,
+      time_to: true,
+      is_enabled: true,
+      user: {
+        select: {
+          names: true,
+          last_names: true,
+          rut: true,
+          professions: {
+            select: {
+              profession: { select: { name: true } }
+            }
           }
         }
       },
-      where: {
-        appointment_status: type,
-        date: date ?? {
-          gte: date_from,
-          lte: date_to
+      patient: {
+        omit: {
+          id: true,
+          status: true,
+          gender: true,
+          birth_date: true
         },
-        user_id: professional_id,
-        user: {
-          professions: {
-            some: { profession_id: profession_id }
+        include: {
+          appointments: {
+            orderBy: {
+              date: "desc"
+            },
+            take: 4,
+            select: {
+              uid: true,
+              appointment_status: true,
+              date: true,
+              time_from: true,
+              time_to: true
+            }
           }
-        },
-        ...(patient_rut && {
-          patient: {
-            rut: { contains: patient_rut }
-          }
-        })
-      },
+        }
+      }
+    } as any;
+  };
+
+  async getAppointments(filters: AppointmentFilters) {
+    return await this.db.appointments.findMany({
+      select: this.buildAppointmentsFieldsSelector(),
+      where: this.aplliedFilters(filters),
       orderBy: [
         {
           date: "asc"
@@ -86,52 +128,8 @@ export class AppointmentService implements AppointmentServiceImpl {
 
   async getAppointmentByUid(uid: string) {
     return await this.db.appointments.findFirst({
-      select: {
-        uid: true,
-        appointment_status: true,
-        date: true,
-        time_from: true,
-        time_to: true,
-        is_enabled: true,
-        user: {
-          select: {
-            names: true,
-            last_names: true,
-            rut: true,
-            professions: {
-              select: {
-                profession: { select: { name: true } }
-              }
-            }
-          }
-        },
-        patient: {
-          omit: {
-            id: true,
-            status: true,
-            gender: true,
-            birth_date: true
-          },
-          include: {
-            appointments: {
-              orderBy: {
-                date: "desc"
-              },
-              take: 4,
-              select: {
-                uid: true,
-                appointment_status: true,
-                date: true,
-                time_from: true,
-                time_to: true
-              }
-            }
-          }
-        }
-      },
-      where: {
-        uid: uid
-      }
+      select: this.buildAppointmentDetailFieldsSelector(),
+      where: { uid }
     });
   }
 }

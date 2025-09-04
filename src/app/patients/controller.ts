@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import { CustomError } from "@/lib/custom-error";
-import { PatientServiceImpl } from "./service";
+import { PatientServiceRepository } from "./repository";
 import { UpdatePatientStatusUseCase } from "./use-cases/update-patient-status.use-case";
 import { CreatePatientUseCase } from "./use-cases/create-patient.use-case";
 import { UpdatePatientUseCase } from "./use-cases/update-patient.use-case";
@@ -15,7 +15,7 @@ export class PatientController {
   private updatePatientUseCase: UpdatePatientUseCase;
   private togglePatientStatusUseCase: UpdatePatientStatusUseCase;
 
-  constructor(service: PatientServiceImpl) {
+  constructor(service: PatientServiceRepository) {
     this.patientListUseCases = new PatientListUseCases(service);
     this.patientDetailUseCase = new PatientDetailUseCase(service);
     this.createPatientUseCase = new CreatePatientUseCase(service);

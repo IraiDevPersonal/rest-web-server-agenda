@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { SeedService } from "./service";
 import { CustomError } from "@/lib/custom-error";
-import { ENVS } from "@/config/envs";
+import { ENVS } from "@/lib/config/envs";
 
 export class SeedController {
   constructor(private readonly seedService: SeedService) {}

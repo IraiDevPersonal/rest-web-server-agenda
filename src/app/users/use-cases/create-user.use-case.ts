@@ -1,22 +1,22 @@
 import { capitalize } from "@/lib/utils";
 import { UpsertResponse } from "@/types/global";
 import { UserStatus } from "@prisma/client";
-import { UserServiceImpl } from "../service";
+import { UserServiceRepository } from "../repository";
 import { UserValidations } from "../validations";
 import { UserModel } from "../models/user.model";
 import { UserDetailMapper } from "../mappers/user-detail.mapper";
 
 export class CreateUserUseCase {
-  private readonly service: UserServiceImpl;
+  private readonly service: UserServiceRepository;
 
-  constructor(service: UserServiceImpl) {
+  constructor(service: UserServiceRepository) {
     this.service = service;
   }
 
   create = async (body: unknown): Promise<UpsertResponse<UserModel>> => {
     const payload = UserValidations.validateInsert(body);
 
-    const existingUser = await this.service.findUserRutAndEmail({
+    const existingUser = await this.service.findByRutOrEmail({
       rut: payload.rut,
       email: payload.email
     });
@@ -28,7 +28,7 @@ export class CreateUserUseCase {
       UserValidations.ensureEmailNotInUse(payload.email);
     }
 
-    const createdUser = await this.service.createUser({
+    const createdUser = await this.service.create({
       ...payload,
       status: UserStatus.ACTIVE
     });

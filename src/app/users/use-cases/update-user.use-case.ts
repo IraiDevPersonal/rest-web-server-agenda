@@ -1,20 +1,20 @@
 import { UpsertResponse } from "@/types/global";
-import { UserServiceImpl } from "../service";
+import { UserServiceRepository } from "../repository";
 import { UserValidations } from "../validations";
 import { UserModel } from "../models/user.model";
 import { UserDetailMapper } from "../mappers/user-detail.mapper";
 
 export class UpdateUserUseCase {
-  private readonly service: UserServiceImpl;
+  private readonly service: UserServiceRepository;
 
-  constructor(service: UserServiceImpl) {
+  constructor(service: UserServiceRepository) {
     this.service = service;
   }
 
   update = async (uid: string, body: unknown): Promise<UpsertResponse<UserModel>> => {
     const payload = UserValidations.validateUpdate(body);
 
-    const existingUser = await this.service.findUserRutAndEmail({
+    const existingUser = await this.service.findByRutOrEmail({
       rut: payload.rut,
       email: payload.email,
       uid: uid // Excluir al paciente actual de la búsqueda
@@ -28,7 +28,7 @@ export class UpdateUserUseCase {
       UserValidations.ensureEmailNotInUse(payload.email);
     }
 
-    const updatedUser = await this.service.updateUser(uid, payload);
+    const updatedUser = await this.service.update(uid, payload);
     const user = UserDetailMapper.map(updatedUser);
 
     return {

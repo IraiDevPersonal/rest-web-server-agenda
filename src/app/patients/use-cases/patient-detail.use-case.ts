@@ -1,14 +1,14 @@
 import { Request } from "express";
 import { PatientDetailMapper } from "../mappers/patient-detail.mapper";
 import { PatientModel } from "../models/patient.model";
-import { PatientServiceImpl } from "../service";
+import { PatientServiceRepository } from "../repository";
 import { PatientValidations } from "../validations";
 import { ExpandPatientTypes } from "../models/shared";
 
 export class PatientDetailUseCase {
-  private readonly service: PatientServiceImpl;
+  private readonly service: PatientServiceRepository;
 
-  constructor(service: PatientServiceImpl) {
+  constructor(service: PatientServiceRepository) {
     this.service = service;
   }
 

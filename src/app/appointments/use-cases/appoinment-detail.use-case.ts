@@ -1,11 +1,11 @@
 import { AppointmentDetailMapper } from "../mappers/appointment-detail.mapper";
-import { AppointmentServiceImpl } from "../service";
+import { AppointmentServiceRepository } from "../repository";
 import { AppointmentValidations } from "../validations";
 
 export class AppointmentDetailUseCase {
-  private readonly service: AppointmentServiceImpl;
+  private readonly service: AppointmentServiceRepository;
 
-  public constructor(service: AppointmentServiceImpl) {
+  public constructor(service: AppointmentServiceRepository) {
     this.service = service;
   }
 

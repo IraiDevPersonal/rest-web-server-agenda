@@ -1,17 +1,17 @@
 import { UserDetailMapper } from "../mappers/user-detail.mapper";
 import { UserModel } from "../models/user.model";
-import { UserServiceImpl } from "../service";
+import { UserServiceRepository } from "../repository";
 import { UserValidations } from "../validations";
 
 export class UserDetailUseCase {
-  private readonly service: UserServiceImpl;
+  private readonly service: UserServiceRepository;
 
-  constructor(service: UserServiceImpl) {
+  constructor(service: UserServiceRepository) {
     this.service = service;
   }
 
   getDetail = async (uid: string): Promise<{ data: UserModel }> => {
-    const bdUser = await this.service.getUserByUid(uid);
+    const bdUser = await this.service.getByUid(uid);
     const validUser = UserValidations.requireExists(bdUser);
     const user = UserDetailMapper.map(validUser);
 

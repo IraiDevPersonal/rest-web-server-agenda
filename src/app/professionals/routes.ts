@@ -1,7 +1,7 @@
 import { UidValidatorMiddleware } from "@/lib/middlewares/uid-validator-middleware";
 import { Router } from "express";
-import { ProfessionalService } from "./services";
 import { ProfessionalController } from "./controller";
+import { ProfessionalService } from "./services";
 
 export class ProfessionalRoutes {
   private static readonly service = new ProfessionalService();
