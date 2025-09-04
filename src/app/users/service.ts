@@ -1,3 +1,4 @@
+import { CustomError } from "@/lib/custom-error";
 import { RutOrEmailQuery } from "@/types/global";
 import { PrismaClient } from "@prisma/client";
 import type { PaginatedUserQueryFilters } from "./models/user-filters.model";
@@ -88,109 +89,137 @@ export class UserService implements UserServiceRepository {
   };
 
   create = async (payload: UpsertUserPayload) => {
-    return await this.db.users.create({
-      data: payload,
-      select: this.buildUserDetailFieldsSelector()
-    });
+    try {
+      return await this.db.users.create({
+        data: payload,
+        select: this.buildUserDetailFieldsSelector()
+      });
+    } catch (error) {
+      throw CustomError.internalServer("An unexpected database error occurred");
+    }
   };
 
   update = async (uid: string, payload: Partial<UpsertUserPayload>) => {
-    return await this.db.users.update({
-      where: { uid },
-      data: payload,
-      select: this.buildUserDetailFieldsSelector()
-    });
+    try {
+      return await this.db.users.update({
+        where: { uid },
+        data: payload,
+        select: this.buildUserDetailFieldsSelector()
+      });
+    } catch (error) {
+      throw CustomError.internalServer("An unexpected database error occurred");
+    }
   };
 
   updateProfessions = async (uid: string, professionIds: number[]) => {
-    if (professionIds.length === 0) return;
+    try {
+      if (professionIds.length === 0) return;
 
-    return this.db.users.update({
-      where: { uid },
-      data: {
-        professions: {
-          deleteMany: {},
-          create: professionIds.map((professionId) => ({
-            profession_id: professionId
-          }))
-        }
-      },
-      select: this.buildUserDetailFieldsSelector()
-    });
+      return this.db.users.update({
+        where: { uid },
+        data: {
+          professions: {
+            deleteMany: {},
+            create: professionIds.map((professionId) => ({
+              profession_id: professionId
+            }))
+          }
+        },
+        select: this.buildUserDetailFieldsSelector()
+      });
+    } catch (error) {
+      throw CustomError.internalServer("An unexpected database error occurred");
+    }
   };
 
   updateRoles = async (uid: string, roleIds: number[]) => {
-    if (roleIds.length === 0) return;
+    try {
+      if (roleIds.length === 0) return;
 
-    return this.db.users.update({
-      where: { uid },
-      data: {
-        roles: {
-          deleteMany: {},
-          create: roleIds.map((roleId) => ({
-            role_id: roleId
-          }))
-        }
-      },
-      select: this.buildUserDetailFieldsSelector()
-    });
+      return this.db.users.update({
+        where: { uid },
+        data: {
+          roles: {
+            deleteMany: {},
+            create: roleIds.map((roleId) => ({
+              role_id: roleId
+            }))
+          }
+        },
+        select: this.buildUserDetailFieldsSelector()
+      });
+    } catch (error) {
+      throw CustomError.internalServer("An unexpected database error occurred");
+    }
   };
 
   findByRutOrEmail = async ({ email, rut, uid }: RutOrEmailQuery) => {
-    return await this.db.users.findFirst({
-      select: { rut: !!rut, email: !!email, uid: true },
-      where: { OR: [{ rut: rut }, { email: email }], NOT: { uid: uid } }
-    });
+    try {
+      return await this.db.users.findFirst({
+        select: { rut: !!rut, email: !!email, uid: true },
+        where: { OR: [{ rut: rut }, { email: email }], NOT: { uid: uid } }
+      });
+    } catch (error) {
+      throw CustomError.internalServer("An unexpected database error occurred");
+    }
   };
 
   getAll = async ({ skip, take, ...filters }: PaginatedUserQueryFilters) => {
-    const whereClause: any = {
-      ...this.appliedFilters(filters),
-      roles: this.getProfessionalRoleFilter()
-    };
+    try {
+      const whereClause: any = {
+        ...this.appliedFilters(filters),
+        roles: this.getProfessionalRoleFilter()
+      };
 
-    const [totalCount, data] = await this.db.$transaction([
-      this.db.users.count({ where: whereClause }),
-      this.db.users.findMany({
-        where: whereClause,
-        take,
-        skip,
-        select: {
-          avatar_image: true,
-          password: true,
-          address: true,
-          names: true,
-          uid: true,
-          status: true,
-          rut: true,
-          phone: true,
-          last_names: true,
-          gender: true,
-          email: true,
-          roles: {
-            select: {
-              role: {
-                select: {
-                  id: true,
-                  name: true
+      const [totalCount, data] = await this.db.$transaction([
+        this.db.users.count({ where: whereClause }),
+        this.db.users.findMany({
+          where: whereClause,
+          take,
+          skip,
+          select: {
+            avatar_image: true,
+            password: true,
+            address: true,
+            names: true,
+            uid: true,
+            status: true,
+            rut: true,
+            phone: true,
+            last_names: true,
+            gender: true,
+            email: true,
+            roles: {
+              select: {
+                role: {
+                  select: {
+                    id: true,
+                    name: true
+                  }
                 }
               }
-            }
-          },
-          professions: this.buildProfessionFieldSelector()
-        }
-      })
-    ]);
+            },
+            professions: this.buildProfessionFieldSelector()
+          }
+        })
+      ]);
 
-    return { data, total: totalCount };
+      return { data, total: totalCount };
+    } catch (error) {
+      throw CustomError.internalServer("An unexpected database error occurred");
+    }
   };
 
   getByUid = async (uid: string) => {
-    return await this.db.users.findFirst({
-      select: this.buildUserDetailFieldsSelector(),
-      where: {
-        uid: uid
-      }
-    });
+    try {
+      return await this.db.users.findFirst({
+        select: this.buildUserDetailFieldsSelector(),
+        where: {
+          uid: uid
+        }
+      });
+    } catch (error) {
+      throw CustomError.internalServer("An unexpected database error occurred");
+    }
   };
 }

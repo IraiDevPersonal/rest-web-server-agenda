@@ -1,3 +1,4 @@
+import { CustomError } from "@/lib/custom-error";
 import { RutOrEmailQuery } from "@/types/global";
 import { PrismaClient } from "@prisma/client";
 import { PaginatedPatientQueryFilters } from "./models/patient-filters.model";
@@ -59,46 +60,66 @@ export class PatientService implements PatientServiceRepository {
   };
 
   async getPatients({ skip, take, ...filters }: PaginatedPatientQueryFilters) {
-    const [total, data] = await this.db.$transaction([
-      this.db.patients.count({ where: this.appliedFilters(filters) }),
-      this.db.patients.findMany({
-        select: this.buildPatientFieldsSelector(),
-        where: this.appliedFilters(filters),
-        orderBy: { last_names: "asc" },
-        take,
-        skip
-      })
-    ]);
+    try {
+      const [total, data] = await this.db.$transaction([
+        this.db.patients.count({ where: this.appliedFilters(filters) }),
+        this.db.patients.findMany({
+          select: this.buildPatientFieldsSelector(),
+          where: this.appliedFilters(filters),
+          orderBy: { last_names: "asc" },
+          take,
+          skip
+        })
+      ]);
 
-    return { data, total };
+      return { data, total };
+    } catch (error) {
+      throw CustomError.internalServer("An unexpected database error occurred");
+    }
   }
 
   async getPatientByUid(uid: string) {
-    return await this.db.patients.findUnique({
-      select: this.buildPatientFieldsSelector(),
-      where: { uid: uid }
-    });
+    try {
+      return await this.db.patients.findUnique({
+        select: this.buildPatientFieldsSelector(),
+        where: { uid: uid }
+      });
+    } catch (error) {
+      throw CustomError.internalServer("An unexpected database error occurred");
+    }
   }
 
   async updatePatient(uid: string, payload: Partial<PatientModel>) {
-    return await this.db.patients.update({
-      select: this.buildPatientFieldsSelector(),
-      where: { uid: uid },
-      data: payload
-    });
+    try {
+      return await this.db.patients.update({
+        select: this.buildPatientFieldsSelector(),
+        where: { uid: uid },
+        data: payload
+      });
+    } catch (error) {
+      throw CustomError.internalServer("An unexpected database error occurred");
+    }
   }
 
   async createPatient(payload: Omit<PatientModel, "uid">) {
-    return await this.db.patients.create({
-      select: this.buildPatientFieldsSelector(),
-      data: payload
-    });
+    try {
+      return await this.db.patients.create({
+        select: this.buildPatientFieldsSelector(),
+        data: payload
+      });
+    } catch (error) {
+      throw CustomError.internalServer("An unexpected database error occurred");
+    }
   }
 
   async findPatientRutAndEmail({ email, rut, uid }: RutOrEmailQuery) {
-    return await this.db.patients.findFirst({
-      select: { rut: !!rut, email: !!email, uid: true },
-      where: { OR: [{ rut: rut }, { email: email }], NOT: { uid: uid } }
-    });
+    try {
+      return await this.db.patients.findFirst({
+        select: { rut: !!rut, email: !!email, uid: true },
+        where: { OR: [{ rut: rut }, { email: email }], NOT: { uid: uid } }
+      });
+    } catch (error) {
+      throw CustomError.internalServer("An unexpected database error occurred");
+    }
   }
 }

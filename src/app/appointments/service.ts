@@ -1,3 +1,4 @@
+import { CustomError } from "@/lib/custom-error";
 import { PrismaClient } from "@prisma/client";
 import { AppointmentFilters } from "./models/appointment-filters.model";
 import { AppointmentServiceRepository } from "./repository";
@@ -112,24 +113,32 @@ export class AppointmentService implements AppointmentServiceRepository {
   };
 
   async getAppointments(filters: AppointmentFilters) {
-    return await this.db.appointments.findMany({
-      select: this.buildAppointmentsFieldsSelector(),
-      where: this.aplliedFilters(filters),
-      orderBy: [
-        {
-          date: "asc"
-        },
-        {
-          time_from: "asc"
-        }
-      ]
-    });
+    try {
+      return await this.db.appointments.findMany({
+        select: this.buildAppointmentsFieldsSelector(),
+        where: this.aplliedFilters(filters),
+        orderBy: [
+          {
+            date: "asc"
+          },
+          {
+            time_from: "asc"
+          }
+        ]
+      });
+    } catch (error) {
+      throw CustomError.internalServer("An unexpected database error occurred");
+    }
   }
 
   async getAppointmentByUid(uid: string) {
-    return await this.db.appointments.findFirst({
-      select: this.buildAppointmentDetailFieldsSelector(),
-      where: { uid }
-    });
+    try {
+      return await this.db.appointments.findFirst({
+        select: this.buildAppointmentDetailFieldsSelector(),
+        where: { uid }
+      });
+    } catch (error) {
+      throw CustomError.internalServer("An unexpected database error occurred");
+    }
   }
 }

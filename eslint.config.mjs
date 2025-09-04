@@ -16,6 +16,12 @@ export default defineConfig([
   tseslint.configs.recommended,
   tseslint.config({
     rules: {
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          'caughtErrors': 'none'
+        }
+      ],
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-empty-object-type": "off"
     },
