@@ -3,8 +3,8 @@ import { PaginatedQuery } from "@/types/global";
 import { CustomError } from "./custom-error";
 
 const PaginationSchema = z.object({
-  page: z.number().positive().min(1).optional().default(1),
-  limit: z.number().positive().min(1).max(100).optional().default(10)
+  page: z.number().positive().int().min(1).optional().default(1),
+  limit: z.number().positive().int().min(1).max(100).optional().default(10)
 });
 
 export class Pagination {
@@ -12,12 +12,11 @@ export class Pagination {
   readonly limit: number;
 
   constructor({ limit, page }: { page?: number; limit?: number }) {
-    const { success, error, data } = PaginationSchema.safeParse({ page, limit });
+    const { success, data } = PaginationSchema.safeParse({ page, limit });
 
     if (!success) {
-      throw CustomError.genericError(
-        error,
-        "Pagination validation error: page must be >= 1 and limit must be between 1-100"
+      throw CustomError.internalServer(
+        "Pagination validation failed: page must be ≥ 1 and limit must be between 1-100 (integers only)"
       );
     }
 

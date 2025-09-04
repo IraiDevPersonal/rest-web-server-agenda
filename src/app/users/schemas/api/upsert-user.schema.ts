@@ -5,14 +5,14 @@ import z from "zod";
 export const UpsertUserSchema = z.object({
   email: z.email(),
   birth_date: z.date(),
+  gender: z.enum(Gender),
   names: z.string().min(3),
   roles: z.number().array(),
+  status: z.enum(UserStatus),
   address: z.string().min(3),
   password: z.string().min(8),
   last_names: z.string().min(3),
   professions: z.number().array(),
-  gender: z.enum(Gender, { error: "invalid gender" }),
-  status: z.enum(UserStatus, { error: "invalid status" }),
   avatar_image: z.url().optional().nullable().default(null),
   rut: z.string().refine(RutManager.validate, { error: "invalid rut" }),
   phone: z

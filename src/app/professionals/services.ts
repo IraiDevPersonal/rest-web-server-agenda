@@ -31,7 +31,7 @@ export class ProfessionalService extends UserService implements ProfessionalServ
         }
       });
     } catch (error) {
-      throw CustomError.internalServer("An unexpected database error occurred");
+      throw CustomError.bdError();
     }
   };
 }

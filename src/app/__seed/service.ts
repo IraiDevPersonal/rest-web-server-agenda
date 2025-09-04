@@ -54,7 +54,7 @@ export class SeedService {
         data: appointments
       });
     } catch (error) {
-      throw CustomError.internalServer("An unexpected database error occurred");
+      throw CustomError.bdError();
     }
   }
 }

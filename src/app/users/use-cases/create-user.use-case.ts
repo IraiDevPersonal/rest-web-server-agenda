@@ -1,7 +1,7 @@
 import { UpsertResponse } from "@/types/global";
 import { UserStatus } from "@prisma/client";
 import { UserDetailMapper } from "../mappers/user-detail.mapper";
-import { UserModel } from "../models/user.model";
+import { UserDetailModel } from "../models/user-detail.model";
 import { UserServiceRepository } from "../repository";
 import { UserValidations } from "../validations";
 
@@ -12,7 +12,7 @@ export class CreateUserUseCase {
     this.service = service;
   }
 
-  create = async (body: unknown): Promise<UpsertResponse<UserModel>> => {
+  create = async (body: unknown): Promise<UpsertResponse<UserDetailModel>> => {
     const payload = UserValidations.validateInsertPayload(body);
 
     const existingUser = await this.service.findByRutOrEmail({

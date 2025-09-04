@@ -22,7 +22,7 @@ export class ProfessionService implements ProfessionServiceRepository {
         }
       });
     } catch (error) {
-      throw CustomError.internalServer("An unexpected database error occurred");
+      throw CustomError.bdError();
     }
   }
 }

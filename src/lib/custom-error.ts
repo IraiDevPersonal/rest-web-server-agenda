@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { Response } from "express";
 import { ZodError } from "zod";
 
@@ -29,24 +30,36 @@ export class CustomError extends Error {
     return new CustomError(500, message);
   }
 
-  static mapperError(error: unknown, name: string) {
-    const errorMessage = this.getErrorMessage(error);
-
-    return CustomError.internalServer(`${name}: ${errorMessage}`);
-  }
-
-  static genericError(error: unknown, message: string, showLog: boolean = true) {
-    const errorMessage = this.getErrorMessage(error);
-
-    if (showLog) {
-      console.log(errorMessage);
+  static prismaError(error: unknown) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      switch (error.code) {
+        case "P2003":
+          return CustomError.badRequest(`One or more referenced IDs are invalid`);
+        case "P2002": // Unique constraint
+          return CustomError.badRequest(`This record already exists`);
+        case "P2025": // Record not found
+          return CustomError.notFound(`Record not found`);
+        default:
+          return CustomError.internalServer("An unexpected database error occurred");
+      }
     }
 
-    return CustomError.internalServer(message);
+    return undefined;
   }
 
-  static handleError = (error: unknown, res: Response) => {
-    const { message, statusCode } = CustomError.getErrorData(error);
+  static bdError(message?: string) {
+    return CustomError.internalServer(message ?? "An unexpected database error occurred");
+  }
+
+  static mapperError(error: unknown, reference: string) {
+    const errorMessage = this.getErrorMessage(error);
+
+    return CustomError.internalServer(`${reference}: ${errorMessage}`);
+  }
+
+  static handleError = (errorrr: unknown, res: Response) => {
+    const bdError = this.prismaError(errorrr);
+    const { message, statusCode } = CustomError.getErrorData(bdError ?? errorrr);
     console.log("ERROR: ", message);
 
     return res.status(statusCode).json({ error: message });
@@ -76,7 +89,7 @@ export class CustomError extends Error {
     }
 
     if (error instanceof ZodError) {
-      const issues = error.issues.map((issue) => `[${String(issue.path.at(-1))}: ${issue.message}]`);
+      const issues = error.issues.map((issue) => `${String(issue.path.at(-1))}: ${issue.message}`);
       return issues.join(", ");
     }
 

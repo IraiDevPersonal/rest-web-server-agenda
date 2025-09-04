@@ -127,7 +127,7 @@ export class AppointmentService implements AppointmentServiceRepository {
         ]
       });
     } catch (error) {
-      throw CustomError.internalServer("An unexpected database error occurred");
+      throw CustomError.bdError();
     }
   }
 
@@ -138,7 +138,7 @@ export class AppointmentService implements AppointmentServiceRepository {
         where: { uid }
       });
     } catch (error) {
-      throw CustomError.internalServer("An unexpected database error occurred");
+      throw CustomError.bdError();
     }
   }
 }

@@ -1,6 +1,6 @@
 import { UpsertResponse } from "@/types/global";
 import { UserDetailMapper } from "../mappers/user-detail.mapper";
-import { UserModel } from "../models/user.model";
+import { UserDetailModel } from "../models/user-detail.model";
 import { UserServiceRepository } from "../repository";
 import { UserValidations } from "../validations";
 
@@ -11,7 +11,7 @@ export class UpdateUserUseCase {
     this.service = service;
   }
 
-  update = async (uid: string, body: unknown): Promise<UpsertResponse<UserModel>> => {
+  update = async (uid: string, body: unknown): Promise<UpsertResponse<UserDetailModel>> => {
     const payload = UserValidations.validateUpdatePayload(body);
 
     const existingUser = await this.service.findByRutOrEmail({
