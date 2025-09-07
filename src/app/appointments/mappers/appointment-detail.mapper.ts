@@ -46,8 +46,10 @@ export class AppointmentDetailMapper {
             avatar_image: patient.avatar_image,
             history: patientHistory.map((appointment) => ({
               uid: appointment.uid,
+              time_to: appointment.time_to,
+              time_from: appointment.time_from,
               status: appointment.appointment_status,
-              date_time: `${DateFormatter.formatDate(appointment.date, "dmy")} ${appointment.time_from}-${appointment.time_to}`
+              date: DateFormatter.formatDate(appointment.date, "ymd")
             }))
           }
         : null
