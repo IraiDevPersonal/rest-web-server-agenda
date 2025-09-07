@@ -1,5 +1,6 @@
 export type PatientForAppointmentModel = {
-  full_name: string;
   rut: string;
   phone: string;
+  names: string;
+  last_names: string;
 };

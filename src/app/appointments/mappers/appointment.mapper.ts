@@ -24,14 +24,16 @@ export class AppointmentMapper {
       status: data.appointment_status,
       date: DateFormatter.formatDate(data.date, "ymd"),
       professional: {
-        full_name: `${professional.names} ${professional.last_names}`,
-        professions: professions
+        professions: professions,
+        names: professional.names,
+        last_names: professional.last_names
       },
       patient: patient
         ? {
-            full_name: `${patient.names} ${patient.last_names}`,
+            rut: patient.rut,
             phone: patient.phone,
-            rut: patient.rut
+            names: patient.names,
+            last_names: patient.last_names
           }
         : null
     };

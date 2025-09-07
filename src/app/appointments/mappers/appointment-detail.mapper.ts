@@ -24,9 +24,10 @@ export class AppointmentDetailMapper {
       status: data.appointment_status,
       date: DateFormatter.formatDate(data.date, "ymd"),
       professional: {
+        names: professional.names,
+        last_names: professional.last_names,
         pay_methods: ["Fonasa", "Particular"],
         confirm_methods: ["Whatsapp", "Correo", "Teléfono"],
-        full_name: `${professional.names} ${professional.last_names}`,
         professions: professional.professions.map((p) => p.profession.name)
       },
       alert: {
@@ -39,9 +40,10 @@ export class AppointmentDetailMapper {
             rut: patient.rut,
             phone: patient.phone,
             email: patient.email,
+            names: patient.names,
             address: patient.address,
+            last_names: patient.last_names,
             avatar_image: patient.avatar_image,
-            full_name: `${patient.names} ${patient.last_names}`,
             history: patientHistory.map((appointment) => ({
               uid: appointment.uid,
               status: appointment.appointment_status,
