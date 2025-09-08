@@ -1,5 +1,5 @@
-import { PatientHistoryForAppointmentDetailModel } from "./patient-history-for-appointment-detail.model";
-import { PatientModel } from "./patient.model";
+import type { PatientHistoryForAppointmentDetailModel } from "./patient-history-for-appointment-detail.model";
+import type { PatientModel } from "./patient.model";
 
 export type PatientForAppointmentDetailModel = Pick<
   PatientModel,

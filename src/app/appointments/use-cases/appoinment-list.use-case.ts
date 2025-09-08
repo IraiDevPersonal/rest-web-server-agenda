@@ -1,9 +1,9 @@
-import { Request } from "express";
+import type { Request } from "express";
 import { AppointmentMapper } from "../mappers/appointment.mapper";
-import { AppointmentModel } from "../models/appointment.model";
-import { AppointmentServiceRepository } from "../repository";
-import { AppointmentFilters } from "../models/appointment-filters.model";
-import { AppointmentStatus } from "@prisma/client";
+import type { AppointmentModel } from "../models/appointment.model";
+import type { AppointmentServiceRepository } from "../repository";
+import type { AppointmentFilters } from "../models/appointment-filters.model";
+import type { AppointmentStatus } from "@prisma/client";
 import { isYearMonth, queryParser } from "@/lib/utils";
 import { DateFormatter } from "@/lib/date-formatter";
 

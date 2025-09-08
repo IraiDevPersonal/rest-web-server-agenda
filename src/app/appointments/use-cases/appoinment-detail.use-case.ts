@@ -1,5 +1,5 @@
 import { AppointmentDetailMapper } from "../mappers/appointment-detail.mapper";
-import { AppointmentServiceRepository } from "../repository";
+import type { AppointmentServiceRepository } from "../repository";
 import { AppointmentValidations } from "../validations";
 
 export class AppointmentDetailUseCase {

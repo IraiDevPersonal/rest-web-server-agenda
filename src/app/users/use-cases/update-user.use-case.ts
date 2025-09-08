@@ -1,7 +1,7 @@
-import { UpsertResponse } from "@/types/global";
+import type { UpsertResponse } from "@/types/global";
 import { UserDetailMapper } from "../mappers/user-detail.mapper";
-import { UserDetailModel } from "../models/user-detail.model";
-import { UserServiceRepository } from "../repository";
+import type { UserDetailModel } from "../models/user-detail.model";
+import type { UserServiceRepository } from "../repository";
 import { UserValidations } from "../validations";
 
 export class UpdateUserUseCase {

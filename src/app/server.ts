@@ -1,5 +1,5 @@
-import express, { Router } from "express";
-import path from "path";
+import express, { type Router } from "express";
+import path from "node:path";
 import cors from "cors";
 
 interface Options {
@@ -37,7 +37,7 @@ export class Server {
     //* SPA /^\/(?!api).*/  <== Únicamente si no empieza con la palabra api
     this.app.get(/^\/(?!api).*/, (req, res) => {
       const indexPath = path.join(
-        __dirname + `/../../../../${this.publicPath}/index.html`
+        `${__dirname}/../../../../${this.publicPath}/index.html`
       );
       res.sendFile(indexPath);
     });

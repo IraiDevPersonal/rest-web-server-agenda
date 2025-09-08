@@ -1,5 +1,5 @@
-import { Gender } from "@prisma/client";
-import { UserModel } from "./user.model";
+import type { Gender } from "@prisma/client";
+import type { UserModel } from "./user.model";
 
 export type UserDetailModel = {
   gender: Gender;

@@ -1,9 +1,9 @@
 import { Pagination } from "@/lib/pagination";
 import { queryParser } from "@/lib/utils";
-import { Request } from "express";
+import type { Request } from "express";
 import { UserMapper } from "../mappers/user.mapper";
-import { UserFilters } from "../models/user-filters.model";
-import { UserServiceRepository } from "../repository";
+import type { UserFilters } from "../models/user-filters.model";
+import type { UserServiceRepository } from "../repository";
 
 export class UserListUseCase<T extends UserServiceRepository = UserServiceRepository> {
   protected readonly service: T;

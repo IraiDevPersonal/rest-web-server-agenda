@@ -1,9 +1,9 @@
 import { queryParser } from "@/lib/utils";
-import { UserStatus } from "@prisma/client";
-import { Request } from "express";
+import type { UserStatus } from "@prisma/client";
+import type { Request } from "express";
 import { PatientMapper } from "../mappers/patient.mapper";
-import { PatientFilters } from "../models/patient-filters.model";
-import { PatientServiceRepository } from "../repository";
+import type { PatientFilters } from "../models/patient-filters.model";
+import type { PatientServiceRepository } from "../repository";
 import { Pagination } from "@/lib/pagination";
 
 export class PatientListUseCases {

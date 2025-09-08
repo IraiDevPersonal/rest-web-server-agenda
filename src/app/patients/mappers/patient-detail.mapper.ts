@@ -1,4 +1,4 @@
-import { type PatientModel } from "../models/patient.model";
+import type { PatientModel } from "../models/patient.model";
 
 import { PatientMapper } from "./patient.mapper";
 

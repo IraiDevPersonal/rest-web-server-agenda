@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 
 import { CustomError } from "@/lib/custom-error";
-import { AppointmentServiceRepository } from "./repository";
+import type { AppointmentServiceRepository } from "./repository";
 import { AppointmentDetailUseCase } from "./use-cases/appoinment-detail.use-case";
 import { AppointmentListUseCase } from "./use-cases/appoinment-list.use-case";
 

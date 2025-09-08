@@ -1,7 +1,7 @@
 import { CustomError } from "@/lib/custom-error";
 import { PrismaClient } from "@prisma/client";
-import { AppointmentFilters } from "./models/appointment-filters.model";
-import { AppointmentServiceRepository } from "./repository";
+import type { AppointmentFilters } from "./models/appointment-filters.model";
+import type { AppointmentServiceRepository } from "./repository";
 
 export class AppointmentService implements AppointmentServiceRepository {
   private readonly db: PrismaClient;

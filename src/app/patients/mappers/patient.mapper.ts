@@ -1,5 +1,5 @@
-import { ResponseWithPagination } from "@/types/global";
-import { PatientWithPaginationModel, type PatientModel } from "../models/patient.model";
+import type { ResponseWithPagination } from "@/types/global";
+import type { PatientWithPaginationModel, PatientModel } from "../models/patient.model";
 import { PatientBdSchema, PatientBdWithPaginationSchema } from "../schemas/bd/patient.schema";
 
 import { CustomError } from "@/lib/custom-error";

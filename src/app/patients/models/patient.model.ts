@@ -1,5 +1,5 @@
-import { ResponseWithPagination } from "@/types/global";
-import { Gender, UserStatus } from "@prisma/client";
+import type { ResponseWithPagination } from "@/types/global";
+import type { Gender, UserStatus } from "@prisma/client";
 
 export type PatientModel = {
   uid: string;

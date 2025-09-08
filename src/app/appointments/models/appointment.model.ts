@@ -1,6 +1,6 @@
-import { AppointmentStatus } from "@prisma/client";
-import { PatientForAppointmentModel } from "../../patients/models/patient-for-appointment.model";
-import { ProfessionalForAppointmentModel } from "../../professionals/models/professional-for-appointment.model";
+import type { AppointmentStatus } from "@prisma/client";
+import type { PatientForAppointmentModel } from "../../patients/models/patient-for-appointment.model";
+import type { ProfessionalForAppointmentModel } from "../../professionals/models/professional-for-appointment.model";
 
 export type AppointmentModel = {
   uid: string;

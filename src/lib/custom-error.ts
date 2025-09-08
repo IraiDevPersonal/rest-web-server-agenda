@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import { Response } from "express";
+import type { Response } from "express";
 import { ZodError } from "zod";
 
 export class CustomError extends Error {
@@ -10,23 +10,23 @@ export class CustomError extends Error {
     super(message);
   }
 
-  static badRequest(message: string = "bad request") {
+  static badRequest(message = "bad request") {
     return new CustomError(400, message);
   }
 
-  static unautorized(message: string = "unautorized") {
+  static unautorized(message = "unautorized") {
     return new CustomError(401, message);
   }
 
-  static forbidden(message: string = "forbidden") {
+  static forbidden(message = "forbidden") {
     return new CustomError(403, message);
   }
 
-  static notFound(message: string = "not found") {
+  static notFound(message = "not found") {
     return new CustomError(404, message);
   }
 
-  static internalServer(message: string = "Internal server error") {
+  static internalServer(message = "Internal server error") {
     return new CustomError(500, message);
   }
 

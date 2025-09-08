@@ -1,8 +1,8 @@
-import { UpsertResponse } from "@/types/global";
+import type { UpsertResponse } from "@/types/global";
 import { UserDetailMapper } from "../mappers/user-detail.mapper";
-import { UserServiceRepository } from "../repository";
+import type { UserServiceRepository } from "../repository";
 import { UserValidations } from "../validations";
-import { UserDetailModel } from "../models/user-detail.model";
+import type { UserDetailModel } from "../models/user-detail.model";
 
 export class UpdateUserProfessionsUseCase {
   private readonly service: UserServiceRepository;

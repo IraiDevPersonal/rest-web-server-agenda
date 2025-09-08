@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 
 import { CustomError } from "@/lib/custom-error";
 import { ProfessionListUseCases } from "./use-cases/profession-list.use-case";
-import { ProfessionServiceRepository } from "./repository";
+import type { ProfessionServiceRepository } from "./repository";
 
 export class ProfessionController {
   private professionalListUseCases: ProfessionListUseCases;

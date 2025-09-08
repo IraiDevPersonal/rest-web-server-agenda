@@ -1,4 +1,4 @@
-import { PaginatedQuery } from "@/types/global";
+import type { PaginatedQuery } from "@/types/global";
 
 export type UserFilters = Partial<{
   profession_id: number;

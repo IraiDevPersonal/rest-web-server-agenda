@@ -1,7 +1,7 @@
-import { UpsertResponse } from "@/types/global";
+import type { UpsertResponse } from "@/types/global";
 import { PatientMapper } from "../mappers/patient.mapper";
-import { PatientModel } from "../models/patient.model";
-import { PatientServiceRepository } from "../repository";
+import type { PatientModel } from "../models/patient.model";
+import type { PatientServiceRepository } from "../repository";
 import { PatientValidations } from "../validations";
 
 export class UpdatePatientUseCase {

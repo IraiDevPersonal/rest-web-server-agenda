@@ -1,3 +1,3 @@
-import { Option } from "@/types/global";
+import type { Option } from "@/types/global";
 
 export type ProfessionOptionModel = Option;

@@ -1,4 +1,4 @@
-import { type ProfessionOptionModel } from "../models/professional-for-filters.model";
+import type { ProfessionOptionModel } from "../models/professional-for-filters.model";
 
 import { CustomError } from "@/lib/custom-error";
 import { ProfessionSchema } from "../schemas/bd/profession.schema";

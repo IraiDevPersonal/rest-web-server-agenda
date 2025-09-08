@@ -1,6 +1,6 @@
-import { MakeRequired, PaginatedResult, RutOrEmailQuery } from "@/types/global";
-import { UpsertUserPayload } from "./models/user-payload.model";
-import { PaginatedUserQueryFilters } from "./models/user-filters.model";
+import type { MakeRequired, PaginatedResult, RutOrEmailQuery } from "@/types/global";
+import type { UpsertUserPayload } from "./models/user-payload.model";
+import type { PaginatedUserQueryFilters } from "./models/user-filters.model";
 
 export type UserServiceRepository = {
   getByUid: (uid: string) => Promise<unknown | null>;

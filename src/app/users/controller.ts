@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 
 import { CustomError } from "@/lib/custom-error";
-import { UserServiceRepository } from "./repository";
+import type { UserServiceRepository } from "./repository";
 import { UserDetailUseCase } from "./use-cases/user-detail.use-case";
 import { UserListUseCase } from "./use-cases/user-list.use-case";
 import { CreateUserUseCase } from "./use-cases/create-user.use-case";

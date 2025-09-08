@@ -1,5 +1,5 @@
 import { CustomError } from "@/lib/custom-error";
-import { UserDetailModel } from "../models/user-detail.model";
+import type { UserDetailModel } from "../models/user-detail.model";
 import { UserDetailSchema } from "../schemas/bd/user-detail.schema";
 import { UserMapper } from "./user.mapper";
 

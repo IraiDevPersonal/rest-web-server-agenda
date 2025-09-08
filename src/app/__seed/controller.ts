@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
-import { SeedService } from "./service";
+import type { Request, Response } from "express";
+import type { SeedService } from "./service";
 import { CustomError } from "@/lib/custom-error";
 import { ENVS } from "@/lib/config/envs";
 

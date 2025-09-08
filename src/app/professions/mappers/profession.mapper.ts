@@ -1,5 +1,5 @@
 import { CustomError } from "@/lib/custom-error";
-import { ProfessionModel } from "../models/profession.model";
+import type { ProfessionModel } from "../models/profession.model";
 import { ProfessionSchema } from "../schemas/bd/profession.schema";
 
 export class ProfessionMapper {

@@ -1,7 +1,7 @@
 import { UserListUseCase } from "@/app/users/use-cases/user-list.use-case";
-import { Request } from "express";
+import type { Request } from "express";
 import { ProfessionalForFiltersMapper } from "../mappers/professional-for-filters.mapper";
-import { ProfessionalServiceRepository } from "../repository";
+import type { ProfessionalServiceRepository } from "../repository";
 
 export class ProfessionalListUseCase extends UserListUseCase<ProfessionalServiceRepository> {
   constructor(service: ProfessionalServiceRepository) {

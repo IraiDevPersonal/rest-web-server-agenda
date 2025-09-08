@@ -1,4 +1,4 @@
-import { type RoleModel } from "../models/role";
+import type { RoleModel } from "../models/role";
 import { RoleSchema } from "../schemas/bd/role.schema";
 
 import { CustomError } from "@/lib/custom-error";

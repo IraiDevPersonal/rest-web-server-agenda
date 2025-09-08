@@ -1,6 +1,6 @@
-import { PatientForAppointmentDetailModel } from "@/app/patients/models/patient-for-appointment-detail.model";
-import { ProfessionalForAppointmentDetailModel } from "@/app/professionals/models/professional-for-appointment-detail.model";
-import { AppointmentModel } from "./appointment.model";
+import type { PatientForAppointmentDetailModel } from "@/app/patients/models/patient-for-appointment-detail.model";
+import type { ProfessionalForAppointmentDetailModel } from "@/app/professionals/models/professional-for-appointment-detail.model";
+import type { AppointmentModel } from "./appointment.model";
 
 export type AlertAppointmentDetailModel = {
   message: string;

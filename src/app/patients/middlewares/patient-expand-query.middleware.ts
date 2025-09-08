@@ -1,7 +1,7 @@
-import { NextFunction, Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 
 import { CustomError } from "@/lib/custom-error";
-import { ExpandPatientTypes } from "../models/shared";
+import type { ExpandPatientTypes } from "../models/shared";
 
 export class PatientExpandQueryMiddleware {
   static validate(req: Request, res: Response, next: NextFunction) {

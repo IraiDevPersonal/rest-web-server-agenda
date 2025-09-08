@@ -1,7 +1,7 @@
 import { CustomError } from "@/lib/custom-error";
-import { UserFilters } from "../users/models/user-filters.model";
+import type { UserFilters } from "../users/models/user-filters.model";
 import { UserService } from "../users/service";
-import { ProfessionalServiceRepository } from "./repository";
+import type { ProfessionalServiceRepository } from "./repository";
 
 export class ProfessionalService extends UserService implements ProfessionalServiceRepository {
   constructor() {

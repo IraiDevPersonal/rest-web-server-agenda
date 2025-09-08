@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 
 import { CustomError } from "@/lib/custom-error";
-import { ProfessionalServiceRepository } from "./repository";
+import type { ProfessionalServiceRepository } from "./repository";
 import { ProfessionalListUseCase } from "./use-cases/professional-list.use-case";
 import { UserController } from "../users/controller";
 

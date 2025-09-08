@@ -1,7 +1,7 @@
 import { CustomError } from "@/lib/custom-error";
 import { PrismaClient } from "@prisma/client";
-import { ProfessionFilters } from "./models/profession-filters.model";
-import { ProfessionServiceRepository } from "./repository";
+import type { ProfessionFilters } from "./models/profession-filters.model";
+import type { ProfessionServiceRepository } from "./repository";
 
 export class ProfessionService implements ProfessionServiceRepository {
   private readonly db: PrismaClient;

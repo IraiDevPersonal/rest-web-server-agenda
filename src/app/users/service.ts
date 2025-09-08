@@ -1,9 +1,9 @@
 import { CustomError } from "@/lib/custom-error";
-import { RutOrEmailQuery } from "@/types/global";
+import type { RutOrEmailQuery } from "@/types/global";
 import { PrismaClient } from "@prisma/client";
 import type { PaginatedUserQueryFilters } from "./models/user-filters.model";
-import { UpsertUserPayload } from "./models/user-payload.model";
-import { UserServiceRepository } from "./repository";
+import type { UpsertUserPayload } from "./models/user-payload.model";
+import type { UserServiceRepository } from "./repository";
 import { ROLE_ID } from "./utils/constants";
 
 type UserServiceOptions = {

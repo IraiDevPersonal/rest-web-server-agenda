@@ -1,10 +1,10 @@
 import { RoleMapper } from "@/app/roles/mappers/role.mapper";
-import { UserWithPaginationModel, type UserModel } from "../models/user.model";
+import type { UserWithPaginationModel, UserModel } from "../models/user.model";
 import { UserBdWithPaginationSchema, UserSchema } from "../schemas/bd/user.schema";
 
 import { ProfessionMapper } from "@/app/professions/mappers/profession.mapper";
 import { CustomError } from "@/lib/custom-error";
-import { ResponseWithPagination } from "@/types/global";
+import type { ResponseWithPagination } from "@/types/global";
 
 export class UserMapper {
   static map = (raw: unknown): UserModel => {

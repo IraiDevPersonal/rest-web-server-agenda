@@ -1,5 +1,5 @@
 import { CustomError } from "@/lib/custom-error";
-import { ProfessionalForFiltersModel } from "../models/professional-for-filters.model";
+import type { ProfessionalForFiltersModel } from "../models/professional-for-filters.model";
 import { BdProfessioanlForFiltersSchema } from "../schemas/bd/professional-for-filters.schema";
 
 export class ProfessionalForFiltersMapper {

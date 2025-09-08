@@ -1,7 +1,7 @@
 import { AppointmentStatus } from "@prisma/client";
 
 import { Uid } from "@/lib/uid";
-import {
+import type {
   BdAppointment,
   BdPatient,
   BdProfession,
@@ -10,7 +10,7 @@ import {
   BdUser,
   BdUserRoles
 } from "@/types/bd-model";
-import { MakeOptional, MakeRequired } from "@/types/global";
+import type { MakeOptional, MakeRequired } from "@/types/global";
 
 export const professions: MakeRequired<BdProfession, "name">[] = [
   { name: "Psicologia" },

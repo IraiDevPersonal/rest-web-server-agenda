@@ -1,8 +1,8 @@
-import { UpsertResponse } from "@/types/global";
+import type { UpsertResponse } from "@/types/global";
 import { UserStatus } from "@prisma/client";
 import { UserDetailMapper } from "../mappers/user-detail.mapper";
-import { UserDetailModel } from "../models/user-detail.model";
-import { UserServiceRepository } from "../repository";
+import type { UserDetailModel } from "../models/user-detail.model";
+import type { UserServiceRepository } from "../repository";
 import { UserValidations } from "../validations";
 
 export class CreateUserUseCase {
@@ -17,7 +17,7 @@ export class CreateUserUseCase {
 
     const existingUser = await this.service.findByRutOrEmail({
       rut: payload.rut,
-      email: payload.email
+      email: payload.email,
     });
 
     if (existingUser?.rut === payload.rut) {
@@ -29,12 +29,12 @@ export class CreateUserUseCase {
 
     const createdUser = await this.service.create({
       ...payload,
-      status: UserStatus.ACTIVE
+      status: UserStatus.ACTIVE,
     });
     const user = UserDetailMapper.fromBdToDomain(createdUser);
 
     return {
-      data: user
+      data: user,
     };
   };
 }

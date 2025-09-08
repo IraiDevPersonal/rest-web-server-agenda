@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 
 import { CustomError } from "@/lib/custom-error";
-import { PatientServiceRepository } from "./repository";
+import type { PatientServiceRepository } from "./repository";
 import { UpdatePatientStatusUseCase } from "./use-cases/update-patient-status.use-case";
 import { CreatePatientUseCase } from "./use-cases/create-patient.use-case";
 import { UpdatePatientUseCase } from "./use-cases/update-patient.use-case";

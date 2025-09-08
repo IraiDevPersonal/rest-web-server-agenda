@@ -1,9 +1,9 @@
-import { Request } from "express";
+import type { Request } from "express";
 import { PatientDetailMapper } from "../mappers/patient-detail.mapper";
-import { PatientModel } from "../models/patient.model";
-import { PatientServiceRepository } from "../repository";
+import type { PatientModel } from "../models/patient.model";
+import type { PatientServiceRepository } from "../repository";
 import { PatientValidations } from "../validations";
-import { ExpandPatientTypes } from "../models/shared";
+import type { ExpandPatientTypes } from "../models/shared";
 
 export class PatientDetailUseCase {
   private readonly service: PatientServiceRepository;

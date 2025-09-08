@@ -1,6 +1,6 @@
 import { UserDetailMapper } from "../mappers/user-detail.mapper";
-import { UserModel } from "../models/user.model";
-import { UserServiceRepository } from "../repository";
+import type { UserModel } from "../models/user.model";
+import type { UserServiceRepository } from "../repository";
 import { UserValidations } from "../validations";
 
 export class UserDetailUseCase {

@@ -1,9 +1,9 @@
 import { CustomError } from "@/lib/custom-error";
-import { RutOrEmailQuery } from "@/types/global";
+import type { RutOrEmailQuery } from "@/types/global";
 import { PrismaClient } from "@prisma/client";
-import { PaginatedPatientQueryFilters } from "./models/patient-filters.model";
-import { PatientModel } from "./models/patient.model";
-import { PatientServiceRepository } from "./repository";
+import type { PaginatedPatientQueryFilters } from "./models/patient-filters.model";
+import type { PatientModel } from "./models/patient.model";
+import type { PatientServiceRepository } from "./repository";
 
 export class PatientService implements PatientServiceRepository {
   private readonly db: PrismaClient;

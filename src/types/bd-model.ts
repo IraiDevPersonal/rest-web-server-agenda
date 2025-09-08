@@ -1,5 +1,5 @@
-import { Prisma } from "@prisma/client";
-import { DefaultArgs } from "@prisma/client/runtime/library";
+import type { Prisma } from "@prisma/client";
+import type { DefaultArgs } from "@prisma/client/runtime/library";
 
 export type BdAppointment<
   T extends Prisma.appointmentsDefaultArgs<DefaultArgs> = {}

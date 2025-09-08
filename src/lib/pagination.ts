@@ -1,5 +1,5 @@
 import z from "zod";
-import { PaginatedQuery } from "@/types/global";
+import type { PaginatedQuery } from "@/types/global";
 import { CustomError } from "./custom-error";
 
 const PaginationSchema = z.object({

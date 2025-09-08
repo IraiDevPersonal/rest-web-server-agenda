@@ -1,5 +1,5 @@
-import { PaginatedQuery } from "@/types/global";
-import { UserStatus } from "@prisma/client";
+import type { PaginatedQuery } from "@/types/global";
+import type { UserStatus } from "@prisma/client";
 
 export type PatientFilters = Partial<{
   rut: string;

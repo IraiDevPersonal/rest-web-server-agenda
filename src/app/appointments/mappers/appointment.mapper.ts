@@ -1,4 +1,4 @@
-import { type AppointmentModel } from "../models/appointment.model";
+import type { AppointmentModel } from "../models/appointment.model";
 
 import { CustomError } from "@/lib/custom-error";
 import { DateFormatter } from "@/lib/date-formatter";
