@@ -74,7 +74,7 @@ export class PatientService implements PatientServiceRepository {
 
       return { data, total };
     } catch (error) {
-      throw CustomError.bdError();
+      throw CustomError.bdError(error);
     }
   }
 
@@ -85,7 +85,7 @@ export class PatientService implements PatientServiceRepository {
         where: { uid: uid }
       });
     } catch (error) {
-      throw CustomError.bdError();
+      throw CustomError.bdError(error);
     }
   }
 
@@ -97,7 +97,7 @@ export class PatientService implements PatientServiceRepository {
         data: payload
       });
     } catch (error) {
-      throw CustomError.bdError();
+      throw CustomError.bdError(error);
     }
   }
 
@@ -108,7 +108,7 @@ export class PatientService implements PatientServiceRepository {
         data: payload
       });
     } catch (error) {
-      throw CustomError.bdError();
+      throw CustomError.bdError(error);
     }
   }
 
@@ -119,7 +119,7 @@ export class PatientService implements PatientServiceRepository {
         where: { OR: [{ rut: rut }, { email: email }], NOT: { uid: uid } }
       });
     } catch (error) {
-      throw CustomError.bdError();
+      throw CustomError.bdError(error);
     }
   }
 }

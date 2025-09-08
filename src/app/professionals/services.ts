@@ -31,7 +31,7 @@ export class ProfessionalService extends UserService implements ProfessionalServ
         }
       });
     } catch (error) {
-      throw CustomError.bdError();
+      throw CustomError.bdError(error);
     }
   };
 }

@@ -34,32 +34,34 @@ export class CustomError extends Error {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       switch (error.code) {
         case "P2003":
-          return CustomError.badRequest(`One or more referenced IDs are invalid`);
+          return CustomError.badRequest(`one or more referenced IDs are invalid`);
         case "P2002": // Unique constraint
-          return CustomError.badRequest(`This record already exists`);
+          return CustomError.badRequest(`this record already exists`);
         case "P2025": // Record not found
-          return CustomError.notFound(`Record not found`);
+          return CustomError.notFound(`record not found`);
         default:
-          return CustomError.internalServer("An unexpected database error occurred");
+          return CustomError.internalServer(error.message);
+          // return CustomError.internalServer("An unexpected database error occurred");
       }
     }
 
     return undefined;
   }
 
-  static bdError(message?: string) {
-    return CustomError.internalServer(message ?? "An unexpected database error occurred");
+  static bdError(error: unknown, message = "An unexpected database error occurred") {
+    const newError = CustomError.prismaError(error);
+    return newError ?? CustomError.internalServer(message);
   }
 
   static mapperError(error: unknown, reference: string) {
-    const errorMessage = this.getErrorMessage(error);
+    const errorMessage = CustomError.getErrorMessage(error);
 
     return CustomError.internalServer(`${reference}: ${errorMessage}`);
   }
 
-  static handleError = (errorrr: unknown, res: Response) => {
-    const bdError = this.prismaError(errorrr);
-    const { message, statusCode } = CustomError.getErrorData(bdError ?? errorrr);
+  static handleError = (error: unknown, res: Response) => {
+    const syncPrismaError = CustomError.prismaError(error);
+    const { message, statusCode } = CustomError.getErrorData(syncPrismaError ?? error);
     console.log("ERROR: ", message);
 
     return res.status(statusCode).json({ error: message });

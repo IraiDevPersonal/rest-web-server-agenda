@@ -95,7 +95,7 @@ export class UserService implements UserServiceRepository {
         select: this.buildUserDetailFieldsSelector()
       });
     } catch (error) {
-      throw CustomError.bdError();
+      throw CustomError.bdError(error);
     }
   };
 
@@ -107,7 +107,7 @@ export class UserService implements UserServiceRepository {
         select: this.buildUserDetailFieldsSelector()
       });
     } catch (error) {
-      throw CustomError.bdError();
+      throw CustomError.bdError(error);
     }
   };
 
@@ -126,7 +126,7 @@ export class UserService implements UserServiceRepository {
         select: this.buildUserDetailFieldsSelector()
       });
     } catch (error) {
-      throw CustomError.bdError();
+      throw CustomError.bdError(error);
     }
   };
 
@@ -145,7 +145,7 @@ export class UserService implements UserServiceRepository {
         select: this.buildUserDetailFieldsSelector()
       });
     } catch (error) {
-      throw CustomError.bdError();
+      throw CustomError.bdError(error);
     }
   };
 
@@ -156,7 +156,7 @@ export class UserService implements UserServiceRepository {
         where: { OR: [{ rut: rut }, { email: email }], NOT: { uid: uid } }
       });
     } catch (error) {
-      throw CustomError.bdError();
+      throw CustomError.bdError(error);
     }
   };
 
@@ -202,7 +202,7 @@ export class UserService implements UserServiceRepository {
 
       return { data, total: totalCount };
     } catch (error) {
-      throw CustomError.bdError();
+      throw CustomError.bdError(error);
     }
   };
 
@@ -215,7 +215,7 @@ export class UserService implements UserServiceRepository {
         }
       });
     } catch (error) {
-      throw CustomError.bdError();
+      throw CustomError.bdError(error);
     }
   };
 }

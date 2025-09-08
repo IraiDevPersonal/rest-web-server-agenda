@@ -22,7 +22,7 @@ export class ProfessionService implements ProfessionServiceRepository {
         }
       });
     } catch (error) {
-      throw CustomError.bdError();
+      throw CustomError.bdError(error);
     }
   }
 }

@@ -54,7 +54,7 @@ export class SeedService {
         data: appointments
       });
     } catch (error) {
-      throw CustomError.bdError();
+      throw CustomError.bdError(error);
     }
   }
 }

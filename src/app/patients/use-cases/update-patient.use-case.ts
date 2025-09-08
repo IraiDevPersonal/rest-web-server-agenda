@@ -17,8 +17,7 @@ export class UpdatePatientUseCase {
     const existingPatient = await this.service.findPatientRutAndEmail({
       rut: payload.rut,
       email: payload.email,
-      uid: uid // Excluir al paciente actual de la búsqueda
-      // TODO: revisar bien esto, para saber si el usuario existe o no antes de actualizar
+      uid: uid
     });
 
     if (existingPatient?.rut === payload.rut) {

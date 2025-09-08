@@ -127,7 +127,7 @@ export class AppointmentService implements AppointmentServiceRepository {
         ]
       });
     } catch (error) {
-      throw CustomError.bdError();
+      throw CustomError.bdError(error);
     }
   }
 
@@ -138,7 +138,7 @@ export class AppointmentService implements AppointmentServiceRepository {
         where: { uid }
       });
     } catch (error) {
-      throw CustomError.bdError();
+      throw CustomError.bdError(error);
     }
   }
 }
