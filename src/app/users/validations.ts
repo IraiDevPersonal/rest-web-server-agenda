@@ -1,24 +1,16 @@
-import { RutManager } from "@/lib/rut-manager";
-import { ExistenceValidation } from "@/lib/validations/existence.validation";
-import { UpsertUserSchema } from "./schemas/api/upsert-user.schema";
-import z from "zod";
+import { ExistenceValidation } from '@/lib/validations/existence.validation';
+import { PersonValidation } from '@/lib/validations/person.validation';
+import z from 'zod';
+import { UpsertUserSchema } from './schemas/api/upsert-user.schema';
 
 const NumberIdsSchema = z.number().positive().min(1).int().array();
 
 export class UserValidations extends ExistenceValidation {
-  private static formatBirthDate(birth_date: any) {
-    return birth_date ? new Date(birth_date) : undefined
-  }
-
-  private static formatRut(rut: any) {
-    return rut ? RutManager.format(rut, { dots: true }) : undefined
-  }
-
   static validateInsertPayload(body: any) {
     return UpsertUserSchema.omit({ status: true }).parse({
       ...body,
-      birth_date: UserValidations.formatBirthDate(body.birth_date),
-      rut: UserValidations.formatRut(body.rut)
+      birth_date: PersonValidation.formatBirthDate(body.birth_date),
+      rut: PersonValidation.formatRut(body.rut),
     });
   }
 
@@ -27,8 +19,8 @@ export class UserValidations extends ExistenceValidation {
       .partial()
       .parse({
         ...body,
-        birth_date: UserValidations.formatBirthDate(body.birth_date),
-        rut: UserValidations.formatRut(body.rut)
+        birth_date: PersonValidation.formatBirthDate(body.birth_date),
+        rut: PersonValidation.formatRut(body.rut),
       });
   }
 
