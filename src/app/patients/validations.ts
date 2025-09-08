@@ -3,19 +3,19 @@ import { ExistenceValidation } from "@/lib/validations/existence.validation";
 import { UpsertPatientApiSchema } from "./schemas/api/upsert-patient.schema";
 
 export class PatientValidations extends ExistenceValidation {
-  private static formatBirthDate(body: any) {
-    return body.birth_date ? new Date(body.birth_date) : undefined
-  }
+  private static formatBirthDate(birth_date: any) {
+    return birth_date ? new Date(birth_date) : undefined
+    }
 
-  private static formatRut(body: any) {
-    return body.rut ? RutManager.format(body.rut, { dots: true }) : undefined
+  private static formatRut(rut: any) {
+    return rut ? RutManager.format(rut, { dots: true }) : undefined
   }
 
   static validateInsertPayload(body: any) {
     return UpsertPatientApiSchema.omit({ status: true }).parse({
       ...body,
-      birth_date: PatientValidations.formatBirthDate(body),
-      rut: PatientValidations.formatRut(body)
+      birth_date: PatientValidations.formatBirthDate(body.birth_date),
+      rut: PatientValidations.formatRut(body.rut)
     });
   }
 
@@ -24,8 +24,8 @@ export class PatientValidations extends ExistenceValidation {
       .partial()
       .parse({
         ...body,
-        birth_date: PatientValidations.formatBirthDate(body),
-        rut: PatientValidations.formatRut(body)
+        birth_date: PatientValidations.formatBirthDate(body.birth_date),
+        rut: PatientValidations.formatRut(body.rut)
       });
   }
 
